@@ -4,10 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover">
     
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://i.imgur.com">
+    <link rel="preconnect" href="https://randomuser.me">
+    <link rel="dns-prefetch" href="https://www.google.com">
+    <link rel="dns-prefetch" href="https://www.facebook.com">
+    <link rel="dns-prefetch" href="https://www.linkedin.com">
+    
     <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.svg">
+    <link rel="icon" type="image/svg+xml" sizes="32x32" href="/favicons/favicon-32x32.svg">
+    <link rel="icon" type="image/svg+xml" sizes="16x16" href="/favicons/favicon-16x16.svg">
     <link rel="manifest" href="/favicons/site.webmanifest" crossorigin="use-credentials">
     <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#FF5F15">
     <link rel="shortcut icon" href="/favicons/favicon.ico">
@@ -20,10 +31,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="format-detection" content="telephone=no">
-    <link rel="apple-touch-startup-image" href="/favicons/apple-splash-2048-2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-    <link rel="apple-touch-startup-image" href="/favicons/apple-splash-1668-2388.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-    <link rel="apple-touch-startup-image" href="/favicons/apple-splash-1536-2048.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-    <link rel="apple-touch-startup-image" href="/favicons/apple-splash-1125-2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/favicons/apple-splash-2048-2732.svg" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/favicons/apple-splash-1668-2388.svg" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/favicons/apple-splash-1536-2048.svg" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/favicons/apple-splash-1125-2436.svg" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
     
     <!-- Primary Meta Tags -->
     <title>Sindikat Sonce Koper | Brezplačna pravna pomoč in zaščita delavcev | Pisarna pravne zaščite</title>
@@ -39,6 +50,9 @@
     <meta name="country" content="Slovenia">
     <meta name="city" content="Koper">
     <meta name="zipcode" content="6000">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta property="og:title" content="Sindikat Sonce Koper | Brezplačna pravna pomoč in zaščita delavcev">
     <meta property="og:description" content="Sindikat Sonce Koper nudi brezplačno pravno pomoč in strokovno svetovanje. Izkušeni pravniki vam pomagajo pri delovnih sporih, odpovedih in mobingu.">
     <meta property="og:locale" content="sl_SI">
@@ -2402,9 +2416,9 @@
                     
                     <div class="mt-12 flex items-center space-x-6" data-aos="fade-up" data-aos-delay="400">
                         <div class="flex -space-x-2">
-                            <img src="https://randomuser.me/api/portraits/women/32.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="Member">
-                            <img src="https://randomuser.me/api/portraits/men/75.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="Member">
-                            <img src="https://randomuser.me/api/portraits/women/63.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="Member">
+                            <img src="https://randomuser.me/api/portraits/women/32.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="Member" loading="lazy">
+                            <img src="https://randomuser.me/api/portraits/men/75.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="Member" loading="lazy">
+                            <img src="https://randomuser.me/api/portraits/women/63.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="Member" loading="lazy">
                         </div>
                         <div>
                             <p class="font-medium">Več kot <span class="highlight-text">1500+</span> zadovoljnih članov</p>
@@ -2421,7 +2435,7 @@
                 </div>
                 <div class="lg:w-1/2" data-aos="fade-left" data-aos-delay="300">
                     <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10 shadow-2xl floating" style="max-width: 70%; margin: 0 auto;">
-                        <img src="https://i.imgur.com/vBKRRYp.jpeg" 
+                        <img src="https://i.imgur.com/vBKRRYp.jpeg" loading="lazy" 
                              alt="Pravna pomoč in sindikalna zaščita za zaposlene v Sloveniji" 
                              class="rounded-lg w-full h-auto object-cover">
                     </div>
@@ -2759,7 +2773,7 @@
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="testimonial-card p-6 rounded-xl card-hover" data-aos="fade-up" data-aos-delay="100">
                     <div class="flex items-center mb-4">
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Maja K." class="w-12 h-12 rounded-full mr-4">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Maja K." class="w-12 h-12 rounded-full mr-4" loading="lazy">
                         <div>
                             <h4 class="font-bold">Maja K.</h4>
                             <div class="flex text-accent text-sm">
@@ -2775,7 +2789,7 @@
                 </div>
                 <div class="testimonial-card p-6 rounded-xl card-hover" data-aos="fade-up" data-aos-delay="200">
                     <div class="flex items-center mb-4">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Peter L." class="w-12 h-12 rounded-full mr-4">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Peter L." class="w-12 h-12 rounded-full mr-4" loading="lazy">
                         <div>
                             <h4 class="font-bold">Peter L.</h4>
                             <div class="flex text-accent text-sm">
@@ -2791,7 +2805,7 @@
                 </div>
                 <div class="testimonial-card p-6 rounded-xl card-hover" data-aos="fade-up" data-aos-delay="300">
                     <div class="flex items-center mb-4">
-                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Ana P." class="w-12 h-12 rounded-full mr-4">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Ana P." class="w-12 h-12 rounded-full mr-4" loading="lazy">
                         <div>
                             <h4 class="font-bold">Ana P.</h4>
                             <div class="flex text-accent text-sm">
@@ -3194,27 +3208,113 @@
             emailjs.init("PLqXSPz6Kid72fbh_");
         })();
         
-        // Send email using EmailJS
-        emailjs.send('service_5m3risr', 'to0auoi', templateParams)
+        // Contact form handler
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const submitButton = document.getElementById('submitButton');
+            const buttonText = document.getElementById('buttonText');
+            const buttonSpinner = document.getElementById('buttonSpinner');
+            const formSuccess = document.getElementById('formSuccess');
+            const formError = document.getElementById('formError');
+            
+            // Show loading state
+            submitButton.disabled = true;
+            buttonText.textContent = 'Pošiljam...';
+            buttonSpinner.classList.remove('hidden');
+            formSuccess.classList.add('hidden');
+            formError.classList.add('hidden');
+            
+            // Get form data
+            const templateParams = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+            
+            // Send email using EmailJS
+            emailjs.send('service_5m3risr', 'template_contact', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    formSuccess.classList.remove('hidden');
+                    document.getElementById('contactForm').reset();
+                })
+                .catch(function(error) {
+                    console.log('FAILED...', error);
+                    formError.classList.remove('hidden');
+                })
+                .finally(function() {
+                    // Reset button state
+                    submitButton.disabled = false;
+                    buttonText.textContent = 'Pošlji sporočilo';
+                    buttonSpinner.classList.add('hidden');
+                });
+            
+            return false;
+        }
+        
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+        
+        // Back to top button
+        function createBackToTopButton() {
+            const button = document.createElement('button');
+            button.innerHTML = '<i class="fas fa-chevron-up"></i>';
+            button.className = 'fixed bottom-6 right-6 bg-gradient-to-r from-primary to-secondary text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 z-50 opacity-0 invisible';
+            button.id = 'backToTop';
+            button.setAttribute('aria-label', 'Nazaj na vrh');
+            
+            button.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            
+            document.body.appendChild(button);
+            
+            // Show/hide button based on scroll position
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    button.classList.remove('opacity-0', 'invisible');
+                    button.classList.add('opacity-100', 'visible');
+                } else {
+                    button.classList.add('opacity-0', 'invisible');
+                    button.classList.remove('opacity-100', 'visible');
+                }
+            });
+        }
+        
+        // Initialize back to top button when DOM is loaded
+        document.addEventListener('DOMContentLoaded', createBackToTopButton);
+        
+        // Service Worker registration for offline functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+        
+        // Performance optimization: Preload critical resources
+        const preloadImage = (src) => {
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.as = 'image';
+            link.href = src;
+            document.head.appendChild(link);
+        };
+        
+        // Preload hero images
+        preloadImage('https://i.imgur.com/slTvYkP.jpeg');
+        preloadImage('https://i.imgur.com/vBKRRYp.jpeg');
     </script>
 </body>
-```
-```html
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
-<script>
-    // Initialize AOS
-    AOS.init({
-        duration: 800,
-        once: true
-    });
-    
-    // Initialize EmailJS
-    (function() {
-        emailjs.init("PLqXSPz6Kid72fbh_");
-    })();
-</script>
+</html>
