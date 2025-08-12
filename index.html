@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover">
     
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://i.imgur.com" crossorigin>
+    <link rel="preconnect" href="https://randomuser.me" crossorigin>
+    <link rel="dns-prefetch" href="//i.imgur.com">
+    <link rel="dns-prefetch" href="//randomuser.me">
+    
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
@@ -420,6 +426,64 @@
         html {
             width: 100%;
             max-width: 100vw;
+        }
+
+        /* Lazy loading styles */
+        .lazy-image {
+            opacity: 0;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(90deg, #f8f9fa 25%, #e9ecef 50%, #f8f9fa 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            will-change: opacity;
+        }
+
+        .lazy-image.loaded {
+            opacity: 1;
+            background: none;
+            animation: none;
+            will-change: auto;
+        }
+
+        .lazy-image.error {
+            opacity: 1;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 12px;
+            font-weight: 500;
+            animation: none;
+        }
+
+        .lazy-image.error::before {
+            content: '📷';
+            margin-right: 4px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Image placeholder styles */
+        .image-placeholder {
+            background: linear-gradient(90deg, #f8f9fa 25%, #e9ecef 50%, #f8f9fa 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: inherit;
+        }
+
+        /* Improve image rendering */
+        .lazy-image, img {
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+
+        /* Reduce layout shift */
+        .lazy-image {
+            background-color: #f8f9fa;
         }
 
         /* Desktop styles */
@@ -2333,6 +2397,17 @@
     </script>
 </head>
 <body class="bg-white text-gray-800">
+    <!-- Noscript fallback for lazy loading -->
+    <noscript>
+        <style>
+            .lazy-image {
+                opacity: 1 !important;
+                background: none !important;
+                animation: none !important;
+            }
+        </style>
+    </noscript>
+    
     <!-- Mobile optimization enabled -->
 
     <!-- Mobile warning removed for optimized mobile experience -->
@@ -2342,7 +2417,7 @@
         <div class="container">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center">
-                    <img src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip Pisarne pravne zaščite Sonce Slovenije" class="h-12 md:h-16 shine">
+                    <img src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip Pisarne pravne zaščite Sonce Slovenije" class="h-12 md:h-16 shine" loading="eager">
                 </div>
                 
                 <nav class="hidden lg:flex space-x-8 items-center">
@@ -2364,7 +2439,7 @@
     <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform -translate-x-full transition-transform duration-300 lg:hidden">
         <div class="container h-full flex flex-col">
             <div class="flex justify-between items-center py-4 border-b">
-                <img src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip" class="h-10">
+                <img src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip" class="h-10" loading="eager">
                 <button class="text-gray-700 focus:outline-none" id="menuClose">
                     <i class="fas fa-times text-2xl"></i>
                 </button>
@@ -2402,9 +2477,9 @@
                     
                     <div class="mt-12 flex items-center space-x-6" data-aos="fade-up" data-aos-delay="400">
                         <div class="flex -space-x-2">
-                            <img src="https://randomuser.me/api/portraits/women/32.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="Member">
-                            <img src="https://randomuser.me/api/portraits/men/75.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="Member">
-                            <img src="https://randomuser.me/api/portraits/women/63.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="Member">
+                            <img data-src="https://randomuser.me/api/portraits/women/32.jpg" class="w-10 h-10 rounded-full border-2 border-white lazy-image" alt="Member" loading="lazy">
+                            <img data-src="https://randomuser.me/api/portraits/men/75.jpg" class="w-10 h-10 rounded-full border-2 border-white lazy-image" alt="Member" loading="lazy">
+                            <img data-src="https://randomuser.me/api/portraits/women/63.jpg" class="w-10 h-10 rounded-full border-2 border-white lazy-image" alt="Member" loading="lazy">
                         </div>
                         <div>
                             <p class="font-medium">Več kot <span class="highlight-text">1500+</span> zadovoljnih članov</p>
@@ -2421,9 +2496,10 @@
                 </div>
                 <div class="lg:w-1/2" data-aos="fade-left" data-aos-delay="300">
                     <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10 shadow-2xl floating" style="max-width: 70%; margin: 0 auto;">
-                        <img src="https://i.imgur.com/vBKRRYp.jpeg" 
+                        <img data-src="https://i.imgur.com/vBKRRYp.jpeg" 
                              alt="Pravna pomoč in sindikalna zaščita za zaposlene v Sloveniji" 
-                             class="rounded-lg w-full h-auto object-cover">
+                             class="rounded-lg w-full h-auto object-cover lazy-image" 
+                             width="400" height="300" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -2759,7 +2835,7 @@
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="testimonial-card p-6 rounded-xl card-hover" data-aos="fade-up" data-aos-delay="100">
                     <div class="flex items-center mb-4">
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Maja K." class="w-12 h-12 rounded-full mr-4">
+                        <img data-src="https://randomuser.me/api/portraits/women/44.jpg" alt="Maja K." class="w-12 h-12 rounded-full mr-4 lazy-image" loading="lazy">
                         <div>
                             <h4 class="font-bold">Maja K.</h4>
                             <div class="flex text-accent text-sm">
@@ -2775,7 +2851,7 @@
                 </div>
                 <div class="testimonial-card p-6 rounded-xl card-hover" data-aos="fade-up" data-aos-delay="200">
                     <div class="flex items-center mb-4">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Peter L." class="w-12 h-12 rounded-full mr-4">
+                        <img data-src="https://randomuser.me/api/portraits/men/32.jpg" alt="Peter L." class="w-12 h-12 rounded-full mr-4 lazy-image" loading="lazy">
                         <div>
                             <h4 class="font-bold">Peter L.</h4>
                             <div class="flex text-accent text-sm">
@@ -2791,7 +2867,7 @@
                 </div>
                 <div class="testimonial-card p-6 rounded-xl card-hover" data-aos="fade-up" data-aos-delay="300">
                     <div class="flex items-center mb-4">
-                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Ana P." class="w-12 h-12 rounded-full mr-4">
+                        <img data-src="https://randomuser.me/api/portraits/women/68.jpg" alt="Ana P." class="w-12 h-12 rounded-full mr-4 lazy-image" loading="lazy">
                         <div>
                             <h4 class="font-bold">Ana P.</h4>
                             <div class="flex text-accent text-sm">
@@ -3072,7 +3148,7 @@
         <div class="container">
             <div class="grid md:grid-cols-3 gap-12">
                 <div data-aos="fade-up">
-                    <img src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip Pisarne pravne zaščite Sonce Slovenije" class="h-16 mb-6">
+                    <img data-src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip Pisarne pravne zaščite Sonce Slovenije" class="h-16 mb-6 lazy-image" loading="lazy">
                     <p class="mb-6 text-white/90">Pisarna pravne zaščite Sonce Slovenije je vaš partner pri uveljavljanju pravic na delovnem mestu.</p>
                     <div class="flex space-x-4">
                         <a href="https://www.facebook.com/PisarnaDelavskePravneZasciteSonceSlovenije" target="_blank" rel="noopener noreferrer" 
@@ -3217,4 +3293,132 @@
     (function() {
         emailjs.init("PLqXSPz6Kid72fbh_");
     })();
+
+    // Lazy Loading Implementation
+    class LazyImageLoader {
+        constructor() {
+            this.imageObserver = null;
+            this.images = [];
+            this.init();
+        }
+
+        init() {
+            this.images = document.querySelectorAll('.lazy-image');
+            
+            // Check if Intersection Observer is supported
+            if ('IntersectionObserver' in window) {
+                this.imageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            this.loadImage(entry.target);
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    // Start loading when image is 100px away from viewport
+                    rootMargin: '100px 0px',
+                    threshold: 0.01
+                });
+
+                this.images.forEach(img => this.imageObserver.observe(img));
+            } else {
+                // Fallback for older browsers
+                this.images.forEach(img => this.loadImage(img));
+            }
+        }
+
+        loadImage(img) {
+            const src = img.dataset.src;
+            if (!src) return;
+
+            // Prevent multiple loading attempts
+            if (img.dataset.loading === 'true') return;
+            img.dataset.loading = 'true';
+
+            // Create a new image to preload
+            const imageLoader = new Image();
+            
+            // Set loading timeout
+            const loadingTimeout = setTimeout(() => {
+                imageLoader.onload = null;
+                imageLoader.onerror = null;
+                this.handleImageError(img);
+            }, 10000); // 10 second timeout
+
+            imageLoader.onload = () => {
+                clearTimeout(loadingTimeout);
+                // Image loaded successfully
+                img.src = src;
+                img.classList.add('loaded');
+                img.removeAttribute('data-src');
+                img.removeAttribute('data-loading');
+                
+                // Trigger reflow for smooth transition
+                img.offsetHeight;
+            };
+
+            imageLoader.onerror = () => {
+                clearTimeout(loadingTimeout);
+                this.handleImageError(img);
+            };
+
+            // Support for high-DPI displays
+            if (window.devicePixelRatio > 1) {
+                imageLoader.crossOrigin = 'anonymous';
+            }
+
+            // Start loading the image
+            imageLoader.src = src;
+        }
+
+        handleImageError(img) {
+            img.classList.add('error');
+            img.setAttribute('aria-label', 'Image failed to load');
+            img.removeAttribute('data-src');
+            img.removeAttribute('data-loading');
+        }
+
+        // Method to manually trigger loading of all images (useful for debugging)
+        loadAllImages() {
+            this.images.forEach(img => {
+                if (img.dataset.src) {
+                    this.loadImage(img);
+                }
+            });
+        }
+
+        // Debug method to check lazy loading status
+        getStatus() {
+            const total = this.images.length;
+            const loaded = document.querySelectorAll('.lazy-image.loaded').length;
+            const errors = document.querySelectorAll('.lazy-image.error').length;
+            const pending = total - loaded - errors;
+            
+            console.log(`Lazy Loading Status:
+                Total images: ${total}
+                Loaded: ${loaded}
+                Errors: ${errors}
+                Pending: ${pending}`);
+                
+            return { total, loaded, errors, pending };
+        }
+    }
+
+    // Initialize lazy loading when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        window.lazyLoader = new LazyImageLoader();
+    });
+
+    // Initialize immediately if DOM is already loaded
+    if (document.readyState === 'loading') {
+        // DOM is still loading, wait for DOMContentLoaded
+    } else {
+        // DOM is already loaded
+        window.lazyLoader = new LazyImageLoader();
+    }
+
+    // Performance monitoring (optional)
+    if (window.performance && window.performance.mark) {
+        window.performance.mark('lazy-loading-initialized');
+    }
 </script>
