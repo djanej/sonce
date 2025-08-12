@@ -83,14 +83,4 @@ Disallow: /*?*test=
 
 # Sitemaps
 Sitemap: https://www.sonce.org/sitemap.xml
-Sitemap: https://www.sonce.org/sitemap-sl.xml
-
-# Host preference
-Host: https://www.sonce.org
-
-# Regional and language targeting
-X-Robots-Tag: region=SI
-X-Robots-Tag: language=sl
-
-# Cache control
-Cache-Control: max-age=3600 
+Sitemap: https://www.sonce.org/sitemap-sl.xml 
