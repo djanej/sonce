@@ -2,23 +2,27 @@
 <html lang="sl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <meta http-equiv="Accept-Encoding" content="gzip, deflate, br">
     
     <!-- Performance optimizations -->
     <link rel="preconnect" href="https://i.imgur.com" crossorigin>
     <link rel="preconnect" href="https://randomuser.me" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel="dns-prefetch" href="//i.imgur.com">
     <link rel="dns-prefetch" href="//randomuser.me">
+    <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="//unpkg.com">
     
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
     <link rel="manifest" href="/favicons/site.webmanifest" crossorigin="use-credentials">
-    <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#FF5F15">
-    <link rel="shortcut icon" href="/favicons/favicon.ico">
-    <meta name="apple-mobile-web-app-title" content="Sindikat Sonce Koper">
-    <meta name="application-name" content="Sindikat Sonce Koper">
+    <meta name="theme-color" content="#FF5F15">
     <meta name="msapplication-TileColor" content="#FF5F15">
     <meta name="msapplication-config" content="/favicons/browserconfig.xml">
     <meta name="theme-color" content="#FF5F15" media="(prefers-color-scheme: light)">
@@ -26,6 +30,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="format-detection" content="telephone=no">
+    <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#FF5F15">
+    <link rel="shortcut icon" href="/favicons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Sindikat Sonce Koper">
+    <meta name="application-name" content="Sindikat Sonce Koper">
     <link rel="apple-touch-startup-image" href="/favicons/apple-splash-2048-2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
     <link rel="apple-touch-startup-image" href="/favicons/apple-splash-1668-2388.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
     <link rel="apple-touch-startup-image" href="/favicons/apple-splash-1536-2048.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
@@ -373,7 +381,14 @@
     }
     </script>
 
-    <!-- Existing styles and scripts -->
+    <!-- Performance optimizations -->
+    <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="preload" href="https://unpkg.com/aos@2.3.1/dist/aos.css" as="style">
+    <link rel="preload" href="https://unpkg.com/aos@2.3.1/dist/aos.js" as="script">
+    <link rel="preload" href="https://i.imgur.com/slTvYkP.jpeg" as="image">
+    
+    <!-- Critical CSS and Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -395,7 +410,34 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
+        /* Critical CSS for performance */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        /* Preload critical fonts */
+        @font-face {
+            font-family: 'Poppins';
+            font-display: swap;
+        }
+        
+        /* Critical CSS optimizations */
+        .lazy-image {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        .lazy-image.loaded {
+            opacity: 1;
+        }
+        
+        /* Performance optimizations */
+        * {
+            box-sizing: border-box;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+        }
         
         /* Base styles */
         :root {
@@ -3690,155 +3732,191 @@
             emailjs.init("PLqXSPz6Kid72fbh_");
         })();
         
-        // Send email using EmailJS
-        emailjs.send('service_5m3risr', 'to0auoi', templateParams)
+        // EmailJS is ready for use
     </script>
-</body>
-```
-```html
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
-<script>
-    // Initialize AOS
-    AOS.init({
-        duration: 800,
-        once: true
-    });
-    
-    // Initialize EmailJS
-    (function() {
-        emailjs.init("PLqXSPz6Kid72fbh_");
-    })();
-
-    // Lazy Loading Implementation
-    class LazyImageLoader {
-        constructor() {
-            this.imageObserver = null;
-            this.images = [];
-            this.init();
-        }
-
-        init() {
-            this.images = document.querySelectorAll('.lazy-image');
-            
-            // Check if Intersection Observer is supported
-            if ('IntersectionObserver' in window) {
-                this.imageObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            this.loadImage(entry.target);
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, {
-                    // Start loading when image is 100px away from viewport
-                    rootMargin: '100px 0px',
-                    threshold: 0.01
-                });
-
-                this.images.forEach(img => this.imageObserver.observe(img));
-            } else {
-                // Fallback for older browsers
-                this.images.forEach(img => this.loadImage(img));
+    <!-- Performance optimized scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" async defer></script>
+    <script type="text/javascript">
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+        
+        // Lazy Loading Implementation
+        class LazyImageLoader {
+            constructor() {
+                this.imageObserver = null;
+                this.images = [];
+                this.init();
             }
-        }
 
-        loadImage(img) {
-            const src = img.dataset.src;
-            if (!src) return;
+            init() {
+                this.images = document.querySelectorAll('.lazy-image');
+                
+                // Check if Intersection Observer is supported
+                if ('IntersectionObserver' in window) {
+                    this.imageObserver = new IntersectionObserver((entries, observer) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                this.loadImage(entry.target);
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, {
+                        // Start loading when image is 100px away from viewport
+                        rootMargin: '100px 0px',
+                        threshold: 0.01
+                    });
 
-            // Prevent multiple loading attempts
-            if (img.dataset.loading === 'true') return;
-            img.dataset.loading = 'true';
+                    this.images.forEach(img => this.imageObserver.observe(img));
+                } else {
+                    // Fallback for older browsers
+                    this.images.forEach(img => this.loadImage(img));
+                }
+            }
 
-            // Create a new image to preload
-            const imageLoader = new Image();
-            
-            // Set loading timeout
-            const loadingTimeout = setTimeout(() => {
-                imageLoader.onload = null;
-                imageLoader.onerror = null;
-                this.handleImageError(img);
-            }, 10000); // 10 second timeout
+            loadImage(img) {
+                const src = img.dataset.src;
+                if (!src) return;
 
-            imageLoader.onload = () => {
-                clearTimeout(loadingTimeout);
-                // Image loaded successfully
-                img.src = src;
-                img.classList.add('loaded');
+                // Prevent multiple loading attempts
+                if (img.dataset.loading === 'true') return;
+                img.dataset.loading = 'true';
+
+                // Create a new image to preload
+                const imageLoader = new Image();
+                
+                // Set loading timeout
+                const loadingTimeout = setTimeout(() => {
+                    imageLoader.onload = null;
+                    imageLoader.onerror = null;
+                    this.handleImageError(img);
+                }, 10000); // 10 second timeout
+
+                imageLoader.onload = () => {
+                    clearTimeout(loadingTimeout);
+                    // Image loaded successfully
+                    img.src = src;
+                    img.classList.add('loaded');
+                    img.removeAttribute('data-src');
+                    img.removeAttribute('data-loading');
+                    
+                    // Trigger reflow for smooth transition
+                    img.offsetHeight;
+                };
+
+                imageLoader.onerror = () => {
+                    clearTimeout(loadingTimeout);
+                    this.handleImageError(img);
+                };
+
+                // Support for high-DPI displays
+                if (window.devicePixelRatio > 1) {
+                    imageLoader.crossOrigin = 'anonymous';
+                }
+
+                // Start loading the image
+                imageLoader.src = src;
+            }
+
+            handleImageError(img) {
+                img.classList.add('error');
+                img.setAttribute('aria-label', 'Image failed to load');
                 img.removeAttribute('data-src');
                 img.removeAttribute('data-loading');
-                
-                // Trigger reflow for smooth transition
-                img.offsetHeight;
-            };
-
-            imageLoader.onerror = () => {
-                clearTimeout(loadingTimeout);
-                this.handleImageError(img);
-            };
-
-            // Support for high-DPI displays
-            if (window.devicePixelRatio > 1) {
-                imageLoader.crossOrigin = 'anonymous';
             }
 
-            // Start loading the image
-            imageLoader.src = src;
+            // Method to manually trigger loading of all images (useful for debugging)
+            loadAllImages() {
+                this.images.forEach(img => {
+                    if (img.dataset.src) {
+                        this.loadImage(img);
+                    }
+                });
+            }
+
+            // Debug method to check lazy loading status
+            getStatus() {
+                const total = this.images.length;
+                const loaded = document.querySelectorAll('.lazy-image.loaded').length;
+                const errors = document.querySelectorAll('.lazy-image.error').length;
+                const pending = total - loaded - errors;
+                
+                console.log(`Lazy Loading Status:
+                    Total images: ${total}
+                    Loaded: ${loaded}
+                    Errors: ${errors}
+                    Pending: ${pending}`);
+                    
+                return { total, loaded, errors, pending };
+            }
         }
 
-        handleImageError(img) {
-            img.classList.add('error');
-            img.setAttribute('aria-label', 'Image failed to load');
-            img.removeAttribute('data-src');
-            img.removeAttribute('data-loading');
+        // Initialize lazy loading when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            window.lazyLoader = new LazyImageLoader();
+        });
+
+        // Initialize immediately if DOM is already loaded
+        if (document.readyState === 'loading') {
+            // DOM is still loading, wait for DOMContentLoaded
+        } else {
+            // DOM is already loaded
+            window.lazyLoader = new LazyImageLoader();
         }
 
-        // Method to manually trigger loading of all images (useful for debugging)
-        loadAllImages() {
-            this.images.forEach(img => {
-                if (img.dataset.src) {
-                    this.loadImage(img);
+        // Performance monitoring (optional)
+        if (window.performance && window.performance.mark) {
+            window.performance.mark('lazy-loading-initialized');
+        }
+        
+        // Performance monitoring and optimization
+        if (window.performance && window.performance.getEntriesByType) {
+            // Monitor Core Web Vitals
+            const observer = new PerformanceObserver((list) => {
+                for (const entry of list.getEntries()) {
+                    if (entry.entryType === 'largest-contentful-paint') {
+                        console.log('LCP:', entry.startTime);
+                    }
+                    if (entry.entryType === 'first-input') {
+                        console.log('FID:', entry.processingStart - entry.startTime);
+                    }
                 }
             });
-        }
-
-        // Debug method to check lazy loading status
-        getStatus() {
-            const total = this.images.length;
-            const loaded = document.querySelectorAll('.lazy-image.loaded').length;
-            const errors = document.querySelectorAll('.lazy-image.error').length;
-            const pending = total - loaded - errors;
             
-            console.log(`Lazy Loading Status:
-                Total images: ${total}
-                Loaded: ${loaded}
-                Errors: ${errors}
-                Pending: ${pending}`);
-                
-            return { total, loaded, errors, pending };
+            try {
+                observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input'] });
+            } catch (e) {
+                console.log('Performance monitoring not supported');
+            }
         }
-    }
-
-    // Initialize lazy loading when DOM is ready
-    document.addEventListener('DOMContentLoaded', () => {
-        window.lazyLoader = new LazyImageLoader();
-    });
-
-    // Initialize immediately if DOM is already loaded
-    if (document.readyState === 'loading') {
-        // DOM is still loading, wait for DOMContentLoaded
-    } else {
-        // DOM is already loaded
-        window.lazyLoader = new LazyImageLoader();
-    }
-
-    // Performance monitoring (optional)
-    if (window.performance && window.performance.mark) {
-        window.performance.mark('lazy-loading-initialized');
-    }
-</script>
+        
+        // Service Worker Registration for performance
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+        
+        // Performance optimization: Preload critical images
+        const criticalImages = [
+            'https://i.imgur.com/slTvYkP.jpeg'
+        ];
+        
+        criticalImages.forEach(src => {
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.as = 'image';
+            link.href = src;
+            document.head.appendChild(link);
+        });
+    </script>
+</body>
+</html>
