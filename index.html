@@ -2677,6 +2677,22 @@
                 margin-bottom: 0.5rem;
                 font-size: 0.875rem;
             }
+            /* Extra mobile enhancements */
+            @media (max-width: 768px) {
+                /* Improve tap comfort for footer links */
+                footer a { padding: 0.5rem 0; display: inline-flex; align-items: center; }
+
+                /* Make hero image card full-width on small screens */
+                .hero-image-card { max-width: 100% !important; margin: 0 auto; }
+
+                /* Sticky mobile CTA bar */
+                .mobile-cta-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; padding-bottom: var(--safe-area-inset-bottom); background: rgba(255,255,255,0.96); backdrop-filter: blur(10px); border-top: 1px solid rgba(0,0,0,0.08); }
+                .mobile-cta-bar .container { padding: 0.5rem 1rem; }
+                .mobile-cta-bar .cta-btn { flex: 1; min-height: 48px; font-weight: 700; border-radius: 9999px; }
+
+                /* Prevent content obscured by CTA */
+                body { padding-bottom: 84px; }
+            }
         }
     </style>
 
@@ -3173,6 +3189,58 @@
             window.location.href = 'mailto:' + email;
         }
     </script>
+
+    <script>
+        // Minimal lazy-loading for .lazy-image elements
+        (function() {
+            function loadImage(img) {
+                const src = img.getAttribute('data-src');
+                if (!src) return;
+                img.src = src;
+                img.addEventListener('load', function onLoad() {
+                    img.classList.add('loaded');
+                    img.removeEventListener('load', onLoad);
+                });
+                img.addEventListener('error', function onErr() {
+                    img.classList.add('error');
+                    img.removeEventListener('error', onErr);
+                });
+                img.removeAttribute('data-src');
+            }
+
+            function initLazy() {
+                const images = document.querySelectorAll('img.lazy-image[data-src]');
+                if ('IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                loadImage(entry.target);
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, { rootMargin: '150px 0px', threshold: 0.01 });
+                    images.forEach(img => observer.observe(img));
+                } else {
+                    images.forEach(loadImage);
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initLazy);
+            } else {
+                initLazy();
+            }
+        })();
+
+        // Service Worker Registration (kept from original)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').catch(function(err){
+                    console.log('SW registration failed:', err);
+                });
+            });
+        }
+    </script>
 </head>
 <body class="bg-white text-gray-800">
     <!-- Noscript fallback for lazy loading -->
@@ -3223,11 +3291,11 @@
                 </button>
             </div>
             <nav class="flex flex-col space-y-4 py-8">
-                <a href="#home" class="text-lg font-medium text-gray-800 hover:text-primary">Domov</a>
-                <a href="#about" class="text-lg font-medium text-gray-800 hover:text-primary">O nas</a>
-                <a href="#services" class="text-lg font-medium text-gray-800 hover:text-primary">Storitve</a>
-                <a href="#contact" class="text-lg font-medium text-gray-800 hover:text-primary">Kontakt</a>
-                <a href="#join" class="btn-primary text-white font-bold py-3 px-6 rounded-full text-center mt-4">Pridruži se <i class="fas fa-arrow-right ml-2"></i></a>
+                <a href="#home" class="mobile-nav-item text-lg font-medium text-gray-800 hover:text-primary">Domov</a>
+                <a href="#about" class="mobile-nav-item text-lg font-medium text-gray-800 hover:text-primary">O nas</a>
+                <a href="#services" class="mobile-nav-item text-lg font-medium text-gray-800 hover:text-primary">Storitve</a>
+                <a href="#contact" class="mobile-nav-item text-lg font-medium text-gray-800 hover:text-primary">Kontakt</a>
+                <a href="#join" class="mobile-nav-item btn-primary text-white font-bold py-3 px-6 rounded-full text-center mt-4">Pridruži se <i class="fas fa-arrow-right ml-2"></i></a>
             </nav>
         </div>
     </div>
@@ -3273,7 +3341,7 @@
                     </div>
                 </div>
                 <div class="lg:w-1/2" data-aos="fade-left" data-aos-delay="300">
-                    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10 shadow-2xl floating" style="max-width: 70%; margin: 0 auto;">
+                        <div class="hero-image-card bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10 shadow-2xl floating" style="max-width: 70%; margin: 0 auto;">
                         <img data-src="https://i.imgur.com/vBKRRYp.jpeg" 
                              alt="Pravna pomoč in sindikalna zaščita za zaposlene v Sloveniji" 
                              class="rounded-lg w-full h-auto object-cover lazy-image" 
@@ -4040,6 +4108,16 @@
         </div>
     </footer>
 
+    <!-- Mobile Sticky CTA Bar (mobile-only) -->
+    <div class="mobile-cta-bar lg:hidden">
+        <div class="container">
+            <div class="flex items-center space-x-3">
+                <a href="#join" class="cta-btn btn-primary text-white px-6">Pridruži se</a>
+                <a href="#contact" class="cta-btn bg-white text-primary font-bold px-6 border border-primary">Kontakt</a>
+            </div>
+        </div>
+    </div>
+
     <!-- Add EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
@@ -4053,186 +4131,303 @@
     <!-- Performance optimized scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" async defer></script>
     <script type="text/javascript">
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            once: true
-        });
-        
-        // Lazy Loading Implementation
-        class LazyImageLoader {
-            constructor() {
-                this.imageObserver = null;
-                this.images = [];
-                this.init();
-            }
-
-            init() {
-                this.images = document.querySelectorAll('.lazy-image');
-                
-                // Check if Intersection Observer is supported
-                if ('IntersectionObserver' in window) {
-                    this.imageObserver = new IntersectionObserver((entries, observer) => {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting) {
-                                this.loadImage(entry.target);
-                                observer.unobserve(entry.target);
-                            }
-                        });
-                    }, {
-                        // Start loading when image is 100px away from viewport
-                        rootMargin: '100px 0px',
-                        threshold: 0.01
+        // Initialize Animation on Scroll with safer defaults
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth > 768) {
+                if (window.AOS) {
+                    AOS.init({
+                        duration: 800,
+                        once: true,
+                        offset: 100,
                     });
-
-                    this.images.forEach(img => this.imageObserver.observe(img));
-                } else {
-                    // Fallback for older browsers
-                    this.images.forEach(img => this.loadImage(img));
                 }
             }
-
-            loadImage(img) {
-                const src = img.dataset.src;
-                if (!src) return;
-
-                // Prevent multiple loading attempts
-                if (img.dataset.loading === 'true') return;
-                img.dataset.loading = 'true';
-
-                // Create a new image to preload
-                const imageLoader = new Image();
+        });
+    </script>
+    <script>
+        // FAQ functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
+                const chevron = item.querySelector('.faq-chevron');
                 
-                // Set loading timeout
-                const loadingTimeout = setTimeout(() => {
-                    imageLoader.onload = null;
-                    imageLoader.onerror = null;
-                    this.handleImageError(img);
-                }, 10000); // 10 second timeout
-
-                imageLoader.onload = () => {
-                    clearTimeout(loadingTimeout);
-                    // Image loaded successfully
-                    img.src = src;
-                    img.classList.add('loaded');
-                    img.removeAttribute('data-src');
-                    img.removeAttribute('data-loading');
+                // Hide all answers by default
+                answer.style.maxHeight = '0';
+                answer.style.overflow = 'hidden';
+                answer.style.transition = 'max-height 0.3s ease-in-out, opacity 0.3s ease-in-out';
+                answer.style.opacity = '0';
+                
+                question.addEventListener('click', () => {
+                    // Close all other FAQ items
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            const otherAnswer = otherItem.querySelector('.faq-answer');
+                            const otherChevron = otherItem.querySelector('.faq-chevron');
+                            otherAnswer.style.maxHeight = '0';
+                            otherAnswer.style.opacity = '0';
+                            otherChevron.classList.remove('transform', 'rotate-180');
+                            otherItem.classList.remove('bg-gray-50');
+                        }
+                    });
                     
-                    // Trigger reflow for smooth transition
-                    img.offsetHeight;
-                };
-
-                imageLoader.onerror = () => {
-                    clearTimeout(loadingTimeout);
-                    this.handleImageError(img);
-                };
-
-                // Support for high-DPI displays
-                if (window.devicePixelRatio > 1) {
-                    imageLoader.crossOrigin = 'anonymous';
-                }
-
-                // Start loading the image
-                imageLoader.src = src;
-            }
-
-            handleImageError(img) {
-                img.classList.add('error');
-                img.setAttribute('aria-label', 'Image failed to load');
-                img.removeAttribute('data-src');
-                img.removeAttribute('data-loading');
-            }
-
-            // Method to manually trigger loading of all images (useful for debugging)
-            loadAllImages() {
-                this.images.forEach(img => {
-                    if (img.dataset.src) {
-                        this.loadImage(img);
+                    // Toggle current item
+                    const isOpen = answer.style.maxHeight !== '0px';
+                    
+                    if (isOpen) {
+                        answer.style.maxHeight = '0';
+                        answer.style.opacity = '0';
+                        chevron.classList.remove('transform', 'rotate-180');
+                        item.classList.remove('bg-gray-50');
+                    } else {
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                        answer.style.opacity = '1';
+                        chevron.classList.add('transform', 'rotate-180');
+                        item.classList.add('bg-gray-50');
                     }
                 });
-            }
-
-            // Debug method to check lazy loading status
-            getStatus() {
-                const total = this.images.length;
-                const loaded = document.querySelectorAll('.lazy-image.loaded').length;
-                const errors = document.querySelectorAll('.lazy-image.error').length;
-                const pending = total - loaded - errors;
-                
-                console.log(`Lazy Loading Status:
-                    Total images: ${total}
-                    Loaded: ${loaded}
-                    Errors: ${errors}
-                    Pending: ${pending}`);
-                    
-                return { total, loaded, errors, pending };
-            }
-        }
-
-        // Initialize lazy loading when DOM is ready
-        document.addEventListener('DOMContentLoaded', () => {
-            window.lazyLoader = new LazyImageLoader();
+            });
         });
 
-        // Initialize immediately if DOM is already loaded
-        if (document.readyState === 'loading') {
-            // DOM is still loading, wait for DOMContentLoaded
-        } else {
-            // DOM is already loaded
-            window.lazyLoader = new LazyImageLoader();
-        }
+        // Global variables and initialization
+        const website = {
+            // DOM elements
+            elements: {
+                mobileMenu: null,
+                menuToggle: null,
+                mobileNavItems: null,
+                sections: null,
+                contactForm: null,
+                faqSection: null,
+                heroSection: null
+            },
 
-        // Performance monitoring (optional)
-        if (window.performance && window.performance.mark) {
-            window.performance.mark('lazy-loading-initialized');
-        }
-        
-        // Performance monitoring and optimization
-        if (window.performance && window.performance.getEntriesByType) {
-            // Monitor Core Web Vitals
-            const observer = new PerformanceObserver((list) => {
-                for (const entry of list.getEntries()) {
-                    if (entry.entryType === 'largest-contentful-paint') {
-                        console.log('LCP:', entry.startTime);
+            // State management
+            state: {
+                isMenuOpen: false,
+                currentSection: null,
+                isScrolling: false
+            },
+
+            // Initialize website
+            init: function() {
+                this.cacheElements();
+                this.bindEvents();
+                this.checkErrors();
+                this.monitorPerformance();
+            },
+
+            // Cache DOM elements
+            cacheElements: function() {
+                this.elements.mobileMenu = document.getElementById('mobileMenu');
+                this.elements.menuToggle = document.getElementById('menuToggle');
+                this.elements.mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+                this.elements.sections = document.querySelectorAll('section');
+                this.elements.contactForm = document.querySelector('.contact-form');
+                this.elements.faqSection = document.querySelector('.faq-section');
+                this.elements.heroSection = document.querySelector('.hero-gradient');
+            },
+
+            // Bind event listeners
+            bindEvents: function() {
+                // Menu toggle
+                if (this.elements.menuToggle) {
+                    this.elements.menuToggle.addEventListener('click', () => this.toggleMenu());
+                }
+
+                // Mobile navigation
+                if (this.elements.mobileNavItems) {
+                    this.elements.mobileNavItems.forEach(item => {
+                        item.addEventListener('click', () => this.closeMenu());
+                    });
+                }
+
+                // Mobile menu close button
+                const menuClose = document.getElementById('menuClose');
+                if (menuClose) {
+                    menuClose.addEventListener('click', () => this.closeMenu());
+                }
+
+                // Close menu when clicking outside
+                if (this.elements.mobileMenu) {
+                    this.elements.mobileMenu.addEventListener('click', (e) => {
+                        if (e.target === this.elements.mobileMenu) {
+                            this.closeMenu();
+                        }
+                    });
+                }
+
+                // Handle window resize
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth > 768 && this.state.isMenuOpen) {
+                        this.closeMenu();
                     }
-                    if (entry.entryType === 'first-input') {
-                        console.log('FID:', entry.processingStart - entry.startTime);
+                });
+
+                // Form submission
+                if (this.elements.contactForm) {
+                    this.elements.contactForm.addEventListener('submit', (e) => this.handleFormSubmit(e));
+                }
+
+                // FAQ section
+                if (this.elements.faqSection) {
+                    this.elements.faqSection.addEventListener('click', (e) => this.handleFaqClick(e));
+                }
+
+                // Scroll handling
+                window.addEventListener('scroll', () => this.handleScroll());
+            },
+
+            // Enhanced Menu functions for mobile
+            toggleMenu: function() {
+                this.state.isMenuOpen = !this.state.isMenuOpen;
+                if (this.elements.mobileMenu) {
+                    if (this.state.isMenuOpen) {
+                        this.elements.mobileMenu.classList.add('open');
+                        this.elements.mobileMenu.style.transform = 'translateX(0)';
+                        document.body.style.overflow = 'hidden'; // Prevent background scroll
+                        
+                        // Update menu toggle icon
+                        const menuToggle = document.getElementById('menuToggle');
+                        if (menuToggle) {
+                            const icon = menuToggle.querySelector('i');
+                            if (icon) {
+                                icon.className = 'fas fa-times text-2xl';
+                            }
+                        }
+                    } else {
+                        this.closeMenu();
                     }
                 }
-            });
-            
-            try {
-                observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input'] });
-            } catch (e) {
-                console.log('Performance monitoring not supported');
-            }
-        }
-        
-        // Service Worker Registration for performance
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then((registration) => {
-                        console.log('SW registered: ', registration);
-                    })
-                    .catch((registrationError) => {
-                        console.log('SW registration failed: ', registrationError);
+            },
+
+            closeMenu: function() {
+                this.state.isMenuOpen = false;
+                if (this.elements.mobileMenu) {
+                    this.elements.mobileMenu.classList.remove('open');
+                    this.elements.mobileMenu.style.transform = 'translateX(-100%)';
+                    document.body.style.overflow = ''; // Restore background scroll
+                    
+                    // Reset menu toggle icon
+                    const menuToggle = document.getElementById('menuToggle');
+                    if (menuToggle) {
+                        const icon = menuToggle.querySelector('i');
+                        if (icon) {
+                            icon.className = 'fas fa-bars text-2xl';
+                        }
+                    }
+                }
+            },
+
+            // Form handling
+            handleFormSubmit: function(e) {
+                e.preventDefault();
+                if (!this.validateForm()) {
+                    return;
+                }
+                // Form submission logic
+            },
+
+            validateForm: function() {
+                const form = this.elements.contactForm;
+                if (!form) return false;
+
+                const inputs = form.querySelectorAll('input, textarea');
+                let isValid = true;
+
+                inputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        isValid = false;
+                        input.classList.add('error');
+                    } else {
+                        input.classList.remove('error');
+                    }
+                });
+
+                return isValid;
+            },
+
+            // FAQ handling
+            handleFaqClick: function(e) {
+                const question = e.target.closest('.faq-question');
+                if (!question) return;
+
+                const answer = question.nextElementSibling;
+                if (!answer) return;
+
+                const isOpen = answer.style.maxHeight;
+                answer.style.maxHeight = isOpen ? null : answer.scrollHeight + 'px';
+                question.classList.toggle('active');
+            },
+
+            // Scroll handling
+            handleScroll: function() {
+                if (this.state.isScrolling) return;
+                this.state.isScrolling = true;
+
+                requestAnimationFrame(() => {
+                    this.updateActiveSection();
+                    this.state.isScrolling = false;
+                });
+            },
+
+            updateActiveSection: function() {
+                const scrollPosition = window.scrollY + 100;
+
+                this.elements.sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.offsetHeight;
+
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                        this.state.currentSection = section.id;
+                        this.updateNavigation();
+                    }
+                });
+            },
+
+            updateNavigation: function() {
+                this.elements.mobileNavItems.forEach(item => {
+                    item.classList.toggle('active', item.getAttribute('href') === `#${this.state.currentSection}`);
+                });
+            },
+
+            // Error checking
+            checkErrors: function() {
+                // Check critical elements
+                Object.entries(this.elements).forEach(([key, element]) => {
+                    if (!element) {
+                        console.error(`Critical element not found: ${key}`);
+                    }
+                });
+
+                // Check for console errors
+                const originalConsoleError = console.error;
+                console.error = function() {
+                    originalConsoleError.apply(console, arguments);
+                    // Log errors to server or display to user
+                };
+
+                // Check for JavaScript errors
+                window.onerror = function(msg, url, line) {
+                    console.error(`Error: ${msg}\nURL: ${url}\nLine: ${line}`);
+                };
+            },
+
+            // Performance monitoring
+            monitorPerformance: function() {
+                if ('performance' in window) {
+                    const paintEntries = performance.getEntriesByType('paint');
+                    paintEntries.forEach(entry => {
+                        console.log(`${entry.name}: ${entry.startTime}`);
                     });
-            });
-        }
-        
-        // Performance optimization: Preload critical images
-        const criticalImages = [
-            'https://i.imgur.com/slTvYkP.jpeg'
-        ];
-        
-        criticalImages.forEach(src => {
-            const link = document.createElement('link');
-            link.rel = 'preload';
-            link.as = 'image';
-            link.href = src;
-            document.head.appendChild(link);
-        });
+                }
+            }
+        };
+
+        // Initialize website
+        document.addEventListener('DOMContentLoaded', () => website.init());
     </script>
 </body>
 </html>
