@@ -2580,6 +2580,32 @@
                 body { padding-bottom: 84px; }
             }
         }
+
+        /* Tablet optimizations (769px–1023px) */
+        @media (min-width: 769px) and (max-width: 1023px) {
+            /* General spacing and container */
+            .container { padding-left: 1.25rem; padding-right: 1.25rem; }
+            section { padding-top: 4rem; padding-bottom: 4rem; }
+            header .container { padding-left: 1.25rem; padding-right: 1.25rem; }
+
+            /* Hero adjustments */
+            .hero-gradient { padding: 6rem 1.5rem 4rem; text-align: center; }
+            .hero-gradient h1,
+            .hero-gradient h2 { font-size: clamp(2rem, 4vw, 2.75rem); line-height: 1.25; }
+            .hero-gradient p { font-size: 1.125rem; }
+            .hero-gradient .flex.lg\:flex-row { flex-direction: column; gap: 2rem; }
+            .lg\:w-1\/2 { width: 100% !important; max-width: 100% !important; }
+            .hero-image-card { max-width: 80% !important; margin-left: auto; margin-right: auto; }
+
+            /* Grids: favor two columns on tablet for readability */
+            .grid.grid-cols-2.md\:grid-cols-3 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+            .grid.md\:grid-cols-3 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+            /* Join section: use two columns on tablet */
+            .grid.lg\:grid-cols-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; }
+
+            /* Buttons on tablet should not be full-width by default */
+            .btn-primary { width: auto; min-height: 48px; padding-left: 1.25rem; padding-right: 1.25rem; }
+        }
     </style>
 
     <script>
