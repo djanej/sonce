@@ -50,14 +50,13 @@
     <meta property="og:site_name" content="Sindikat Sonce Koper">
 
     <!-- Language Alternates -->
-    <link rel="alternate" href="https://sonce.org" hreflang="x-default" />
-    <link rel="alternate" href="https://sonce.org" hreflang="sl" />
-    <link rel="alternate" href="https://sonce.org/sl" hreflang="sl-SI" />
-    <link rel="canonical" href="https://sonce.org/" />
+    <link rel="alternate" href="https://www.sonce.org/" hreflang="x-default" />
+    <link rel="alternate" href="https://www.sonce.org/" hreflang="sl" />
+    <link rel="canonical" href="https://www.sonce.org/" />
     
     <!-- Social Media Meta Tags -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://sonce.org/">
+    <meta property="og:url" content="https://www.sonce.org/">
     <meta property="og:title" content="Sindikat Sonce Koper | Brezplačna pravna pomoč in zaščita delavcev">
     <meta property="og:description" content="Sindikat Sonce Koper nudi brezplačno pravno pomoč in strokovno svetovanje. Izkušeni pravniki vam pomagajo pri delovnih sporih, odpovedih in mobingu.">
     <meta property="og:image" content="https://i.imgur.com/slTvYkP.jpeg">
@@ -375,6 +374,7 @@
     </script>
 
     <!-- Existing styles and scripts -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -392,7 +392,6 @@
             }
         }
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
@@ -2027,7 +2026,7 @@
                 this.elements.menuToggle = document.getElementById('menuToggle');
                 this.elements.mobileNavItems = document.querySelectorAll('.mobile-nav-item');
                 this.elements.sections = document.querySelectorAll('section');
-                this.elements.contactForm = document.getElementById('contactForm');
+                this.elements.contactForm = document.querySelector('.contact-form');
                 this.elements.faqSection = document.querySelector('.faq-section');
                 this.elements.heroSection = document.querySelector('.hero-gradient');
             },
@@ -2079,53 +2078,9 @@
             handleFormSubmit: function(e) {
                 e.preventDefault();
                 if (!this.validateForm()) {
-                    return false;
+                    return;
                 }
-
-                const formElement = this.elements.contactForm;
-                const submitButton = document.getElementById('submitButton');
-                const buttonText = document.getElementById('buttonText');
-                const buttonSpinner = document.getElementById('buttonSpinner');
-                const successBox = document.getElementById('formSuccess');
-                const errorBox = document.getElementById('formError');
-
-                if (errorBox) errorBox.classList.add('hidden');
-
-                if (submitButton && buttonText && buttonSpinner) {
-                    submitButton.disabled = true;
-                    buttonText.textContent = 'Pošiljanje…';
-                    buttonSpinner.classList.remove('hidden');
-                }
-
-                const name = document.getElementById('name')?.value?.trim() || '';
-                const email = document.getElementById('email')?.value?.trim() || '';
-                const phone = document.getElementById('phone')?.value?.trim() || '';
-                const subject = document.getElementById('subject')?.value || 'Sporočilo s spletne strani';
-                const message = document.getElementById('message')?.value?.trim() || '';
-
-                // Compose mailto fallback
-                const mailtoSubject = encodeURIComponent(`[Spletna stran] ${subject}`);
-                const mailtoBody = encodeURIComponent(
-                    `Ime: ${name}\nE-pošta: ${email}\nTelefon: ${phone}\n\nSporočilo:\n${message}`
-                );
-
-                try {
-                    window.location.href = `mailto:info@pisarnasonce.si?subject=${mailtoSubject}&body=${mailtoBody}`;
-
-                    if (successBox) successBox.classList.remove('hidden');
-                    formElement?.reset();
-                } catch (err) {
-                    if (errorBox) errorBox.classList.remove('hidden');
-                    console.error('Form submission failed:', err);
-                } finally {
-                    if (submitButton && buttonText && buttonSpinner) {
-                        submitButton.disabled = false;
-                        buttonText.textContent = 'Pošlji sporočilo';
-                        buttonSpinner.classList.add('hidden');
-                    }
-                }
-
-                return false;
+                // Form submission logic
             },
 
             validateForm: function() {
@@ -2517,15 +2472,9 @@
                     
                     <div class="mt-12 flex items-center space-x-6" data-aos="fade-up" data-aos-delay="400">
                         <div class="flex -space-x-2">
-<<<<<<< HEAD
-                            <img src="https://randomuser.me/api/portraits/women/32.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="Member" loading="lazy" decoding="async">
-                            <img src="https://randomuser.me/api/portraits/men/75.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="Member" loading="lazy" decoding="async">
-                            <img src="https://randomuser.me/api/portraits/women/63.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="Member" loading="lazy" decoding="async">
-=======
                             <img data-src="https://randomuser.me/api/portraits/women/32.jpg" class="w-10 h-10 rounded-full border-2 border-white lazy-image" alt="Member" loading="lazy">
                             <img data-src="https://randomuser.me/api/portraits/men/75.jpg" class="w-10 h-10 rounded-full border-2 border-white lazy-image" alt="Member" loading="lazy">
                             <img data-src="https://randomuser.me/api/portraits/women/63.jpg" class="w-10 h-10 rounded-full border-2 border-white lazy-image" alt="Member" loading="lazy">
->>>>>>> origin/main
                         </div>
                         <div>
                             <p class="font-medium">Več kot <span class="highlight-text">1500+</span> zadovoljnih članov</p>
@@ -2542,16 +2491,10 @@
                 </div>
                 <div class="lg:w-1/2" data-aos="fade-left" data-aos-delay="300">
                     <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10 shadow-2xl floating" style="max-width: 70%; margin: 0 auto;">
-<<<<<<< HEAD
-                                                 <img src="https://i.imgur.com/vBKRRYp.jpeg" 
-                             alt="Pravna pomoč in sindikalna zaščita za zaposlene v Sloveniji" 
-                             class="rounded-lg w-full h-auto object-cover" loading="lazy" decoding="async">
-=======
                         <img data-src="https://i.imgur.com/vBKRRYp.jpeg" 
                              alt="Pravna pomoč in sindikalna zaščita za zaposlene v Sloveniji" 
                              class="rounded-lg w-full h-auto object-cover lazy-image" 
                              width="400" height="300" loading="lazy">
->>>>>>> origin/main
                     </div>
                 </div>
             </div>
@@ -2857,7 +2800,7 @@
                                 <div>
                                     <h4 class="font-bold text-lg text-gray-800 mb-2">Brezplačna pravna pomoč</h4>
                                     <p class="text-gray-600">V skladu s prospektom sindikata</p>
-                                    <a href="prospekt-sindikata-sonce-slovenije.pdf" class="inline-block mt-2 text-primary hover:underline text-sm font-medium">
+                                    <a href="prospekt sindikata sonce slovenije.pdf" class="inline-block mt-2 text-primary hover:underline text-sm font-medium">
                                         Preglej prospekt <i class="fas fa-external-link-alt ml-1"></i>
                                     </a>
                                 </div>
@@ -2887,11 +2830,7 @@
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="testimonial-card p-6 rounded-xl card-hover" data-aos="fade-up" data-aos-delay="100">
                     <div class="flex items-center mb-4">
-<<<<<<< HEAD
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Maja K." class="w-12 h-12 rounded-full mr-4" loading="lazy" decoding="async">
-=======
                         <img data-src="https://randomuser.me/api/portraits/women/44.jpg" alt="Maja K." class="w-12 h-12 rounded-full mr-4 lazy-image" loading="lazy">
->>>>>>> origin/main
                         <div>
                             <h4 class="font-bold">Maja K.</h4>
                             <div class="flex text-accent text-sm">
@@ -2907,11 +2846,7 @@
                 </div>
                 <div class="testimonial-card p-6 rounded-xl card-hover" data-aos="fade-up" data-aos-delay="200">
                     <div class="flex items-center mb-4">
-<<<<<<< HEAD
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Peter L." class="w-12 h-12 rounded-full mr-4" loading="lazy" decoding="async">
-=======
                         <img data-src="https://randomuser.me/api/portraits/men/32.jpg" alt="Peter L." class="w-12 h-12 rounded-full mr-4 lazy-image" loading="lazy">
->>>>>>> origin/main
                         <div>
                             <h4 class="font-bold">Peter L.</h4>
                             <div class="flex text-accent text-sm">
@@ -2927,11 +2862,7 @@
                 </div>
                 <div class="testimonial-card p-6 rounded-xl card-hover" data-aos="fade-up" data-aos-delay="300">
                     <div class="flex items-center mb-4">
-<<<<<<< HEAD
-                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Ana P." class="w-12 h-12 rounded-full mr-4" loading="lazy" decoding="async">
-=======
                         <img data-src="https://randomuser.me/api/portraits/women/68.jpg" alt="Ana P." class="w-12 h-12 rounded-full mr-4 lazy-image" loading="lazy">
->>>>>>> origin/main
                         <div>
                             <h4 class="font-bold">Ana P.</h4>
                             <div class="flex text-accent text-sm">
@@ -2972,7 +2903,7 @@
                                 <h4 class="font-bold text-xl text-gray-800 mb-2">Brezplačna pravna pomoč</h4>
                                 <div class="flex items-center">
                                     <p class="text-gray-600">V skladu s prospektom sindikata</p>
-                                    <a href="prospekt-sindikata-sonce-slovenije.pdf" class="ml-2 bg-primary/10 hover:bg-primary/20 text-primary font-medium py-1 px-3 rounded-lg transition-colors">
+                                    <a href="prospekt sindikata sonce slovenije.pdf" class="ml-2 bg-primary/10 hover:bg-primary/20 text-primary font-medium py-1 px-3 rounded-lg transition-colors">
                                         prospekt
                                     </a>
                                 </div>
@@ -3061,7 +2992,7 @@
                         <i class="fas fa-chevron-down text-primary faq-chevron transition-transform duration-300"></i>
                     </button>
                     <div class="faq-answer mt-4 text-gray-700 leading-relaxed">
-                        <p>Kot član sindikata imate pravico do brezplačne pravne pomoči skladno s prospektom sindikata <a href="prospekt-sindikata-sonce-slovenije.pdf" class="ml-2 bg-primary/10 hover:bg-primary/20 text-primary font-medium py-1 px-3 rounded-lg transition-colors">prospekt</a>, zastopanja pri delodajalcu, zaščite pred mobingom, pomoči pri kolektivnih pogodb in številnih drugih ugodnosti. Zagotavljamo vam tudi solidarnostno pomoč in izobraževanje o delavskih pravicah.</p>
+                        <p>Kot član sindikata imate pravico do brezplačne pravne pomoči skladno s prospektom sindikata <a href="prospekt sindikata sonce slovenije.pdf" class="ml-2 bg-primary/10 hover:bg-primary/20 text-primary font-medium py-1 px-3 rounded-lg transition-colors">prospekt</a>, zastopanja pri delodajalcu, zaščite pred mobingom, pomoči pri kolektivnih pogodb in številnih drugih ugodnosti. Zagotavljamo vam tudi solidarnostno pomoč in izobraževanje o delavskih pravicah.</p>
                     </div>
                 </div>
                 
@@ -3138,7 +3069,7 @@
                     <div class="bg-white p-10 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
                         <h3 class="text-2xl font-bold mb-8 text-primary">Pošljite nam sporočilo</h3>
                         
-                        <form id="contactForm" class="contact-form space-y-6">
+                        <form id="contactForm" class="space-y-6" onsubmit="return handleFormSubmit(event)">
                             <!-- Success Message (initially hidden) -->
                             <div id="formSuccess" class="hidden p-4 mb-6 text-green-700 bg-green-100 rounded-lg">
                                 Hvala za vaše sporočilo! Odgovorili vam bomo v najkrajšem možnem času.
@@ -3287,28 +3218,28 @@
                     <p class="text-white/80 mb-4">Delite našo stran:</p>
                     <div class="flex space-x-4">
                         <!-- Facebook -->
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://sonce.org" 
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.sonce.org" 
                            target="_blank" rel="noopener noreferrer"
                            class="text-white/80 hover:text-white transition-colors duration-300 group">
                             <i class="fab fa-facebook-f text-xl group-hover:scale-110 transform transition-transform duration-300"></i>
                         </a>
                         
                         <!-- LinkedIn -->
-                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://sonce.org&title=Pravna pomoč za delavce&summary=Brezplačna pravna pomoč in zaščita delavskih pravic" 
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.sonce.org&title=Pravna pomoč za delavce&summary=Brezplačna pravna pomoč in zaščita delavskih pravic" 
                            target="_blank" rel="noopener noreferrer"
                            class="text-white/80 hover:text-white transition-colors duration-300 group">
                             <i class="fab fa-linkedin-in text-xl group-hover:scale-110 transform transition-transform duration-300"></i>
                         </a>
                         
                         <!-- WhatsApp -->
-                        <a href="whatsapp://send?text=Potrebujete pravno pomoč? Obiščite https://sonce.org" 
+                        <a href="whatsapp://send?text=Potrebujete pravno pomoč? Obiščite https://www.sonce.org" 
                            data-action="share/whatsapp/share"
                            class="text-white/80 hover:text-white transition-colors duration-300 group">
                             <i class="fab fa-whatsapp text-xl group-hover:scale-110 transform transition-transform duration-300"></i>
                         </a>
                         
                         <!-- Email -->
-                        <a href="mailto:?subject=Pravna pomoč - Sindikat Sonce Koper&body=Potrebujete pravno pomoč? Obiščite https://sonce.org" 
+                        <a href="mailto:?subject=Pravna pomoč - Sindikat Sonce Koper&body=Potrebujete pravno pomoč? Obiščite https://www.sonce.org" 
                            class="text-white/80 hover:text-white transition-colors duration-300 group">
                             <i class="fas fa-envelope text-xl group-hover:scale-110 transform transition-transform duration-300"></i>
                         </a>
@@ -3326,18 +3257,18 @@
         </div>
     </footer>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        if (window.AOS && typeof AOS.init === 'function') {
-          AOS.init({ duration: 800, once: true });
-        }
-      });
+    <!-- Add EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // Initialize EmailJS with your public key
+        (function() {
+            emailjs.init("PLqXSPz6Kid72fbh_");
+        })();
+        
+        // Send email using EmailJS
+        emailjs.send('service_5m3risr', 'to0auoi', templateParams)
     </script>
 </body>
-<<<<<<< HEAD
-</html>
-=======
 ```
 ```html
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -3486,4 +3417,3 @@
         window.performance.mark('lazy-loading-initialized');
     }
 </script>
->>>>>>> origin/main
