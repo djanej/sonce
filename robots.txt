@@ -82,5 +82,8 @@ Disallow: /*?*debug=
 Disallow: /*?*test=
 
 # Sitemaps
-Sitemap: https://www.sonce.org/sitemap.xml
-Sitemap: https://www.sonce.org/sitemap-sl.xml 
+Sitemap: https://sonce.org/sitemap.xml
+Sitemap: https://sonce.org/sitemap-sl.xml
+
+# Preferred host
+Host: sonce.org 

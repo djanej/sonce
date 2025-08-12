@@ -6,39 +6,52 @@
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     
     <url>
-        <loc>https://www.sonce.org/</loc>
+        <loc>https://sonce.org/</loc>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
-        <xhtml:link rel="alternate" hreflang="sl" href="https://www.sonce.org/"/>
+        <xhtml:link rel="alternate" hreflang="sl" href="https://sonce.org/"/>
+        <xhtml:link rel="alternate" hreflang="sl-SI" href="https://sonce.org/"/>
+        <lastmod>2025-08-12</lastmod>
     </url>
 
     <url>
-        <loc>https://www.sonce.org/pogoji-uporabe.html</loc>
+        <loc>https://sonce.org/pogoji-uporabe.html</loc>
         <changefreq>yearly</changefreq>
         <priority>0.5</priority>
+        <xhtml:link rel="alternate" hreflang="sl" href="https://sonce.org/pogoji-uporabe.html"/>
+        <xhtml:link rel="alternate" hreflang="sl-SI" href="https://sonce.org/pogoji-uporabe.html"/>
+        <lastmod>2025-08-12</lastmod>
     </url>
 
     <url>
-        <loc>https://www.sonce.org/pravilnik-o-zasebnosti.html</loc>
+        <loc>https://sonce.org/pravilnik-o-zasebnosti.html</loc>
         <changefreq>yearly</changefreq>
         <priority>0.5</priority>
+        <xhtml:link rel="alternate" hreflang="sl" href="https://sonce.org/pravilnik-o-zasebnosti.html"/>
+        <xhtml:link rel="alternate" hreflang="sl-SI" href="https://sonce.org/pravilnik-o-zasebnosti.html"/>
+        <lastmod>2025-08-12</lastmod>
     </url>
 
     <url>
-        <loc>https://www.sonce.org/pravilnik-o-piskotkih.html</loc>
+        <loc>https://sonce.org/pravilnik-o-piskotkih.html</loc>
         <changefreq>yearly</changefreq>
         <priority>0.5</priority>
+        <xhtml:link rel="alternate" hreflang="sl" href="https://sonce.org/pravilnik-o-piskotkih.html"/>
+        <xhtml:link rel="alternate" hreflang="sl-SI" href="https://sonce.org/pravilnik-o-piskotkih.html"/>
+        <lastmod>2025-08-12</lastmod>
     </url>
 
     <url>
-        <loc>https://www.sonce.org/pristopna-izjava.pdf</loc>
+        <loc>https://sonce.org/pristopna-izjava.pdf</loc>
         <changefreq>yearly</changefreq>
         <priority>0.8</priority>
+        <lastmod>2025-08-12</lastmod>
     </url>
 
     <url>
-        <loc>https://www.sonce.org/prospekt-sindikata-sonce-slovenije.pdf</loc>
+        <loc>https://sonce.org/prospekt-sindikata-sonce-slovenije.pdf</loc>
         <changefreq>yearly</changefreq>
         <priority>0.7</priority>
+        <lastmod>2025-08-12</lastmod>
     </url>
 </urlset>
