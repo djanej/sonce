@@ -20,6 +20,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="format-detection" content="telephone=no">
+    <meta name="robots" content="index, follow">
     <link rel="apple-touch-startup-image" href="/favicons/apple-splash-2048-2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
     <link rel="apple-touch-startup-image" href="/favicons/apple-splash-1668-2388.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
     <link rel="apple-touch-startup-image" href="/favicons/apple-splash-1536-2048.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
@@ -373,7 +374,7 @@
     </script>
 
     <!-- Existing styles and scripts -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com" onerror="console.warn('Tailwind CSS failed to load')"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -391,14 +392,56 @@
             }
         }
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onerror="console.warn('Font Awesome CSS failed to load')">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" onerror="console.warn('AOS CSS failed to load')">
+    
+    <!-- Fallback CSS for when Tailwind fails to load -->
+    <style>
+        .fallback-styles {
+            display: none;
+        }
+        
+        /* Show fallback styles if Tailwind is not loaded */
+        .no-tailwind .fallback-styles {
+            display: block;
+        }
+    </style>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        /* Fallback font stack */
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        /* Font loading detection */
+        .fonts-loaded {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        .fonts-not-loaded {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
         
         /* Base styles */
         :root {
             --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+            --primary: #FF5F15;
+            --secondary: #FF1E00;
+            --accent: #FFD700;
+        }
+        
+        /* CSS variable fallbacks */
+        .primary-color {
+            color: var(--primary, #FF5F15);
+        }
+        
+        .secondary-color {
+            color: var(--secondary, #FF1E00);
+        }
+        
+        .accent-color {
+            color: var(--accent, #FFD700);
         }
         
         * {
@@ -483,20 +526,31 @@
                 width: auto;
             }
 
-            /* Mobile menu improvements */
-            #mobileMenu {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100vh;
-                background: white;
-                padding-top: 60px;
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-                z-index: 49;
-                overflow-y: auto;
-            }
+                    /* Mobile menu improvements */
+        #mobileMenu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: white;
+            padding-top: 60px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 49;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Mobile menu focus management */
+        #mobileMenu:focus-within {
+            outline: none;
+        }
+        
+        #mobileMenu .nav-link:focus {
+            outline: 2px solid var(--primary, #FF5F15);
+            outline-offset: 2px;
+        }
 
             #mobileMenu.open {
                 transform: translateX(0);
@@ -551,44 +605,99 @@
                 border-radius: 1rem;
             }
 
-            /* Form improvements */
-            input, select, textarea {
-                font-size: 16px !important;
-                padding: 1rem;
-                margin-bottom: 1rem;
-                border-radius: 0.5rem;
-                -webkit-appearance: none;
-                appearance: none;
-                width: 100%;
-            }
+                    /* Form improvements */
+        input, select, textarea {
+            font-size: 16px !important;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+        }
+        
+        /* Form input focus styles */
+        input:focus, select:focus, textarea:focus {
+            outline: 2px solid var(--primary, #FF5F15);
+            outline-offset: 2px;
+        }
+        
+        /* Form input error styles */
+        input.error, select.error, textarea.error {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
 
-            /* Button improvements */
-            .btn-primary {
-                width: 100%;
-                padding: 1rem;
-                margin: 0.5rem 0;
-                font-size: 1rem;
-                min-height: 48px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 0.5rem;
-            }
+                    /* Button improvements */
+        .btn-primary {
+            width: 100%;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            font-size: 1rem;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+        }
+        
+        /* Button focus styles */
+        .btn-primary:focus {
+            outline: 2px solid var(--primary, #FF5F15);
+            outline-offset: 2px;
+        }
+        
+        /* Button disabled styles */
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
 
-            /* Touch improvements */
-            a, button {
-                min-height: 44px;
-                min-width: 44px;
-                padding: 0.5rem;
-                touch-action: manipulation;
-            }
+                    /* Touch improvements */
+        a, button {
+            min-height: 44px;
+            min-width: 44px;
+            padding: 0.5rem;
+            touch-action: manipulation;
+        }
+        
+        /* Touch target improvements */
+        .nav-link, .btn-primary, .faq-question {
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Touch feedback */
+        .nav-link:active, .btn-primary:active, .faq-question:active {
+            transform: scale(0.95);
+        }
 
-            /* Remove animations on mobile */
-            [data-aos] {
-                opacity: 1 !important;
-                transform: none !important;
-                transition: none !important;
-            }
+                    /* Remove animations on mobile */
+        [data-aos] {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+        }
+        
+        /* AOS fallback for when library fails to load */
+        .aos-fallback {
+            opacity: 1;
+            transform: none;
+        }
+        
+        /* Progressive enhancement for animations */
+        .enhanced-animations [data-aos] {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+        
+        .enhanced-animations [data-aos].aos-animate {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Add new styles for header animation */
@@ -598,12 +707,26 @@
             transition: all 0.3s ease;
         }
         
+        /* Header scroll effect */
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
         .hero-gradient {
             background: linear-gradient(135deg, #FF5F15 0%, #FF1E00 100%);
+            /* Fallback for older browsers */
+            background: -webkit-linear-gradient(135deg, #FF5F15 0%, #FF1E00 100%);
+            background: -moz-linear-gradient(135deg, #FF5F15 0%, #FF1E00 100%);
         }
         
         .btn-primary {
             background: linear-gradient(135deg, #FF5F15 0%, #FF1E00 100%);
+            /* Fallback for older browsers */
+            background: -webkit-linear-gradient(135deg, #FF5F15 0%, #FF1E00 100%);
+            background: -moz-linear-gradient(135deg, #FF5F15 0%, #FF1E00 100%);
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             color: white;
@@ -636,6 +759,16 @@
             width: 100%;
         }
         
+        /* Active navigation state */
+        .nav-link.active {
+            color: var(--primary, #FF5F15);
+            font-weight: 600;
+        }
+        
+        .nav-link.active:after {
+            width: 100%;
+        }
+        
         .card-hover {
             transition: all 0.3s ease;
             border: 1px solid rgba(229, 231, 235, 0.5);
@@ -645,6 +778,12 @@
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             border-color: rgba(255, 95, 21, 0.3);
+        }
+        
+        /* Card focus styles for accessibility */
+        .card-hover:focus-within {
+            outline: 2px solid var(--primary, #FF5F15);
+            outline-offset: 2px;
         }
         
         .section-title {
@@ -661,12 +800,19 @@
             bottom: 0;
             left: 25%;
             background: linear-gradient(90deg, #FF5F15, #FF1E00);
+            /* Fallback for older browsers */
+            background: -webkit-linear-gradient(90deg, #FF5F15, #FF1E00);
+            background: -moz-linear-gradient(90deg, #FF5F15, #FF1E00);
             border-radius: 2px;
         }
         
         .testimonial-card {
             background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.95) 100%);
+            /* Fallback for older browsers */
+            background: -webkit-linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.95) 100%);
+            background: -moz-linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.95) 100%);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(229, 231, 235, 0.5);
         }
         
@@ -680,6 +826,56 @@
             border-color: #FF5F15;
             box-shadow: 0 0 0 3px rgba(255, 95, 21, 0.2);
             background-color: white;
+        }
+        
+        /* Contact form input error states */
+        .contact-form-input.error {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+        
+        /* Contact form input success states */
+        .contact-form-input.success {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+        
+        /* Form validation styles */
+        .error {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        /* Focus styles for accessibility */
+        .focus-visible {
+            outline: 2px solid var(--primary, #FF5F15);
+            outline-offset: 2px;
+        }
+        
+        /* Loading states */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid var(--primary, #FF5F15);
+            border-radius: 50%;
+            animation: loading 1.5s infinite;
         }
         
         .floating {
@@ -708,6 +904,22 @@
             100% {
                 transform: scale(1);
                 box-shadow: 0 0 20px rgba(255, 95, 21, 0.5);
+            }
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            .floating,
+            .pulse,
+            .animate-pulse,
+            .animate-shimmer {
+                animation: none;
+            }
+            
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
         }
         
@@ -1977,41 +2189,179 @@
                 // Menu toggle
                 if (this.elements.menuToggle) {
                     this.elements.menuToggle.addEventListener('click', () => this.toggleMenu());
+                    
+                    // Add keyboard support for menu toggle
+                    this.elements.menuToggle.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.toggleMenu();
+                        }
+                    });
                 }
 
                 // Mobile navigation
                 if (this.elements.mobileNavItems) {
                     this.elements.mobileNavItems.forEach(item => {
                         item.addEventListener('click', () => this.closeMenu());
+                        
+                        // Add keyboard support for mobile navigation items
+                        item.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                this.closeMenu();
+                            }
+                        });
+                    });
+                }
+                
+                // Add close button event listener
+                const closeBtn = document.getElementById('menuClose');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => this.closeMenu());
+                    
+                    // Add keyboard support for close button
+                    closeBtn.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.closeMenu();
+                        }
                     });
                 }
 
                 // Form submission
                 if (this.elements.contactForm) {
                     this.elements.contactForm.addEventListener('submit', (e) => this.handleFormSubmit(e));
+                    
+                    // Add input validation on blur
+                    const inputs = this.elements.contactForm.querySelectorAll('input, textarea');
+                    inputs.forEach(input => {
+                        input.addEventListener('blur', () => {
+                            if (input.hasAttribute('required') && !input.value.trim()) {
+                                input.classList.add('error');
+                            } else {
+                                input.classList.remove('error');
+                            }
+                        });
+                        
+                        // Add keyboard support for form inputs
+                        input.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                                e.preventDefault();
+                                this.elements.contactForm.dispatchEvent(new Event('submit'));
+                            }
+                        });
+                    });
                 }
 
                 // FAQ section
                 if (this.elements.faqSection) {
                     this.elements.faqSection.addEventListener('click', (e) => this.handleFaqClick(e));
                 }
+                
+                // Add keyboard support for FAQ items
+                const faqItems = document.querySelectorAll('.faq-item');
+                faqItems.forEach(item => {
+                    const question = item.querySelector('.faq-question');
+                    if (question) {
+                        question.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                this.handleFaqClick(e);
+                            }
+                        });
+                        
+                        // Add focus management for FAQ items
+                        question.addEventListener('focus', () => {
+                            item.classList.add('focus-visible');
+                        });
+                        
+                        question.addEventListener('blur', () => {
+                            item.classList.remove('focus-visible');
+                        });
+                    }
+                });
 
                 // Scroll handling
                 window.addEventListener('scroll', () => this.handleScroll());
+                
+                // Add keyboard navigation support
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        if (this.state.isMenuOpen) {
+                            this.closeMenu();
+                        }
+                    }
+                    
+                    // Add keyboard shortcuts for navigation
+                    if (e.ctrlKey || e.metaKey) {
+                        switch (e.key) {
+                            case 'h':
+                                e.preventDefault();
+                                window.location.hash = '#home';
+                                break;
+                            case 'a':
+                                e.preventDefault();
+                                window.location.hash = '#about';
+                                break;
+                            case 's':
+                                e.preventDefault();
+                                window.location.hash = '#services';
+                                break;
+                            case 'c':
+                                e.preventDefault();
+                                window.location.hash = '#contact';
+                                break;
+                        }
+                    }
+                });
             },
 
             // Menu functions
             toggleMenu: function() {
                 this.state.isMenuOpen = !this.state.isMenuOpen;
                 if (this.elements.mobileMenu) {
-                    this.elements.mobileMenu.style.transform = this.state.isMenuOpen ? 'translateX(0)' : 'translateX(-100%)';
+                    try {
+                        this.elements.mobileMenu.style.transform = this.state.isMenuOpen ? 'translateX(0)' : 'translateX(-100%)';
+                        this.elements.mobileMenu.setAttribute('aria-hidden', !this.state.isMenuOpen);
+                        
+                        // Prevent body scroll when menu is open
+                        if (this.state.isMenuOpen) {
+                            document.body.style.overflow = 'hidden';
+                        } else {
+                            document.body.style.overflow = '';
+                        }
+                    } catch (error) {
+                        console.error('Error toggling menu:', error);
+                    }
+                }
+                if (this.elements.menuToggle) {
+                    try {
+                        this.elements.menuToggle.setAttribute('aria-expanded', this.state.isMenuOpen);
+                    } catch (error) {
+                        console.error('Error updating menu toggle state:', error);
+                    }
                 }
             },
 
             closeMenu: function() {
                 this.state.isMenuOpen = false;
                 if (this.elements.mobileMenu) {
-                    this.elements.mobileMenu.style.transform = 'translateX(-100%)';
+                    try {
+                        this.elements.mobileMenu.style.transform = 'translateX(-100%)';
+                        this.elements.mobileMenu.setAttribute('aria-hidden', 'true');
+                        
+                        // Restore body scroll
+                        document.body.style.overflow = '';
+                    } catch (error) {
+                        console.error('Error closing menu:', error);
+                    }
+                }
+                if (this.elements.menuToggle) {
+                    try {
+                        this.elements.menuToggle.setAttribute('aria-expanded', 'false');
+                    } catch (error) {
+                        console.error('Error updating menu toggle state:', error);
+                    }
                 }
             },
 
@@ -2021,7 +2371,87 @@
                 if (!this.validateForm()) {
                     return;
                 }
-                // Form submission logic
+                
+                // Get form data
+                const formData = new FormData(e.target);
+                const templateParams = {
+                    from_name: formData.get('name') || 'Anonymous',
+                    from_email: formData.get('email') || 'No email provided',
+                    message: formData.get('message') || 'No message provided',
+                    phone: formData.get('phone') || 'No phone provided'
+                };
+                
+                // Show loading state
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Pošiljam...';
+                submitBtn.disabled = true;
+                
+                // Show loading message
+                const loadingMsg = document.getElementById('formLoading');
+                const successMsg = document.getElementById('formSuccess');
+                const errorMsg = document.getElementById('formError');
+                
+                if (loadingMsg) loadingMsg.classList.remove('hidden');
+                if (successMsg) successMsg.classList.add('hidden');
+                if (errorMsg) errorMsg.classList.add('hidden');
+                
+                // Send email using EmailJS
+                if (typeof emailjs !== 'undefined') {
+                    try {
+                        emailjs.send('service_5m3risr', 'to0auoi', templateParams)
+                            .then((response) => {
+                                // Hide loading message
+                                if (loadingMsg) loadingMsg.classList.add('hidden');
+                                
+                                // Show success message
+                                if (successMsg) {
+                                    successMsg.classList.remove('hidden');
+                                    e.target.reset();
+                                }
+                                submitBtn.textContent = 'Poslano!';
+                                setTimeout(() => {
+                                    submitBtn.textContent = originalText;
+                                    submitBtn.disabled = false;
+                                    if (successMsg) successMsg.classList.add('hidden');
+                                }, 3000);
+                            })
+                            .catch((error) => {
+                                console.error('EmailJS error:', error);
+                                
+                                // Hide loading message
+                                if (loadingMsg) loadingMsg.classList.add('hidden');
+                                
+                                // Show error message
+                                if (errorMsg) errorMsg.classList.remove('hidden');
+                                
+                                submitBtn.textContent = originalText;
+                                submitBtn.disabled = false;
+                            });
+                    } catch (error) {
+                        console.error('Error sending email:', error);
+                        
+                        // Hide loading message
+                        if (loadingMsg) loadingMsg.classList.add('hidden');
+                        
+                        // Show error message
+                        if (errorMsg) errorMsg.classList.remove('hidden');
+                        
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }
+                } else {
+                    console.error('EmailJS library not loaded');
+                    
+                    // Hide loading message
+                    if (loadingMsg) loadingMsg.classList.add('hidden');
+                    
+                    // Show error message
+                    if (errorMsg) errorMsg.classList.remove('hidden');
+                    
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
             },
 
             validateForm: function() {
@@ -2031,16 +2461,71 @@
                 const inputs = form.querySelectorAll('input, textarea');
                 let isValid = true;
 
+                // Clear previous error states
                 inputs.forEach(input => {
-                    if (!input.value.trim()) {
-                        isValid = false;
-                        input.classList.add('error');
-                    } else {
+                    try {
                         input.classList.remove('error');
+                        const errorMsg = input.parentNode.querySelector('.error-message');
+                        if (errorMsg) errorMsg.remove();
+                    } catch (error) {
+                        console.error('Error clearing error state for input:', input, error);
+                    }
+                });
+
+                inputs.forEach(input => {
+                    if (input.hasAttribute('required') && !input.value.trim()) {
+                        isValid = false;
+                        try {
+                            input.classList.add('error');
+                            
+                            // Add error message
+                            const errorMsg = document.createElement('div');
+                            errorMsg.className = 'error-message';
+                            errorMsg.textContent = 'To polje je obvezno';
+                            input.parentNode.appendChild(errorMsg);
+                        } catch (error) {
+                            console.error('Error adding error state for input:', input, error);
+                        }
+                    } else if (input.type === 'email' && input.value.trim() && !this.isValidEmail(input.value)) {
+                        isValid = false;
+                        try {
+                            input.classList.add('error');
+                            
+                            // Add error message
+                            const errorMsg = document.createElement('div');
+                            errorMsg.className = 'error-message';
+                            errorMsg.textContent = 'Vnesite veljaven e-poštni naslov';
+                            input.parentNode.appendChild(errorMsg);
+                        } catch (error) {
+                            console.error('Error adding error state for input:', input, error);
+                        }
+                    } else if (input.type === 'tel' && input.value.trim() && !this.isValidPhone(input.value)) {
+                        isValid = false;
+                        try {
+                            input.classList.add('error');
+                            
+                            // Add error message
+                            const errorMsg = document.createElement('div');
+                            errorMsg.className = 'error-message';
+                            errorMsg.textContent = 'Vnesite veljavno telefonsko številko';
+                            input.parentNode.appendChild(errorMsg);
+                        } catch (error) {
+                            console.error('Error adding error state for input:', input, error);
+                        }
                     }
                 });
 
                 return isValid;
+            },
+
+            isValidPhone: function(phone) {
+                const phoneRegex = /^[\+]?[0-9\s\-\(\)]{8,}$/;
+                return phoneRegex.test(phone);
+            },
+
+            isValidEmail: function(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
             },
 
             // FAQ handling
@@ -2051,9 +2536,20 @@
                 const answer = question.nextElementSibling;
                 if (!answer) return;
 
-                const isOpen = answer.style.maxHeight;
-                answer.style.maxHeight = isOpen ? null : answer.scrollHeight + 'px';
-                question.classList.toggle('active');
+                try {
+                    const isOpen = answer.style.maxHeight;
+                    answer.style.maxHeight = isOpen ? null : answer.scrollHeight + 'px';
+                    question.classList.toggle('active');
+                    
+                    // Update ARIA attributes for accessibility
+                    const isExpanded = answer.style.maxHeight !== '0px';
+                    question.setAttribute('aria-expanded', isExpanded);
+                    
+                    // Add smooth transition
+                    answer.style.transition = 'max-height 0.3s ease-in-out';
+                } catch (error) {
+                    console.error('Error handling FAQ click:', error);
+                }
             },
 
             // Scroll handling
@@ -2062,37 +2558,95 @@
                 this.state.isScrolling = true;
 
                 requestAnimationFrame(() => {
-                    this.updateActiveSection();
+                    try {
+                        this.updateActiveSection();
+                    } catch (error) {
+                        console.error('Error updating active section:', error);
+                    }
                     this.state.isScrolling = false;
                 });
+                
+                // Add scroll-based animations
+                try {
+                    const scrolled = window.pageYOffset;
+                    const parallax = document.querySelector('.parallax');
+                    if (parallax) {
+                        const speed = scrolled * 0.5;
+                        parallax.style.transform = `translateY(${speed}px)`;
+                    }
+                } catch (error) {
+                    console.error('Error handling scroll animations:', error);
+                }
             },
 
             updateActiveSection: function() {
                 const scrollPosition = window.scrollY + 100;
 
                 this.elements.sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    const sectionHeight = section.offsetHeight;
+                    try {
+                        const sectionTop = section.offsetTop;
+                        const sectionHeight = section.offsetHeight;
 
-                    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                        this.state.currentSection = section.id;
-                        this.updateNavigation();
+                        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                            this.state.currentSection = section.id;
+                            this.updateNavigation();
+                            
+                            // Add scroll-based highlighting
+                            const navLinks = document.querySelectorAll('.nav-link');
+                            navLinks.forEach(link => {
+                                if (link.getAttribute('href') === `#${section.id}`) {
+                                    link.classList.add('active');
+                                } else {
+                                    link.classList.remove('active');
+                                }
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error processing section:', section, error);
                     }
                 });
             },
 
             updateNavigation: function() {
                 this.elements.mobileNavItems.forEach(item => {
-                    item.classList.toggle('active', item.getAttribute('href') === `#${this.state.currentSection}`);
+                    try {
+                        item.classList.toggle('active', item.getAttribute('href') === `#${this.state.currentSection}`);
+                    } catch (error) {
+                        console.error('Error updating navigation item:', item, error);
+                    }
                 });
+                
+                // Update desktop navigation as well
+                try {
+                    const desktopNavLinks = document.querySelectorAll('.nav-link');
+                    desktopNavLinks.forEach(link => {
+                        link.classList.toggle('active', link.getAttribute('href') === `#${this.state.currentSection}`);
+                    });
+                } catch (error) {
+                    console.error('Error updating desktop navigation:', error);
+                }
             },
 
-            // Error checking
+                        // Error checking
             checkErrors: function() {
                 // Check critical elements
                 Object.entries(this.elements).forEach(([key, element]) => {
                     if (!element) {
                         console.error(`Critical element not found: ${key}`);
+                    } else {
+                        try {
+                            // Check if element is visible and accessible
+                            if (element.offsetParent === null && element.style.display !== 'none') {
+                                console.warn(`Element ${key} may not be visible`);
+                            }
+                            
+                            // Check if element has proper ARIA attributes
+                            if (element.hasAttribute('aria-label') || element.hasAttribute('aria-labelledby')) {
+                                console.log(`Element ${key} has proper ARIA attributes`);
+                            }
+                        } catch (error) {
+                            console.error(`Error checking element ${key}:`, error);
+                        }
                     }
                 });
 
@@ -2108,32 +2662,82 @@
                     console.error(`Error: ${msg}\nURL: ${url}\nLine: ${line}`);
                     return false;
                 };
+                
+                // Check for unhandled promise rejections
+                window.addEventListener('unhandledrejection', function(event) {
+                    console.error('Unhandled promise rejection:', event.reason);
+                });
             },
 
             // Performance monitoring
             monitorPerformance: function() {
-                if ('performance' in window) {
-                    const timing = performance.timing;
-                    const loadTime = timing.loadEventEnd - timing.navigationStart;
-                    console.log(`Page load time: ${loadTime}ms`);
+                try {
+                    if ('performance' in window) {
+                        const timing = performance.timing;
+                        const loadTime = timing.loadEventEnd - timing.navigationStart;
+                        console.log(`Page load time: ${loadTime}ms`);
 
-                    if (loadTime > 3000) {
-                        console.warn('Page load time exceeds 3 seconds');
+                        if (loadTime > 3000) {
+                            console.warn('Page load time exceeds 3 seconds');
+                        }
                     }
-                }
 
-                // Monitor memory usage
-                if ('memory' in performance) {
-                    setInterval(() => {
-                        console.log(`Memory usage: ${performance.memory.usedJSHeapSize / 1048576}MB`);
-                    }, 10000);
+                    // Monitor memory usage
+                    if ('memory' in performance) {
+                        setInterval(() => {
+                            try {
+                                console.log(`Memory usage: ${performance.memory.usedJSHeapSize / 1048576}MB`);
+                            } catch (error) {
+                                console.error('Error monitoring memory usage:', error);
+                            }
+                        }, 10000);
+                    }
+                    
+                    // Monitor Core Web Vitals
+                    if ('PerformanceObserver' in window) {
+                        try {
+                            const observer = new PerformanceObserver((list) => {
+                                for (const entry of list.getEntries()) {
+                                    if (entry.entryType === 'largest-contentful-paint') {
+                                        console.log(`LCP: ${entry.startTime}ms`);
+                                        if (entry.startTime > 2500) {
+                                            console.warn('LCP exceeds 2.5 seconds');
+                                        }
+                                    }
+                                }
+                            });
+                            observer.observe({ entryTypes: ['largest-contentful-paint'] });
+                        } catch (e) {
+                            console.warn('Could not observe Core Web Vitals:', e);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error in performance monitoring:', error);
                 }
             }
         };
 
         // Initialize website when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
-            website.init();
+            try {
+                website.init();
+            } catch (error) {
+                console.error('Error initializing website:', error);
+                
+                // Fallback initialization
+                try {
+                    // Basic functionality without advanced features
+                    const contactForm = document.querySelector('.contact-form');
+                    if (contactForm) {
+                        contactForm.addEventListener('submit', (e) => {
+                            e.preventDefault();
+                            alert('Spletna stran se še nalaga. Prosimo, poskusite ponovno.');
+                        });
+                    }
+                } catch (fallbackError) {
+                    console.error('Fallback initialization failed:', fallbackError);
+                }
+            }
         });
     </script>
 
@@ -2342,7 +2946,7 @@
         <div class="container">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center">
-                    <img src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip Pisarne pravne zaščite Sonce Slovenije" class="h-12 md:h-16 shine">
+                    <img src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip Pisarne pravne zaščite Sonce Slovenije" class="h-12 md:h-16 shine" loading="lazy" onerror="this.style.display='none'">
                 </div>
                 
                 <nav class="hidden lg:flex space-x-8 items-center">
@@ -2353,19 +2957,19 @@
                     <a href="#join" class="btn-primary text-white font-bold py-2 px-6 rounded-full ml-4 pulse">Pridruži se <i class="fas fa-arrow-right ml-2"></i></a>
                 </nav>
                 
-                <button class="lg:hidden text-gray-700 focus:outline-none" id="menuToggle">
-                    <i class="fas fa-bars text-2xl"></i>
-                </button>
+                            <button class="lg:hidden text-gray-700 focus:outline-none" id="menuToggle" aria-label="Odpri meni" aria-expanded="false" aria-controls="mobileMenu">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
             </div>
         </div>
     </header>
 
     <!-- Mobile Menu -->
-    <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform -translate-x-full transition-transform duration-300 lg:hidden">
+            <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform -translate-x-full transition-transform duration-300 lg:hidden" aria-hidden="true" role="navigation" aria-label="Mobilni meni">
         <div class="container h-full flex flex-col">
             <div class="flex justify-between items-center py-4 border-b">
-                <img src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip" class="h-10">
-                <button class="text-gray-700 focus:outline-none" id="menuClose">
+                <img src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip" class="h-10" loading="lazy" onerror="this.style.display='none'">
+                <button class="text-gray-700 focus:outline-none" id="menuClose" aria-label="Zapri meni">
                     <i class="fas fa-times text-2xl"></i>
                 </button>
             </div>
@@ -2421,9 +3025,8 @@
                 </div>
                 <div class="lg:w-1/2" data-aos="fade-left" data-aos-delay="300">
                     <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10 shadow-2xl floating" style="max-width: 70%; margin: 0 auto;">
-                        <img src="https://i.imgur.com/vBKRRYp.jpeg" 
-                             alt="Pravna pomoč in sindikalna zaščita za zaposlene v Sloveniji" 
-                             class="rounded-lg w-full h-auto object-cover">
+                                        <img src="https://i.imgur.com/vBKRRYp.jpeg" alt="Pravna pomoč in sindikalna zaščita za zaposlene v Sloveniji" 
+                               class="rounded-lg w-full h-auto object-cover" loading="lazy" onerror="this.style.display='none'">
                     </div>
                 </div>
             </div>
@@ -2759,7 +3362,7 @@
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="testimonial-card p-6 rounded-xl card-hover" data-aos="fade-up" data-aos-delay="100">
                     <div class="flex items-center mb-4">
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Maja K." class="w-12 h-12 rounded-full mr-4">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Maja K." class="w-12 h-12 rounded-full mr-4" loading="lazy" onerror="this.style.display='none'">
                         <div>
                             <h4 class="font-bold">Maja K.</h4>
                             <div class="flex text-accent text-sm">
@@ -2775,7 +3378,7 @@
                 </div>
                 <div class="testimonial-card p-6 rounded-xl card-hover" data-aos="fade-up" data-aos-delay="200">
                     <div class="flex items-center mb-4">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Peter L." class="w-12 h-12 rounded-full mr-4">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Peter L." class="w-12 h-12 rounded-full mr-4" loading="lazy" onerror="this.style.display='none'">
                         <div>
                             <h4 class="font-bold">Peter L.</h4>
                             <div class="flex text-accent text-sm">
@@ -2791,7 +3394,7 @@
                 </div>
                 <div class="testimonial-card p-6 rounded-xl card-hover" data-aos="fade-up" data-aos-delay="300">
                     <div class="flex items-center mb-4">
-                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Ana P." class="w-12 h-12 rounded-full mr-4">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Ana P." class="w-12 h-12 rounded-full mr-4" loading="lazy" onerror="this.style.display='none'">
                         <div>
                             <h4 class="font-bold">Ana P.</h4>
                             <div class="flex text-accent text-sm">
@@ -2998,7 +3601,7 @@
                     <div class="bg-white p-10 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
                         <h3 class="text-2xl font-bold mb-8 text-primary">Pošljite nam sporočilo</h3>
                         
-                        <form id="contactForm" class="space-y-6" onsubmit="return handleFormSubmit(event)">
+                        <form id="contactForm" class="contact-form space-y-6" onsubmit="return handleFormSubmit(event)">
                             <!-- Success Message (initially hidden) -->
                             <div id="formSuccess" class="hidden p-4 mb-6 text-green-700 bg-green-100 rounded-lg">
                                 Hvala za vaše sporočilo! Odgovorili vam bomo v najkrajšem možnem času.
@@ -3009,21 +3612,29 @@
                                 Prišlo je do napake pri pošiljanju sporočila. Prosimo, poskusite znova ali nas kontaktirajte direktno na info@pisarnasonce.si
                             </div>
                             
+                            <!-- Loading Message (initially hidden) -->
+                            <div id="formLoading" class="hidden p-4 mb-6 text-blue-700 bg-blue-100 rounded-lg">
+                                <div class="flex items-center">
+                                    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-700 mr-2"></div>
+                                    Pošiljam sporočilo...
+                                </div>
+                            </div>
+                            
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="form-group">
                                     <label class="block text-gray-700 font-medium mb-2">Ime in priimek</label>
-                                    <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" required>
+                                    <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" required aria-label="Vaše ime" aria-required="true">
                             </div>
                             
                             <div class="form-group">
                                     <label class="block text-gray-700 font-medium mb-2">E-pošta</label>
-                                    <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" required>
+                                    <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" required aria-label="Vaš e-poštni naslov" aria-required="true">
                                 </div>
                             </div>
                             
                             <div class="form-group">
                                 <label class="block text-gray-700 font-medium mb-2">Telefon</label>
-                                <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" required>
+                                <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" aria-label="Vaša telefonska številka">
                             </div>
                             
                             <div class="form-group">
@@ -3039,11 +3650,11 @@
                             
                             <div class="form-group">
                                 <label class="block text-gray-700 font-medium mb-2">Sporočilo</label>
-                                <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" required></textarea>
+                                <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" required aria-label="Vaše sporočilo" aria-required="true"></textarea>
                             </div>
                             
                             <div class="pt-4">
-                                <button type="submit" id="submitButton" class="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:-translate-y-1">
+                                <button type="submit" id="submitButton" class="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:-translate-y-1" aria-label="Pošlji sporočilo">
                                     <span class="flex items-center justify-center">
                                         <span id="buttonText">Pošlji sporočilo</span>
                                         <span id="buttonSpinner" class="hidden ml-2">
@@ -3072,7 +3683,7 @@
         <div class="container">
             <div class="grid md:grid-cols-3 gap-12">
                 <div data-aos="fade-up">
-                    <img src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip Pisarne pravne zaščite Sonce Slovenije" class="h-16 mb-6">
+                    <img src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip Pisarne pravne zaščite Sonce Slovenije" class="h-16 mb-6" loading="lazy" onerror="this.style.display='none'">
                     <p class="mb-6 text-white/90">Pisarna pravne zaščite Sonce Slovenije je vaš partner pri uveljavljanju pravic na delovnem mestu.</p>
                     <div class="flex space-x-4">
                         <a href="https://www.facebook.com/PisarnaDelavskePravneZasciteSonceSlovenije" target="_blank" rel="noopener noreferrer" 
@@ -3194,8 +3805,7 @@
             emailjs.init("PLqXSPz6Kid72fbh_");
         })();
         
-        // Send email using EmailJS
-        emailjs.send('service_5m3risr', 'to0auoi', templateParams)
+        // EmailJS functionality will be handled by the contact form
     </script>
 </body>
 ```
@@ -3207,14 +3817,30 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
 <script>
-    // Initialize AOS
-    AOS.init({
-        duration: 800,
-        once: true
-    });
+            // Initialize AOS
+        if (typeof AOS !== 'undefined') {
+            try {
+                AOS.init({
+                    duration: 800,
+                    once: true
+                });
+            } catch (error) {
+                console.error('Error initializing AOS:', error);
+            }
+        } else {
+            console.warn('AOS library not loaded');
+        }
     
-    // Initialize EmailJS
-    (function() {
-        emailjs.init("PLqXSPz6Kid72fbh_");
-    })();
+            // Initialize EmailJS
+        (function() {
+            if (typeof emailjs !== 'undefined') {
+                try {
+                    emailjs.init("PLqXSPz6Kid72fbh_");
+                } catch (error) {
+                    console.error('Error initializing EmailJS:', error);
+                }
+            } else {
+                console.warn('EmailJS library not loaded');
+            }
+        })();
 </script>
