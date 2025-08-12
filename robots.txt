@@ -1,0 +1,96 @@
+# www.sonce.org robots.txt
+# Optimizirano za slovenske uporabnike in ključne besede
+
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /kontakt
+Allow: /o-nas
+Allow: /storitve
+Allow: /images/
+Allow: /css/
+Allow: /js/
+Allow: /fonts/
+Allow: /sitemap.xml
+
+# Allow specific content paths
+Allow: /brezplacna-pravna-pomoc
+Allow: /pravno-svetovanje
+Allow: /strokovno-svetovanje
+Allow: /delovni-spori
+Allow: /zastopanje
+Allow: /koper
+Allow: /slovenija
+Allow: /zascita-pravic
+Allow: /pristopna-izjava.pdf
+Allow: /prospekt-sindikata-sonce-slovenije.pdf
+Allow: /pogoji-uporabe.html
+Allow: /pravilnik-o-zasebnosti.html
+Allow: /pravilnik-o-piskotkih.html
+Allow: /mobile-warning.html
+
+# Googlebot specific rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+Allow: /*.js
+Allow: /*.css
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.gif
+Allow: /*.svg
+Allow: /*.webp
+
+# Bingbot specific rules
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Slovenian search engine - Najdi.si
+User-agent: NajdiBot
+Allow: /
+Crawl-delay: 1
+
+# Block common bad bots
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: SemrushBot
+Crawl-delay: 5
+
+User-agent: AhrefsBot
+Crawl-delay: 5
+
+# Media files indexing control
+User-agent: Googlebot-Image
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.png$
+Allow: /*.webp$
+Disallow: /admin/images/
+
+# Clean Parameters
+Allow: /*?keyword=*
+Allow: /*?lang=sl
+Disallow: /*?*print=
+Disallow: /*?*debug=
+Disallow: /*?*test=
+
+# Sitemaps
+Sitemap: https://www.sonce.org/sitemap.xml
+Sitemap: https://www.sonce.org/sitemap-sl.xml
+
+# Host preference
+Host: https://www.sonce.org
+
+# Regional and language targeting
+X-Robots-Tag: region=SI
+X-Robots-Tag: language=sl
+
+# Cache control
+Cache-Control: max-age=3600 

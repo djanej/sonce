@@ -1,0 +1,22 @@
+Plans for the website:
+
+Hitrost nalaganja
+Optimiziraj slike (uporabi WebP format)
+Minificiraj CSS in JavaScript
+Implementiraj leno nalaganje slik (lazy loading)
+Uporabniška izkušnja
+Dodaj "Nazaj na vrh" gumb
+Izboljšaj mobilno navigacijo z animacijami
+Dodaj občutek globine s senčenjem in prekrivanjem
+Vsebina
+Dodaj blog/zgodbe o uspehu
+Vključi video vsebine
+Dodaj interaktivno pogosto zastavljena vprašanja (FAQ)
+Tehnične izboljšave
+Implementiraj Service Worker za offline delovanje
+Dodaj PWA funkcionalnosti
+Optimiziraj za boljše SEO
+Dodatne funkcionalnosti
+Klepet v živo
+Sistemska obvestila
+Integracija s socialnimi omrežji
