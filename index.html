@@ -4325,34 +4325,79 @@
         // Initialize website
         document.addEventListener('DOMContentLoaded', () => website.init());
     </script>
+    <style>
+        /* Smooth-scroll target highlight */
+        .scroll-highlight { animation: targetFocus 900ms ease-out; }
+        @keyframes targetFocus {
+            0% { box-shadow: 0 0 0 0 rgba(255,95,21,.35); }
+            100% { box-shadow: 0 0 0 30px rgba(255,95,21,0); }
+        }
+        /* Offset native anchor jumps by header height as fallback */
+        section[id] { scroll-margin-top: calc(var(--header-offset, 3.5rem) + 8px); }
+    </style>
     <script>
-        // Desktop smooth scroll for header nav links with offset
+        // Global smooth scrolling with header offset and section highlight
         document.addEventListener('DOMContentLoaded', function() {
-            const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
-            if (!navLinks || navLinks.length === 0) return;
+            const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-            navLinks.forEach(function(link) {
-                link.addEventListener('click', function(e) {
-                    const href = this.getAttribute('href');
-                    if (!href || href.charAt(0) !== '#') return;
+            function getHeaderOffset() {
+                const header = document.querySelector('header');
+                return header ? (header.offsetHeight || parseInt(getComputedStyle(header).height) || 0) : 0;
+            }
+            function updateHeaderOffsetVar() {
+                document.documentElement.style.setProperty('--header-offset', getHeaderOffset() + 'px');
+            }
+            function smoothScrollToTarget(target) {
+                const headerOffset = getHeaderOffset();
+                const targetTop = target.getBoundingClientRect().top + window.pageYOffset - headerOffset - 8;
+                window.scrollTo({ top: targetTop, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+            }
+            function highlightTarget(target) {
+                target.classList.add('scroll-highlight');
+                setTimeout(() => target.classList.remove('scroll-highlight'), 900);
+            }
 
-                    const targetId = href.slice(1);
-                    const target = document.getElementById(targetId);
-                    if (!target) return;
+            document.addEventListener('click', function(e) {
+                const link = e.target.closest('a[href^="#"]');
+                if (!link) return;
+                const href = link.getAttribute('href');
+                if (!href || href === '#' || href.length === 1) return;
+                const targetId = decodeURIComponent(href.slice(1));
+                const target = document.getElementById(targetId);
+                if (!target) return;
+                e.preventDefault();
 
-                    // Only apply custom scroll on desktop
-                    if (window.innerWidth >= 1024) {
-                        e.preventDefault();
-                        const header = document.querySelector('header');
-                        const headerOffset = header ? header.offsetHeight : 0;
-                        const targetTop = target.getBoundingClientRect().top + window.pageYOffset - headerOffset - 8;
-
-                        window.scrollTo({ top: targetTop, behavior: 'smooth' });
-                        // Update URL hash without causing a jump
-                        history.pushState(null, '', '#' + targetId);
+                // Close mobile menu if open
+                const mobileMenu = document.getElementById('mobileMenu');
+                if (mobileMenu && mobileMenu.classList.contains('open')) {
+                    mobileMenu.classList.remove('open');
+                    mobileMenu.style.transform = 'translateX(-100%)';
+                    document.body.style.overflow = '';
+                    const menuToggle = document.getElementById('menuToggle');
+                    if (menuToggle) {
+                        const icon = menuToggle.querySelector('i');
+                        if (icon) icon.className = 'fas fa-bars text-2xl';
                     }
-                });
+                }
+
+                smoothScrollToTarget(target);
+                history.pushState(null, '', '#' + targetId);
+                highlightTarget(target);
             });
+
+            if (window.location.hash) {
+                const id = decodeURIComponent(window.location.hash.slice(1));
+                const el = document.getElementById(id);
+                if (el) {
+                    setTimeout(() => {
+                        smoothScrollToTarget(el);
+                        highlightTarget(el);
+                    }, 60);
+                }
+            }
+
+            updateHeaderOffsetVar();
+            window.addEventListener('resize', updateHeaderOffsetVar);
         });
     </script>
 </body>
