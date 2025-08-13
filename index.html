@@ -2614,6 +2614,14 @@
             /* Buttons on tablet should not be full-width by default */
             .btn-primary { width: auto; min-height: 48px; padding-left: 1.25rem; padding-right: 1.25rem; }
         }
+
+        /* Mobile override: hide header completely */
+        @media (max-width: 768px) {
+            header { display: none !important; }
+            html { scroll-padding-top: 0 !important; }
+            section:first-of-type { padding-top: 0 !important; }
+            #mobileMenu { padding-top: 0 !important; }
+        }
     </style>
 
     <script>
