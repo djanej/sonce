@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta http-equiv="Accept-Encoding" content="gzip, deflate, br">
+    <title>Tehnična podpora – Pisarna pravne zaščite Sonce Slovenije</title>
+    <meta name="description" content="Prijavite težave z delovanjem spletne strani Pisarna pravne zaščite Sonce Slovenije.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://sonce.org/podpora.html">
+
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-12 max-w-3xl">
+        <h1 class="text-3xl font-bold text-primary mb-3">Imate težave z našo spletno stranjo?</h1>
+        <p class="text-gray-700 mb-8">Zahvaljujemo se vam za povratne informacije. Pomagajte nam izboljšati delovanje spletne strani z opisom težave. Za nujne zadeve nam lahko pišete tudi neposredno na
+            <a href="mailto:info@pisarnasonce.si" class="text-primary font-semibold underline">info@pisarnasonce.si</a>.
+        </p>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Hitra prijava težave</h2>
+            <form id="supportForm" class="space-y-5" onsubmit="return handleSupportSubmit(event)">
+                <div>
+                    <label for="pageUrl" class="block text-gray-700 font-medium mb-2">URL strani</label>
+                    <input id="pageUrl" name="pageUrl" type="url" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="https://sonce.org/..." required>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="device" class="block text-gray-700 font-medium mb-2">Naprava</label>
+                        <input id="device" name="device" type="text" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="npr. Telefon, Računalnik">
+                    </div>
+                    <div>
+                        <label for="browser" class="block text-gray-700 font-medium mb-2">Brskalnik</label>
+                        <input id="browser" name="browser" type="text" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="npr. Chrome, Safari, Firefox">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="description" class="block text-gray-700 font-medium mb-2">Kaj ne deluje?</label>
+                    <textarea id="description" name="description" rows="5" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Opišite korake do težave, morebitna sporočila o napaki, posnetek zaslona ipd." required></textarea>
+                </div>
+
+                <div>
+                    <label for="email" class="block text-gray-700 font-medium mb-2">Vaš e‑poštni naslov (neobvezno)</label>
+                    <input id="email" name="email" type="email" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="ime@primer.si">
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-6 rounded-xl hover:from-primary/90 hover:to-secondary/90 transition-all duration-300">
+                        Odpri e‑pošto za podporo
+                    </button>
+                </div>
+            </form>
+
+            <p class="text-gray-500 text-sm mt-4">Če se e‑pošta ne odpre samodejno, kliknite: <a id="fallbackMailto" href="mailto:info@pisarnasonce.si" class="text-primary underline">odpri pošto</a>.</p>
+        </div>
+    </div>
+
+    <script>
+        function encode(value) {
+            return encodeURIComponent(value || '').replace(/%20/g, '+');
+        }
+
+        function detectBrowser() {
+            const ua = navigator.userAgent;
+            if (/edg\//i.test(ua)) return 'Edge';
+            if (/chrome\//i.test(ua)) return 'Chrome';
+            if (/safari/i.test(ua) && !/chrome/i.test(ua)) return 'Safari';
+            if (/firefox/i.test(ua)) return 'Firefox';
+            return '';
+        }
+
+        function detectDevice() {
+            const ua = navigator.userAgent.toLowerCase();
+            if (/mobile|iphone|android/.test(ua)) return 'Telefon';
+            if (/ipad|tablet/.test(ua)) return 'Tablica';
+            return 'Računalnik';
+        }
+
+        function handleSupportSubmit(event) {
+            event.preventDefault();
+            const pageUrl = document.getElementById('pageUrl').value.trim();
+            const device = document.getElementById('device').value.trim();
+            const browser = document.getElementById('browser').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const email = document.getElementById('email').value.trim();
+
+            const subject = encode(`Prijava težave na spletni strani – ${pageUrl || 'sonce.org'}`);
+            const bodyLines = [
+                `URL strani: ${pageUrl}`,
+                `Naprava: ${device}`,
+                `Brskalnik: ${browser}`,
+                email ? `Kontaktni e‑naslov: ${email}` : null,
+                '',
+                'Opis težave:',
+                description
+            ].filter(Boolean);
+            const body = encode(bodyLines.join('\n'));
+
+            const mailto = `mailto:info@pisarnasonce.si?subject=${subject}&body=${body}`;
+            const fallback = document.getElementById('fallbackMailto');
+            if (fallback) fallback.href = mailto;
+            window.location.href = mailto;
+            return false;
+        }
+
+        // Prefill helpers
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlInput = document.getElementById('pageUrl');
+            const deviceInput = document.getElementById('device');
+            const browserInput = document.getElementById('browser');
+            if (urlInput && !urlInput.value) urlInput.value = window.location.origin;
+            if (deviceInput && !deviceInput.value) deviceInput.value = detectDevice();
+            if (browserInput && !browserInput.value) browserInput.value = detectBrowser();
+        });
+    </script>
+</body>
+</html>

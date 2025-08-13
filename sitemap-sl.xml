@@ -54,4 +54,13 @@
         <priority>0.7</priority>
         <lastmod>2025-08-12</lastmod>
     </url>
+
+    <url>
+        <loc>https://sonce.org/podpora.html</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.5</priority>
+        <xhtml:link rel="alternate" hreflang="sl" href="https://sonce.org/podpora.html"/>
+        <xhtml:link rel="alternate" hreflang="sl-SI" href="https://sonce.org/podpora.html"/>
+        <lastmod>2025-08-13</lastmod>
+    </url>
 </urlset>
