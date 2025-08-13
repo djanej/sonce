@@ -4335,6 +4335,14 @@
         }
         /* Offset native anchor jumps by header height as fallback */
         section[id] { scroll-margin-top: calc(var(--header-offset, 3.5rem) + 8px); }
+
+        /* Sticky footer layout to remove extra space below footer */
+        html, body { height: 100%; min-height: 100%; }
+        body { display: flex; flex-direction: column; margin: 0; padding-bottom: 0; }
+        footer { margin-top: auto !important; }
+
+        /* Hide trailing CTA bar to ensure footer is last element */
+        .mobile-cta-bar { display: none !important; }
     </style>
     <script>
         // Global smooth scrolling with header offset and section highlight
