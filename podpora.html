@@ -21,7 +21,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-12 max-w-3xl">
+    <div id="error-message" style="display:none;color:#dc2626;text-align:center;padding:16px;">⚠️ Some content couldn’t load. It may be blocked by Cloudflare or a connection issue.</div>
+    <div id="content" class="container mx-auto px-4 py-12 max-w-3xl">
         <h1 class="text-3xl font-bold text-primary mb-3">Imate težave z našo spletno stranjo?</h1>
         <p class="text-gray-700 mb-8">Zahvaljujemo se vam za povratne informacije. Pomagajte nam izboljšati delovanje spletne strani z opisom težave. Za nujne zadeve nam lahko pišete tudi neposredno na
             <a href="mailto:anej.bltnk@gmail.com" class="text-primary font-semibold underline">anej.bltnk@gmail.com</a>.
@@ -68,6 +69,23 @@
     </div>
 
     <script>
+        (function(){
+            function showErrorIfEmpty(){
+                var content = document.getElementById('content');
+                var error = document.getElementById('error-message');
+                if (!content || !error) { return; }
+                var hasElements = content.children && content.children.length > 0;
+                var hasText = (content.textContent || '').trim().length > 0;
+                if (!hasElements && !hasText) {
+                    error.style.display = 'block';
+                }
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', showErrorIfEmpty);
+            } else {
+                showErrorIfEmpty();
+            }
+        })();
         function encode(value) {
             return encodeURIComponent(value || '').replace(/%20/g, '+');
         }
