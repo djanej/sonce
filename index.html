@@ -2622,6 +2622,12 @@
             .btn-primary { width: auto; min-height: 48px; padding-left: 1.25rem; padding-right: 1.25rem; }
         }
 
+        /* Desktop offset for fixed header */
+        @media (min-width: 1024px) {
+            html { scroll-padding-top: 96px; }
+            section:first-of-type { padding-top: 96px; }
+        }
+
         /* Mobile override: hide header completely */
         @media (max-width: 768px) {
             header { display: none !important; }
@@ -3145,7 +3151,7 @@
     <!-- Mobile warning removed for optimized mobile experience -->
 
     <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+    <header class="bg-white shadow-sm sticky top-0 lg:fixed lg:top-0 lg:left-0 lg:right-0 z-50">
         <div class="container">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center">
