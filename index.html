@@ -3187,6 +3187,10 @@
     </div>
 
     <!-- Hero Section -->
+    <div id="error-message" style="display:none;color:#dc2626;text-align:center;padding:16px;">⚠️ Some content couldn't load. It may be blocked by Cloudflare or a connection issue.</div>
+    <div id="content">
+
+    <!-- Hero Section -->
     <section id="home" class="hero-gradient text-white py-20 md:py-28 overflow-hidden">
         <div class="container">
             <div class="flex flex-col lg:flex-row items-center">
@@ -3904,6 +3908,9 @@
     </div>
 
     <!-- Footer -->
+    </div>
+
+    <!-- Footer -->
     <footer class="bg-gradient-to-br from-primary to-secondary text-white py-16 md:-mt-8">
         <div class="container">
             <div class="grid gap-8 md:grid-cols-3 md:gap-12">
@@ -3911,8 +3918,7 @@
                     <img data-src="/images/soncelogo.jpg" alt="Logotip Pisarne pravne zaščite Sonce Slovenije" class="h-16 mb-6 lazy-image" loading="lazy" decoding="async">
                     <p class="mb-6 text-white/90">Pisarna pravne zaščite Sonce Slovenije je vaš partner pri uveljavljanju pravic na delovnem mestu.</p>
                     <div class="flex space-x-4 justify-center md:justify-start">
-                        <a href="https://www.facebook.com/PisarnaDelavskePravneZasciteSonceSlovenije" target="_blank" rel="noopener noreferrer" 
-                           class="bg-white/10 hover:bg-white/20 p-4 rounded-full transition-all duration-300 transform hover:scale-110 hover:shadow-lg group">
+                        <a href="https://www.facebook.com/PisarnaDelavskePravneZasciteSonceSlovenije" target="_blank" rel="noopener noreferrer" class="bg-white/10 hover:bg-white/20 p-4 rounded-full transition-all duration-300 transform hover:scale-110 hover:shadow-lg group">
                             <i class="fab fa-facebook-f text-2xl group-hover:text-primary transition-colors duration-300"></i>
                         </a>
                     </div>
@@ -3983,29 +3989,22 @@
                     <p class="text-white/80 mb-4">Delite našo stran:</p>
                     <div class="flex space-x-4 justify-center">
                         <!-- Facebook -->
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://sonce.org" 
-                           target="_blank" rel="noopener noreferrer"
-                           class="text-white/80 hover:text-white transition-colors duration-300 group">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://sonce.org" target="_blank" rel="noopener noreferrer" class="text-white/80 hover:text-white transition-colors duration-300 group">
                             <i class="fab fa-facebook-f text-xl group-hover:scale-110 transform transition-transform duration-300"></i>
                         </a>
                         
                         <!-- LinkedIn -->
-                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://sonce.org&title=Pravna pomoč za delavce&summary=Brezplačna pravna pomoč in zaščita delavskih pravic" 
-                           target="_blank" rel="noopener noreferrer"
-                           class="text-white/80 hover:text-white transition-colors duration-300 group">
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://sonce.org&title=Pravna pomoč za delavce&summary=Brezplačna pravna pomoč in zaščita delavskih pravic" target="_blank" rel="noopener noreferrer" class="text-white/80 hover:text-white transition-colors duration-300 group">
                             <i class="fab fa-linkedin-in text-xl group-hover:scale-110 transform transition-transform duration-300"></i>
                         </a>
                         
                         <!-- WhatsApp -->
-                        <a href="whatsapp://send?text=Potrebujete pravno pomoč? Obiščite https://sonce.org" 
-                           data-action="share/whatsapp/share"
-                           class="text-white/80 hover:text-white transition-colors duration-300 group">
+                        <a href="whatsapp://send?text=Potrebujete pravno pomoč? Obiščite https://sonce.org" data-action="share/whatsapp/share" class="text-white/80 hover:text-white transition-colors duration-300 group">
                             <i class="fab fa-whatsapp text-xl group-hover:scale-110 transform transition-transform duration-300"></i>
                         </a>
                         
                         <!-- Email -->
-                        <a href="mailto:?subject=Pravna pomoč - Sindikat Sonce Koper&body=Potrebujete pravno pomoč? Obiščite https://sonce.org" 
-                           class="text-white/80 hover:text-white transition-colors duration-300 group">
+                        <a href="mailto:?subject=Pravna pomoč - Sindikat Sonce Koper&body=Potrebujete pravno pomoč? Obiščite https://sonce.org" class="text-white/80 hover:text-white transition-colors duration-300 group">
                             <i class="fas fa-envelope text-xl group-hover:scale-110 transform transition-transform duration-300"></i>
                         </a>
                     </div>
@@ -4435,6 +4434,25 @@
             updateHeaderOffsetVar();
             window.addEventListener('resize', updateHeaderOffsetVar);
         });
+    </script>
+    <script>
+        (function(){
+            function showErrorIfEmpty(){
+                var content = document.getElementById('content');
+                var error = document.getElementById('error-message');
+                if (!content || !error) { return; }
+                var hasElements = content.children && content.children.length > 0;
+                var hasText = (content.textContent || '').trim().length > 0;
+                if (!hasElements && !hasText) {
+                    error.style.display = 'block';
+                }
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', showErrorIfEmpty);
+            } else {
+                showErrorIfEmpty();
+            }
+        })();
     </script>
 </body>
 </html>

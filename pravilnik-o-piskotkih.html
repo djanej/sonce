@@ -21,7 +21,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-12 max-w-4xl">
+    <div id="error-message" style="display:none;color:#dc2626;text-align:center;padding:16px;">⚠️ Some content couldn’t load. It may be blocked by Cloudflare or a connection issue.</div>
+    <div id="content" class="container mx-auto px-4 py-12 max-w-4xl">
         <h1 class="text-3xl font-bold text-primary mb-8">Pravilnik o piškotkih</h1>
         
         <div class="space-y-8">
@@ -72,5 +73,24 @@
             </section>
         </div>
     </div>
+    <script>
+        (function(){
+            function showErrorIfEmpty(){
+                var content = document.getElementById('content');
+                var error = document.getElementById('error-message');
+                if (!content || !error) { return; }
+                var hasElements = content.children && content.children.length > 0;
+                var hasText = (content.textContent || '').trim().length > 0;
+                if (!hasElements && !hasText) {
+                    error.style.display = 'block';
+                }
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', showErrorIfEmpty);
+            } else {
+                showErrorIfEmpty();
+            }
+        })();
+    </script>
 </body>
 </html> 
