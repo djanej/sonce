@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <meta http-equiv="Accept-Encoding" content="gzip, deflate, br">
+
     <title>Pravilnik o piškotkih - Pisarna pravne zaščite Sonce Slovenije</title>
     <meta name="description" content="Pravilnik o uporabi piškotkov na spletnem mestu Pisarna pravne zaščite Sonce Slovenije." />
     <meta name="robots" content="index, follow" />
@@ -17,6 +17,19 @@
     <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
     
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF5F15',
+                        secondary: '#FF1E00',
+                        accent: '#FFD700'
+                    }
+                }
+            }
+        }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>

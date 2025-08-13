@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <meta http-equiv="Accept-Encoding" content="gzip, deflate, br">
+
     
     <!-- Performance optimizations -->
     <link rel="preconnect" href="https://i.imgur.com" crossorigin>
@@ -304,7 +304,7 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"></noscript>
     <style>
         /* Critical CSS for performance */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        /* Using link preload + noscript to load fonts; removing @import to avoid double-fetch */
         
         /* Preload critical fonts */
         @font-face {
@@ -2681,7 +2681,8 @@
         });
 
         // Global variables and initialization
-        const website = {
+        window.website = window.website || {
+
             // DOM elements
             elements: {
                 mobileMenu: null,
@@ -2910,7 +2911,7 @@
                 if ('performance' in window) {
                     const timing = performance.timing;
                     const loadTime = timing.loadEventEnd - timing.navigationStart;
-                    console.log(`Page load time: ${loadTime}ms`);
+                    console.debug(`Page load time: ${loadTime}ms`);
 
                     if (loadTime > 3000) {
                         console.warn('Page load time exceeds 3 seconds');
@@ -2920,15 +2921,18 @@
                 // Monitor memory usage
                 if ('memory' in performance) {
                     setInterval(() => {
-                        console.log(`Memory usage: ${performance.memory.usedJSHeapSize / 1048576}MB`);
+                        console.debug(`Memory usage: ${performance.memory.usedJSHeapSize / 1048576}MB`);
                     }, 10000);
                 }
             }
         };
-
+        
         // Initialize website when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
-            website.init();
+            if (!window.__websiteInitialized) {
+                window.__websiteInitialized = true;
+                window.website && window.website.init();
+            }
         });
     </script>
 
@@ -3125,12 +3129,17 @@
                     if (reg && reg.installing) {
                         reg.installing.addEventListener('statechange', function() {
                             if (this.state === 'installed' && navigator.serviceWorker.controller) {
-                                window.location.reload();
+                                if (!sessionStorage.getItem('sw-reloaded')) {
+                                    try { sessionStorage.setItem('sw-reloaded', '1'); } catch (e) {}
+                                    window.location.reload();
+                                }
                             }
                         });
                     }
                 }).catch(function(err){
-                    console.log('SW registration failed:', err);
+                    console.warn('SW registration failed:', err);
+                }).finally(function(){
+                    try { sessionStorage.removeItem('sw-reloaded'); } catch (e) {}
                 });
             });
         }
@@ -4048,7 +4057,7 @@
             const sdk = document.getElementById('emailjs-sdk');
             function initIfReady() {
                 if (window.emailjs && typeof window.emailjs.init === 'function') {
-                    window.emailjs.init("PLqXSPz6Kid72fbh_");
+                    try { window.emailjs.init("PLqXSPz6Kid72fbh_"); } catch (e) {}
                 }
             }
             if (sdk) {
@@ -4144,6 +4153,7 @@
         });
 
         // Global variables and initialization
+        if (!window.website) {
         const website = {
             // DOM elements
             elements: {
@@ -4372,14 +4382,15 @@
                 if ('performance' in window) {
                     const paintEntries = performance.getEntriesByType('paint');
                     paintEntries.forEach(entry => {
-                        console.log(`${entry.name}: ${entry.startTime}`);
+                        console.debug(`${entry.name}: ${entry.startTime}`);
                     });
                 }
             }
                 };
  
         // Initialize website
-        document.addEventListener('DOMContentLoaded', () => website.init());
+        document.addEventListener('DOMContentLoaded', () => { if (!window.__websiteInitialized) { window.__websiteInitialized = true; window.website && window.website.init(); } });
+        }
     </script>
     <style>
         /* Smooth-scroll target highlight */
