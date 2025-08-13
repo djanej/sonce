@@ -276,7 +276,7 @@
     <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
     <link rel="preload" href="https://unpkg.com/aos@2.3.1/dist/aos.css" as="style">
-    <link rel="preload" href="https://unpkg.com/aos@2.3.1/dist/aos.js" as="script">
+    <link rel="preload" href="https://unpkg.com/aos@2.3.1/dist/aos.js" as="script" crossorigin>
     <link rel="preload" href="https://i.imgur.com/vBKRRYp.jpeg" as="image" fetchpriority="high">
     
     <!-- Critical CSS and Scripts -->
@@ -299,7 +299,7 @@
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" media="all">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"></noscript>
     <style>
@@ -671,6 +671,7 @@
                 opacity: 1 !important;
                 transform: none !important;
                 transition: none !important;
+                visibility: visible !important;
             }
 
             .floating, .pulse, .shine:after {
@@ -1707,6 +1708,7 @@
             [data-aos] {
                 opacity: 1 !important;
                 transform: none !important;
+                visibility: visible !important;
             }
 
             /* Mobile menu improvements */
@@ -3115,12 +3117,18 @@
             }
         })();
 
-        // Service Worker Registration (kept from original)
+        // Service Worker Registration with immediate update
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/sw.js').then(function(reg){
-                    // Optional: listen for updates
-                    if (reg && reg.waiting) { /* noop */ }
+                    if (reg && reg.waiting) { reg.waiting.postMessage({type:'SKIP_WAITING'}); }
+                    if (reg && reg.installing) {
+                        reg.installing.addEventListener('statechange', function() {
+                            if (this.state === 'installed' && navigator.serviceWorker.controller) {
+                                window.location.reload();
+                            }
+                        });
+                    }
                 }).catch(function(err){
                     console.log('SW registration failed:', err);
                 });
@@ -4051,20 +4059,41 @@
         });
     </script>
     <!-- Performance optimized scripts -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" async defer></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer id="aos-script"></script>
     <script type="text/javascript">
         // Initialize Animation on Scroll with safer defaults
         document.addEventListener('DOMContentLoaded', function() {
             const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            if (window.innerWidth > 768 && !prefersReducedMotion) {
-                if (window.AOS) {
-                    AOS.init({
-                        duration: 800,
-                        once: true,
-                        offset: 100
+            // On desktop, initialize AOS if available; otherwise, ensure elements are visible
+            function initAOSIfReady() {
+                if (window.innerWidth > 768 && !prefersReducedMotion && window.AOS) {
+                    try {
+                        AOS.init({ duration: 800, once: true, offset: 100 });
+                    } catch (e) {
+                        // If AOS init fails, reveal any [data-aos] elements
+                        document.querySelectorAll('[data-aos]').forEach(el => {
+                            el.style.opacity = '1';
+                            el.style.transform = 'none';
+                            el.style.visibility = 'visible';
+                            el.classList.add('aos-animate');
+                        });
+                    }
+                } else {
+                    // No AOS or reduced motion: ensure [data-aos] elements are visible
+                    document.querySelectorAll('[data-aos]').forEach(el => {
+                        el.style.opacity = '1';
+                        el.style.transform = 'none';
+                        el.style.visibility = 'visible';
+                        el.classList.add('aos-animate');
                     });
                 }
             }
+            const aosScript = document.getElementById('aos-script');
+            if (aosScript && !window.AOS) {
+                aosScript.addEventListener('load', initAOSIfReady);
+            }
+            // Call once in case script already loaded
+            initAOSIfReady();
         });
     </script>
     <script>

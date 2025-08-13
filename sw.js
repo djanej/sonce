@@ -1,5 +1,5 @@
 // Service Worker for Sindikat Sonce Koper website
-const CACHE_NAME = 'sonce-cache-v2';
+const CACHE_NAME = 'sonce-cache-v3';
 const OFFLINE_URL = '/index.html';
 const urlsToCache = [
   '/',
@@ -33,6 +33,12 @@ self.addEventListener('activate', event => {
   })());
 });
 
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 function staleWhileRevalidate(request) {
   return caches.open(CACHE_NAME).then(cache =>
     cache.match(request).then(cachedResponse => {
@@ -64,9 +70,9 @@ self.addEventListener('fetch', event => {
   if (request.mode === 'navigate') {
     event.respondWith((async () => {
       try {
-        const networkResponse = await fetch(request);
+        const networkResponse = await fetch(request, { cache: 'no-store' });
         const cache = await caches.open(CACHE_NAME);
-        cache.put(request, networkResponse.clone()).catch(() => {});
+        cache.put(OFFLINE_URL, networkResponse.clone()).catch(() => {});
         return networkResponse;
       } catch (err) {
         const cached = await caches.match(OFFLINE_URL);
@@ -77,7 +83,11 @@ self.addEventListener('fetch', event => {
   }
 
   if (['style', 'script', 'worker'].includes(request.destination)) {
-    event.respondWith(staleWhileRevalidate(request));
+    // Always try network first to avoid stale scripts/styles that can blank the page
+    event.respondWith(fetch(request).then(r => {
+      caches.open(CACHE_NAME).then(c => c.put(request, r.clone())).catch(() => {});
+      return r;
+    }).catch(() => staleWhileRevalidate(request)));
     return;
   }
 
