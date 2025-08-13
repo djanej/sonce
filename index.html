@@ -460,15 +460,12 @@
 
             /* Header improvements */
             header {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
+                position: static;
                 height: 70px;
                 background: rgba(255, 255, 255, 0.98);
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
-                z-index: 50;
+                z-index: 1;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 width: 100%;
             }
@@ -3145,7 +3142,7 @@
     <!-- Mobile warning removed for optimized mobile experience -->
 
     <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+    <header class="bg-white shadow-sm">
         <div class="container">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center">
