@@ -2910,16 +2910,18 @@
                 if ('performance' in window) {
                     const timing = performance.timing;
                     const loadTime = timing.loadEventEnd - timing.navigationStart;
-                    console.log(`Page load time: ${loadTime}ms`);
+                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                        console.log(`Page load time: ${loadTime}ms`);
+                    }
 
-                    if (loadTime > 3000) {
+                    if (loadTime > 3000 && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
                         console.warn('Page load time exceeds 3 seconds');
                     }
                 }
 
-                // Monitor memory usage
-                if ('memory' in performance) {
-                    setInterval(() => {
+                // Monitor memory usage (only in development)
+                if ('memory' in performance && window.location.hostname === 'localhost') {
+                    this.state.memoryMonitorInterval = setInterval(() => {
                         console.log(`Memory usage: ${performance.memory.usedJSHeapSize / 1048576}MB`);
                     }, 10000);
                 }
@@ -3088,6 +3090,8 @@
                 });
                 img.addEventListener('error', function onErr() {
                     img.classList.add('error');
+                    // Set a fallback image or hide the broken image
+                    img.style.display = 'none';
                     img.removeEventListener('error', onErr);
                 });
                 img.removeAttribute('data-src');
@@ -3130,7 +3134,9 @@
                         });
                     }
                 }).catch(function(err){
-                    console.log('SW registration failed:', err);
+                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                        console.log('SW registration failed:', err);
+                    }
                 });
             });
         }
