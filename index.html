@@ -535,7 +535,9 @@
             .hero-gradient {
                 padding: 5rem 1rem 3rem;
                 text-align: center;
-                min-height: auto;
+                min-height: calc(100vh - var(--header-offset, 70px));
+                display: flex;
+                align-items: center;
             }
 
             .hero-gradient h2 {
@@ -744,7 +746,7 @@
             /* Landscape mode adjustments */
             @media (orientation: landscape) and (max-height: 500px) {
                 .hero-gradient {
-                    min-height: auto;
+                    min-height: calc(100vh - var(--header-offset, 50px));
                     padding: 2rem 1rem;
                 }
                 
@@ -2624,6 +2626,7 @@
             header { display: none !important; }
             html { scroll-padding-top: 0 !important; }
             section:first-of-type { padding-top: 0 !important; }
+            .hero-gradient { min-height: 100vh; display: flex; align-items: center; }
             #mobileMenu { padding-top: 0 !important; }
         }
     </style>
