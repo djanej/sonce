@@ -1,5 +1,6 @@
 // Service Worker for Sindikat Sonce Koper website
-const CACHE_NAME = 'sonce-cache-v1';
+const CACHE_NAME = 'sonce-cache-v2';
+const OFFLINE_URL = '/index.html';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -10,40 +11,80 @@ const urlsToCache = [
   '/images/soncelogo.jpg'
 ];
 
-// Install event - cache resources
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
-      })
-  );
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    try {
+      await cache.addAll(urlsToCache);
+    } catch (e) {
+      // Ignore failures for cross-origin or opaque responses
+    }
+    self.skipWaiting();
+  })());
 });
 
-// Fetch event - serve from cache when possible
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
-      })
-  );
-});
-
-// Activate event - clean up old caches
 self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
+  event.waitUntil((async () => {
+    const cacheNames = await caches.keys();
+    await Promise.all(
+      cacheNames.map(name => name !== CACHE_NAME ? caches.delete(name) : undefined)
+    );
+    self.clients.claim();
+  })());
+});
+
+function staleWhileRevalidate(request) {
+  return caches.open(CACHE_NAME).then(cache =>
+    cache.match(request).then(cachedResponse => {
+      const networkFetch = fetch(request).then(networkResponse => {
+        cache.put(request, networkResponse.clone()).catch(() => {});
+        return networkResponse;
+      }).catch(() => undefined);
+      return cachedResponse || networkFetch;
     })
   );
+}
+
+function cacheFirst(request) {
+  return caches.open(CACHE_NAME).then(cache =>
+    cache.match(request).then(cachedResponse => {
+      if (cachedResponse) return cachedResponse;
+      return fetch(request).then(networkResponse => {
+        cache.put(request, networkResponse.clone()).catch(() => {});
+        return networkResponse;
+      });
+    })
+  );
+}
+
+self.addEventListener('fetch', event => {
+  const request = event.request;
+  if (request.method !== 'GET') return;
+
+  if (request.mode === 'navigate') {
+    event.respondWith((async () => {
+      try {
+        const networkResponse = await fetch(request);
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(request, networkResponse.clone()).catch(() => {});
+        return networkResponse;
+      } catch (err) {
+        const cached = await caches.match(OFFLINE_URL);
+        return cached || new Response('Offline', { headers: { 'Content-Type': 'text/plain' } });
+      }
+    })());
+    return;
+  }
+
+  if (['style', 'script', 'worker'].includes(request.destination)) {
+    event.respondWith(staleWhileRevalidate(request));
+    return;
+  }
+
+  if (request.destination === 'image') {
+    event.respondWith(cacheFirst(request));
+    return;
+  }
+
+  event.respondWith(fetch(request).catch(() => caches.match(request)));
 });

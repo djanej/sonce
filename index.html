@@ -11,11 +11,17 @@
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="dns-prefetch" href="//i.imgur.com">
     <link rel="dns-prefetch" href="//randomuser.me">
     <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
     <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="//unpkg.com">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
     
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
@@ -68,13 +74,12 @@
     <meta property="og:url" content="https://sonce.org/">
     <meta property="og:title" content="Sindikat Sonce Koper | Brezplačna pravna pomoč in zaščita delavcev">
     <meta property="og:description" content="Sindikat Sonce Koper nudi brezplačno pravno pomoč in strokovno svetovanje. Izkušeni pravniki vam pomagajo pri delovnih sporih, odpovedih in mobingu.">
-    <meta property="og:image" content="https://i.imgur.com/slTvYkP.jpeg">
     <meta property="og:image" content="https://sonce.org/images/soncelogo.jpg">
     <meta property="og:image:alt" content="Sindikat Sonce Koper – brezplačna pravna pomoč in zaščita delavcev">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Sindikat Sonce Koper | Brezplačna pravna pomoč in zaščita delavcev">
     <meta name="twitter:description" content="Sindikat Sonce Koper nudi brezplačno pravno pomoč in strokovno svetovanje. Izkušeni pravniki vam pomagajo pri delovnih sporih, odpovedih in mobingu.">
-    <meta name="twitter:image" content="https://i.imgur.com/slTvYkP.jpeg">
+    <meta name="twitter:image" content="https://sonce.org/images/soncelogo.jpg">
     <meta name="twitter:image:alt" content="Sindikat Sonce Koper – brezplačna pravna pomoč in zaščita delavcev">
 
     <!-- Structured Data -->
@@ -92,7 +97,7 @@
             "Pisarna pravne zaščite Sonce Slovenije"
         ],
         "url": "https://sonce.org/",
-        "logo": "https://i.imgur.com/slTvYkP.jpeg",
+                    "logo": "https://sonce.org/images/soncelogo.jpg",
         "description": "Sindikat Sonce Koper ponuja brezplačno pravno svetovanje, zaščito pravic zaposlenih in sindikalno pomoč. Zastopamo vas pri delodajalcu, pomagamo pri kolektivnih pogodbah in zagotavljamo zaščito pred mobingom.",
         "address": {
             "@type": "PostalAddress",
@@ -148,7 +153,7 @@
         "@type": "LocalBusiness",
         "@id": "https://sonce.org/#localbusiness",
         "name": "Sindikat Sonce Koper",
-        "image": "https://i.imgur.com/slTvYkP.jpeg",
+        "image": "https://sonce.org/images/soncelogo.jpg",
         "priceRange": "$$",
         "address": {
             "@type": "PostalAddress",
@@ -272,7 +277,7 @@
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
     <link rel="preload" href="https://unpkg.com/aos@2.3.1/dist/aos.css" as="style">
     <link rel="preload" href="https://unpkg.com/aos@2.3.1/dist/aos.js" as="script">
-    <link rel="preload" href="https://i.imgur.com/slTvYkP.jpeg" as="image">
+    <link rel="preload" href="/images/soncelogo.jpg" as="image" fetchpriority="high">
     
     <!-- Critical CSS and Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -295,6 +300,8 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"></noscript>
     <style>
         /* Critical CSS for performance */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -3071,6 +3078,7 @@
             function loadImage(img) {
                 const src = img.getAttribute('data-src');
                 if (!src) return;
+                try { img.decoding = 'async'; } catch(e) {}
                 img.src = src;
                 img.addEventListener('load', function onLoad() {
                     img.classList.add('loaded');
@@ -3110,7 +3118,10 @@
         // Service Worker Registration (kept from original)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js').catch(function(err){
+                navigator.serviceWorker.register('/sw.js').then(function(reg){
+                    // Optional: listen for updates
+                    if (reg && reg.waiting) { /* noop */ }
+                }).catch(function(err){
                     console.log('SW registration failed:', err);
                 });
             });
@@ -3138,7 +3149,7 @@
         <div class="container">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center">
-                    <img src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip Pisarne pravne zaščite Sonce Slovenije" class="h-12 md:h-16 shine" loading="eager">
+                    <img src="/images/soncelogo.jpg" alt="Logotip Pisarne pravne zaščite Sonce Slovenije" class="h-12 md:h-16 shine" loading="eager" fetchpriority="high" decoding="async">
                 </div>
                 
                 <nav class="hidden lg:flex space-x-8 items-center">
@@ -3160,7 +3171,7 @@
     <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform -translate-x-full transition-transform duration-300 lg:hidden">
         <div class="container h-full flex flex-col">
             <div class="flex justify-between items-center py-4 border-b">
-                <img src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip" class="h-10" loading="eager">
+                <img src="/images/soncelogo.jpg" alt="Logotip" class="h-10" loading="eager" decoding="async">
                 <button class="text-gray-700 focus:outline-none" id="menuClose">
                     <i class="fas fa-times text-2xl"></i>
                 </button>
@@ -3870,7 +3881,7 @@
         <div class="container">
             <div class="grid gap-8 md:grid-cols-3 md:gap-12">
                 <div data-aos="fade-up">
-                    <img data-src="https://i.imgur.com/slTvYkP.jpeg" alt="Logotip Pisarne pravne zaščite Sonce Slovenije" class="h-16 mb-6 lazy-image" loading="lazy">
+                    <img data-src="/images/soncelogo.jpg" alt="Logotip Pisarne pravne zaščite Sonce Slovenije" class="h-16 mb-6 lazy-image" loading="lazy" decoding="async">
                     <p class="mb-6 text-white/90">Pisarna pravne zaščite Sonce Slovenije je vaš partner pri uveljavljanju pravic na delovnem mestu.</p>
                     <div class="flex space-x-4 justify-center md:justify-start">
                         <a href="https://www.facebook.com/PisarnaDelavskePravneZasciteSonceSlovenije" target="_blank" rel="noopener noreferrer" 
@@ -3995,26 +4006,35 @@
     </div>
 
     <!-- Add EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        // Initialize EmailJS with your public key
-        (function() {
-            emailjs.init("PLqXSPz6Kid72fbh_");
-        })();
-        
-        // EmailJS is ready for use
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" id="emailjs-sdk" defer></script>
+    <script>
+        // Initialize EmailJS when the SDK is loaded and DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            const sdk = document.getElementById('emailjs-sdk');
+            function initIfReady() {
+                if (window.emailjs && typeof window.emailjs.init === 'function') {
+                    window.emailjs.init("PLqXSPz6Kid72fbh_");
+                }
+            }
+            if (sdk) {
+                sdk.addEventListener('load', initIfReady);
+            }
+            // Fallback in case the load event fired earlier
+            initIfReady();
+        });
     </script>
     <!-- Performance optimized scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" async defer></script>
     <script type="text/javascript">
         // Initialize Animation on Scroll with safer defaults
         document.addEventListener('DOMContentLoaded', function() {
-            if (window.innerWidth > 768) {
+            const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (window.innerWidth > 768 && !prefersReducedMotion) {
                 if (window.AOS) {
                     AOS.init({
                         duration: 800,
                         once: true,
-                        offset: 100,
+                        offset: 100
                     });
                 }
             }
