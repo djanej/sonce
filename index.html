@@ -4321,10 +4321,85 @@
                     });
                 }
             }
-        };
-
+                };
+ 
         // Initialize website
         document.addEventListener('DOMContentLoaded', () => website.init());
+    </script>
+    <style>
+        /* Smooth-scroll target highlight */
+        .scroll-highlight { animation: targetFocus 900ms ease-out; }
+        @keyframes targetFocus {
+            0% { box-shadow: 0 0 0 0 rgba(255,95,21,.35); }
+            100% { box-shadow: 0 0 0 30px rgba(255,95,21,0); }
+        }
+        /* Offset native anchor jumps by header height as fallback */
+        section[id] { scroll-margin-top: calc(var(--header-offset, 3.5rem) + 8px); }
+    </style>
+    <script>
+        // Global smooth scrolling with header offset and section highlight
+        document.addEventListener('DOMContentLoaded', function() {
+            const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function getHeaderOffset() {
+                const header = document.querySelector('header');
+                return header ? (header.offsetHeight || parseInt(getComputedStyle(header).height) || 0) : 0;
+            }
+            function updateHeaderOffsetVar() {
+                document.documentElement.style.setProperty('--header-offset', getHeaderOffset() + 'px');
+            }
+            function smoothScrollToTarget(target) {
+                const headerOffset = getHeaderOffset();
+                const targetTop = target.getBoundingClientRect().top + window.pageYOffset - headerOffset - 8;
+                window.scrollTo({ top: targetTop, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+            }
+            function highlightTarget(target) {
+                target.classList.add('scroll-highlight');
+                setTimeout(() => target.classList.remove('scroll-highlight'), 900);
+            }
+
+            document.addEventListener('click', function(e) {
+                const link = e.target.closest('a[href^="#"]');
+                if (!link) return;
+                const href = link.getAttribute('href');
+                if (!href || href === '#' || href.length === 1) return;
+                const targetId = decodeURIComponent(href.slice(1));
+                const target = document.getElementById(targetId);
+                if (!target) return;
+                e.preventDefault();
+
+                // Close mobile menu if open
+                const mobileMenu = document.getElementById('mobileMenu');
+                if (mobileMenu && mobileMenu.classList.contains('open')) {
+                    mobileMenu.classList.remove('open');
+                    mobileMenu.style.transform = 'translateX(-100%)';
+                    document.body.style.overflow = '';
+                    const menuToggle = document.getElementById('menuToggle');
+                    if (menuToggle) {
+                        const icon = menuToggle.querySelector('i');
+                        if (icon) icon.className = 'fas fa-bars text-2xl';
+                    }
+                }
+
+                smoothScrollToTarget(target);
+                history.pushState(null, '', '#' + targetId);
+                highlightTarget(target);
+            });
+
+            if (window.location.hash) {
+                const id = decodeURIComponent(window.location.hash.slice(1));
+                const el = document.getElementById(id);
+                if (el) {
+                    setTimeout(() => {
+                        smoothScrollToTarget(el);
+                        highlightTarget(el);
+                    }, 60);
+                }
+            }
+
+            updateHeaderOffsetVar();
+            window.addEventListener('resize', updateHeaderOffsetVar);
+        });
     </script>
 </body>
 </html>
