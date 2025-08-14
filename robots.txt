@@ -1,5 +1,6 @@
 # www.sonce.org robots.txt
 # Optimizirano za slovenske uporabnike in ključne besede
+# Enhanced SEO and crawling directives
 
 User-agent: *
 Allow: /
@@ -12,6 +13,14 @@ Allow: /css/
 Allow: /js/
 Allow: /fonts/
 Allow: /sitemap.xml
+Allow: /sitemap-sl.xml
+Allow: /favicons/
+Allow: /podpora.html
+Allow: /pogoji-uporabe.html
+Allow: /pravilnik-o-zasebnosti.html
+Allow: /pravilnik-o-piskotkih.html
+Allow: /pristopna-izjava.pdf
+Allow: /prospekt-sindikata-sonce-slovenije.pdf
 
 # Allow specific content paths
 Allow: /brezplacna-pravna-pomoc
@@ -82,8 +91,10 @@ Disallow: /*?*debug=
 Disallow: /*?*test=
 
 # Sitemaps
+Sitemap: https://sonce.org/sitemap-index.xml
 Sitemap: https://sonce.org/sitemap.xml
 Sitemap: https://sonce.org/sitemap-sl.xml
+Sitemap: https://sonce.org/sitemap-images.xml
 
 # Preferred host
 Host: sonce.org 
