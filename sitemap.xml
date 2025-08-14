@@ -2,8 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
+        http://www.google.com/schemas/sitemap-image/1.1
+        http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd">
     
     <url>
         <loc>https://sonce.org/</loc>
@@ -11,7 +14,12 @@
         <priority>1.0</priority>
         <xhtml:link rel="alternate" hreflang="sl" href="https://sonce.org/"/>
         <xhtml:link rel="alternate" hreflang="sl-SI" href="https://sonce.org/"/>
-        <lastmod>2025-08-12</lastmod>
+        <lastmod>2025-01-13</lastmod>
+        <image:image>
+            <image:loc>https://sonce.org/images/soncelogo.jpg</image:loc>
+            <image:title>Sindikat Sonce Koper - Brezplačna pravna pomoč in zaščita delavcev</image:title>
+            <image:caption>Sindikat Sonce Koper nudi brezplačno pravno pomoč in strokovno svetovanje</image:caption>
+        </image:image>
     </url>
 
     <url>
@@ -20,7 +28,7 @@
         <priority>0.5</priority>
         <xhtml:link rel="alternate" hreflang="sl" href="https://sonce.org/pogoji-uporabe.html"/>
         <xhtml:link rel="alternate" hreflang="sl-SI" href="https://sonce.org/pogoji-uporabe.html"/>
-        <lastmod>2025-08-12</lastmod>
+        <lastmod>2025-01-13</lastmod>
     </url>
 
     <url>
@@ -29,7 +37,7 @@
         <priority>0.5</priority>
         <xhtml:link rel="alternate" hreflang="sl" href="https://sonce.org/pravilnik-o-zasebnosti.html"/>
         <xhtml:link rel="alternate" hreflang="sl-SI" href="https://sonce.org/pravilnik-o-zasebnosti.html"/>
-        <lastmod>2025-08-12</lastmod>
+        <lastmod>2025-01-13</lastmod>
     </url>
 
     <url>
@@ -38,21 +46,21 @@
         <priority>0.5</priority>
         <xhtml:link rel="alternate" hreflang="sl" href="https://sonce.org/pravilnik-o-piskotkih.html"/>
         <xhtml:link rel="alternate" hreflang="sl-SI" href="https://sonce.org/pravilnik-o-piskotkih.html"/>
-        <lastmod>2025-08-12</lastmod>
+        <lastmod>2025-01-13</lastmod>
     </url>
 
     <url>
         <loc>https://sonce.org/pristopna-izjava.pdf</loc>
         <changefreq>yearly</changefreq>
         <priority>0.8</priority>
-        <lastmod>2025-08-12</lastmod>
+        <lastmod>2025-01-13</lastmod>
     </url>
 
     <url>
         <loc>https://sonce.org/prospekt-sindikata-sonce-slovenije.pdf</loc>
         <changefreq>yearly</changefreq>
         <priority>0.7</priority>
-        <lastmod>2025-08-12</lastmod>
+        <lastmod>2025-01-13</lastmod>
     </url>
 
     <url>

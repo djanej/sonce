@@ -1,4 +1,4 @@
-# Performance optimizations for Sindikat Sonce Koper website
+# Performance and SEO optimizations for Sindikat Sonce Koper website
 
 # Enable compression
 <IfModule mod_deflate.c>
@@ -12,6 +12,11 @@
     AddOutputFilterByType DEFLATE application/javascript
     AddOutputFilterByType DEFLATE application/x-javascript
     AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE application/pdf
+    AddOutputFilterByType DEFLATE application/font-woff
+    AddOutputFilterByType DEFLATE application/font-woff2
+    AddOutputFilterByType DEFLATE font/woff
+    AddOutputFilterByType DEFLATE font/woff2
 </IfModule>
 
 # Enable browser caching
@@ -49,3 +54,27 @@ RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 # Force HTTPS
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# SEO-friendly URL redirects
+RewriteRule ^index\.html$ / [R=301,L]
+RewriteRule ^index\.php$ / [R=301,L]
+
+# Remove trailing slashes for better SEO
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+# Custom error pages for better UX
+ErrorDocument 404 /404.html
+ErrorDocument 500 /500.html
+
+# Additional SEO headers
+<IfModule mod_headers.c>
+    # Add X-Robots-Tag for better search engine control
+    Header always set X-Robots-Tag "index, follow"
+    
+    # Add Content-Security-Policy for security
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:;"
+    
+    # Add Feature-Policy for better browser control
+    Header always set Feature-Policy "geolocation 'none'; microphone 'none'; camera 'none'; payment 'none'"
+</IfModule>
