@@ -1,8 +1,213 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-    
-    <!-- Video content sitemap for better SEO -->
-    <!-- Add video entries here when video content is available -->
-    
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
+        http://www.google.com/schemas/sitemap-video/1.1
+        http://www.google.com/schemas/sitemap-video/1.1/sitemap-video.xsd">
+
+    <!-- Main Video Content -->
+    <url>
+        <loc>https://sonce.org/</loc>
+        <video:video>
+            <video:thumbnail_loc>https://sonce.org/images/soncelogo.jpg</video:thumbnail_loc>
+            <video:title>Sindikat Sonce Koper - Uvodni video</video:title>
+            <video:description>Uvodni video o sindikatu Sonce Koper in naših storitvah za delavce v Kopru in Sloveniji</video:description>
+            <video:content_loc>https://sonce.org/videos/uvodni-video-sindikat-sonce-koper.mp4</video:content_loc>
+            <video:duration>120</video:duration>
+            <video:family_friendly>yes</video:family_friendly>
+            <video:restriction>SI</video:restriction>
+            <video:gallery_loc>https://sonce.org/</video:gallery_loc>
+            <video:price>0.00</video:price>
+            <video:requires_subscription>no</video:requires_subscription>
+            <video:uploader>info@pisarnasonce.si</video:uploader>
+            <video:live>no</video:live>
+        </video:video>
+    </url>
+
+    <!-- Service Videos -->
+    <url>
+        <loc>https://sonce.org/brezplacna-pravna-pomoc</loc>
+        <video:video>
+            <video:thumbnail_loc>https://sonce.org/images/soncelogo.jpg</video:thumbnail_loc>
+            <video:title>Brezplačna pravna pomoč - Sindikat Sonce Koper</video:title>
+            <video:description>Video o brezplačni pravni pomoči, ki jo nudimo članom sindikata</video:description>
+            <video:content_loc>https://sonce.org/videos/brezplacna-pravna-pomoc.mp4</video:content_loc>
+            <video:duration>180</video:duration>
+            <video:family_friendly>yes</video:family_friendly>
+            <video:restriction>SI</video:restriction>
+            <video:gallery_loc>https://sonce.org/brezplacna-pravna-pomoc</video:gallery_loc>
+            <video:price>0.00</video:price>
+            <video:requires_subscription>no</video:requires_subscription>
+            <video:uploader>info@pisarnasonce.si</video:uploader>
+            <video:live>no</video:live>
+        </video:video>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/zascita-pred-mobingom</loc>
+        <video:video>
+            <video:thumbnail_loc>https://sonce.org/images/soncelogo.jpg</video:thumbnail_loc>
+            <video:title>Zaščita pred mobingom - Video vodnik</video:title>
+            <video:description>Video vodnik o tem, kako se zaščititi pred mobingom na delovnem mestu</video:description>
+            <video:content_loc>https://sonce.org/videos/zascita-pred-mobingom.mp4</video:content_loc>
+            <video:duration>240</video:duration>
+            <video:family_friendly>yes</video:family_friendly>
+            <video:restriction>SI</video:restriction>
+            <video:gallery_loc>https://sonce.org/zascita-pred-mobingom</video:gallery_loc>
+            <video:price>0.00</video:price>
+            <video:requires_subscription>no</video:requires_subscription>
+            <video:uploader>info@pisarnasonce.si</video:uploader>
+            <video:live>no</video:live>
+        </video:video>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/delovni-spori</loc>
+        <video:video>
+            <video:thumbnail_loc>https://sonce.org/images/soncelogo.jpg</video:thumbnail_loc>
+            <video:title>Reševanje delovnih sporov - Praktični primeri</video:title>
+            <video:description>Video o reševanju delovnih sporov z praktičnimi primeri iz prakse</video:description>
+            <video:content_loc>https://sonce.org/videos/delovni-spori.mp4</video:content_loc>
+            <video:duration>300</video:duration>
+            <video:family_friendly>yes</video:family_friendly>
+            <video:restriction>SI</video:restriction>
+            <video:gallery_loc>https://sonce.org/delovni-spori</video:gallery_loc>
+            <video:price>0.00</video:price>
+            <video:requires_subscription>no</video:requires_subscription>
+            <video:uploader>info@pisarnasonce.si</video:uploader>
+            <video:live>no</video:live>
+        </video:video>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/kolektivne-pogodbe</loc>
+        <video:video>
+            <video:thumbnail_loc>https://sonce.org/images/soncelogo.jpg</video:thumbnail_loc>
+            <video:title>Kolektivne pogodbe - Pogajanja in proces</video:title>
+            <video:description>Video o procesu pogajanj o kolektivnih pogodbah in vlogi sindikata</video:description>
+            <video:content_loc>https://sonce.org/videos/kolektivne-pogodbe.mp4</video:content_loc>
+            <video:duration>360</video:duration>
+            <video:family_friendly>yes</video:family_friendly>
+            <video:restriction>SI</video:restriction>
+            <video:gallery_loc>https://sonce.org/kolektivne-pogodbe</video:gallery_loc>
+            <video:price>0.00</video:price>
+            <video:requires_subscription>no</video:requires_subscription>
+            <video:uploader>info@pisarnasonce.si</video:uploader>
+            <video:live>no</video:live>
+        </video:video>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/odpoved-pogodbe</loc>
+        <video:video>
+            <video:thumbnail_loc>https://sonce.org/images/soncelogo.jpg</video:thumbnail_loc>
+            <video:title>Odpoved pogodbe o zaposlitvi - Pravice in zaščita</video:title>
+            <video:description>Video o pravicah delavcev pri odpovedi pogodbe o zaposlitvi</video:description>
+            <video:content_loc>https://sonce.org/videos/odpoved-pogodbe.mp4</video:content_loc>
+            <video:duration>270</video:duration>
+            <video:family_friendly>yes</video:family_friendly>
+            <video:restriction>SI</video:restriction>
+            <video:gallery_loc>https://sonce.org/odpoved-pogodbe</video:gallery_loc>
+            <video:price>0.00</video:price>
+            <video:requires_subscription>no</video:requires_subscription>
+            <video:uploader>info@pisarnasonce.si</video:uploader>
+            <video:live>no</video:live>
+        </video:video>
+    </url>
+
+    <!-- Educational Videos -->
+    <url>
+        <loc>https://sonce.org/</loc>
+        <video:video>
+            <video:thumbnail_loc>https://sonce.org/images/soncelogo.jpg</video:thumbnail_loc>
+            <video:title>Izobraževanje o delovnih pravicah</video:title>
+            <video:description>Edukativni video o osnovnih delovnih pravicah v Sloveniji</video:description>
+            <video:content_loc>https://sonce.org/videos/delovne-pravice.mp4</video:content_loc>
+            <video:duration>420</video:duration>
+            <video:family_friendly>yes</video:family_friendly>
+            <video:restriction>SI</video:restriction>
+            <video:gallery_loc>https://sonce.org/</video:gallery_loc>
+            <video:price>0.00</video:price>
+            <video:requires_subscription>no</video:requires_subscription>
+            <video:uploader>info@pisarnasonce.si</video:uploader>
+            <video:live>no</video:live>
+        </video:video>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/</loc>
+        <video:video>
+            <video:thumbnail_loc>https://sonce.org/images/soncelogo.jpg</video:thumbnail_loc>
+            <video:title>Kako se prijaviti v sindikat</video:title>
+            <video:description>Korak za korakom vodnik o tem, kako se prijaviti v sindikat Sonce Koper</video:description>
+            <video:content_loc>https://sonce.org/videos/prijava-v-sindikat.mp4</video:content_loc>
+            <video:duration>150</video:duration>
+            <video:family_friendly>yes</video:family_friendly>
+            <video:restriction>SI</video:restriction>
+            <video:gallery_loc>https://sonce.org/</video:gallery_loc>
+            <video:price>0.00</video:price>
+            <video:requires_subscription>no</video:requires_subscription>
+            <video:uploader>info@pisarnasonce.si</video:uploader>
+            <video:live>no</video:live>
+        </video:video>
+    </url>
+
+    <!-- Company Videos -->
+    <url>
+        <loc>https://sonce.org/o-nas</loc>
+        <video:video>
+            <video:thumbnail_loc>https://sonce.org/images/soncelogo.jpg</video:thumbnail_loc>
+            <video:title>O sindikatu Sonce Koper - Naša zgodovina</video:title>
+            <video:description>Video o zgodovini in razvoju sindikata Sonce Koper</video:description>
+            <video:content_loc>https://sonce.org/videos/o-nas-zgodovina.mp4</video:content_loc>
+            <video:duration>200</video:duration>
+            <video:family_friendly>yes</video:family_friendly>
+            <video:restriction>SI</video:restriction>
+            <video:gallery_loc>https://sonce.org/o-nas</video:gallery_loc>
+            <video:price>0.00</video:price>
+            <video:requires_subscription>no</video:requires_subscription>
+            <video:uploader>info@pisarnasonce.si</video:uploader>
+            <video:live>no</video:live>
+        </video:video>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/kontakt</loc>
+        <video:video>
+            <video:thumbnail_loc>https://sonce.org/images/soncelogo.jpg</video:thumbnail_loc>
+            <video:title>Kontakt in lokacija pisarne</video:title>
+            <video:description>Video o lokaciji pisarne in kako nas kontaktirati</video:description>
+            <video:content_loc>https://sonce.org/videos/kontakt-lokacija.mp4</video:content_loc>
+            <video:duration>90</video:duration>
+            <video:family_friendly>yes</video:family_friendly>
+            <video:restriction>SI</video:restriction>
+            <video:gallery_loc>https://sonce.org/kontakt</video:gallery_loc>
+            <video:price>0.00</video:price>
+            <video:requires_subscription>no</video:requires_subscription>
+            <video:uploader>info@pisarnasonce.si</video:uploader>
+            <video:live>no</video:live>
+        </video:video>
+    </url>
+
+    <!-- Testimonial Videos -->
+    <url>
+        <loc>https://sonce.org/</loc>
+        <video:video>
+            <video:thumbnail_loc>https://sonce.org/images/soncelogo.jpg</video:thumbnail_loc>
+            <video:title>Mnenja članov sindikata</video:title>
+            <video:description>Video mnenja članov sindikata o naših storitvah</video:description>
+            <video:content_loc>https://sonce.org/videos/mnenja-clanov.mp4</video:content_loc>
+            <video:duration>180</video:duration>
+            <video:family_friendly>yes</video:family_friendly>
+            <video:restriction>SI</video:restriction>
+            <video:gallery_loc>https://sonce.org/</video:gallery_loc>
+            <video:price>0.00</video:price>
+            <video:requires_subscription>no</video:requires_subscription>
+            <video:uploader>info@pisarnasonce.si</video:uploader>
+            <video:live>no</video:live>
+        </video:video>
+    </url>
+
 </urlset>
