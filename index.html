@@ -2,7 +2,7 @@
 <html lang="sl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover, user-scalable=yes, shrink-to-fit=no">
     <meta http-equiv="Accept-Encoding" content="gzip, deflate, br">
     
     <!-- Canonical URL -->
@@ -740,6 +740,10 @@
                 max-width: 100vw;
                 margin: 0;
                 padding: 0;
+                -webkit-tap-highlight-color: transparent;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                user-select: none;
             }
 
             /* Container improvements */
@@ -753,14 +757,18 @@
 
             /* Header improvements */
             header {
-                position: static;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
                 height: 70px;
                 background: rgba(255, 255, 255, 0.98);
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
-                z-index: 1;
+                z-index: 1000;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                 width: 100%;
+                transition: all 0.3s ease;
             }
 
             header .container {
@@ -786,9 +794,11 @@
                 background: white;
                 padding-top: 70px;
                 transform: translateX(-100%);
-                transition: transform 0.3s ease;
-                z-index: 49;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 999;
                 overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior: contain;
             }
 
             #mobileMenu.open {
@@ -809,6 +819,30 @@
                 text-align: center;
                 display: block;
                 text-decoration: none;
+                transition: all 0.2s ease;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            #mobileMenu a:active {
+                background-color: rgba(0,0,0,0.05);
+                transform: scale(0.98);
+            }
+
+            /* Mobile menu toggle button improvements */
+            #menuToggle {
+                width: 44px;
+                height: 44px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s ease;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            #menuToggle:active {
+                background-color: rgba(0,0,0,0.1);
+                transform: scale(0.95);
             }
 
             /* Section improvements */
@@ -820,17 +854,18 @@
             }
 
             section:first-of-type {
-                margin-top: 0;
-                padding-top: 70px;
+                margin-top: 70px;
+                padding-top: 3rem;
             }
 
             /* Hero section improvements */
             .hero-gradient {
                 padding: 5rem 1rem 3rem;
                 text-align: center;
-                min-height: calc(100vh - var(--header-offset, 70px));
+                min-height: calc(100vh - 70px);
                 display: flex;
                 align-items: center;
+                justify-content: center;
             }
 
             .hero-gradient h2 {
@@ -838,6 +873,7 @@
                 line-height: 1.2;
                 margin-bottom: 1.5rem;
                 word-wrap: break-word;
+                overflow-wrap: break-word;
             }
 
             .hero-gradient p {
@@ -852,11 +888,31 @@
                 gap: 2rem;
             }
 
+            /* Button improvements for mobile */
+            .btn-primary, .bg-white, .bg-white\/20 {
+                min-height: 48px;
+                padding: 1rem 2rem;
+                font-size: 1rem;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s ease;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+
+            .btn-primary:active, .bg-white:active, .bg-white\/20:active {
+                transform: scale(0.98);
+                transition: transform 0.1s ease;
+            }
+
             /* Typography improvements */
             h1, h2, h3, h4, h5, h6 {
                 word-wrap: break-word;
                 overflow-wrap: break-word;
                 hyphens: auto;
+                line-height: 1.2;
             }
 
             h1 { font-size: 2.5rem; line-height: 1.2; }
@@ -896,118 +952,41 @@
                 width: 100%;
                 box-sizing: border-box;
                 max-width: 100%;
+                transition: all 0.2s ease;
+                -webkit-tap-highlight-color: transparent;
             }
 
-            /* Image improvements */
-            img {
-                max-width: 100%;
-                height: auto;
-                display: block;
-                margin: 0 auto;
+            .card-hover:active {
+                transform: scale(0.98);
+                transition: transform 0.1s ease;
             }
 
-            /* Form improvements */
+            /* Form improvements for mobile */
             input, select, textarea {
                 font-size: 16px !important;
-                padding: 1rem;
-                margin-bottom: 1rem;
-                border-radius: 0.5rem;
-                -webkit-appearance: none;
-                appearance: none;
-                width: 100%;
-                box-sizing: border-box;
-                border: 1px solid #d1d5db;
+                padding: 1rem !important;
+                border-radius: 12px !important;
+                border: 2px solid #e5e7eb !important;
+                transition: all 0.2s ease !important;
+                -webkit-appearance: none !important;
+                appearance: none !important;
+                min-height: 48px !important;
             }
 
-            /* Button improvements */
-            .btn-primary {
-                width: 100%;
-                padding: 1.2rem;
-                margin: 0.5rem 0;
-                font-size: 1rem;
-                min-height: 48px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 0.5rem;
-                box-sizing: border-box;
-                text-align: center;
+            input:focus, select:focus, textarea:focus {
+                border-color: #FF5F15 !important;
+                box-shadow: 0 0 0 3px rgba(255, 95, 21, 0.1) !important;
+                outline: none !important;
             }
 
-            /* Touch improvements */
-            a, button {
+            /* Better touch targets */
+            button, a, input, select, textarea {
                 min-height: 44px;
                 min-width: 44px;
-                padding: 0.75rem;
+                -webkit-tap-highlight-color: transparent;
                 touch-action: manipulation;
-                cursor: pointer;
             }
 
-            /* Content width constraints */
-            .lg\:w-1\/2, .md\:w-1\/2 {
-                width: 100% !important;
-                max-width: 100% !important;
-            }
-
-            /* Spacing improvements */
-            .space-y-4 > :not([hidden]) ~ :not([hidden]) {
-                margin-top: 1rem;
-            }
-
-            .space-x-4 > :not([hidden]) ~ :not([hidden]) {
-                margin-left: 0;
-                margin-top: 1rem;
-            }
-
-            /* Disable animations on mobile for better performance */
-            [data-aos] {
-                opacity: 1 !important;
-                transform: none !important;
-                transition: none !important;
-                visibility: visible !important;
-            }
-
-            .floating, .pulse, .shine:after {
-                animation: none !important;
-            }
-
-            /* Text alignment */
-            .text-left {
-                text-align: center;
-            }
-
-            /* Overflow prevention */
-            * {
-                max-width: 100%;
-                box-sizing: border-box;
-            }
-            
-            /* Safe area adjustments for mobile devices */
-            header {
-                padding-top: var(--safe-area-inset-top);
-                padding-left: var(--safe-area-inset-left);
-                padding-right: var(--safe-area-inset-right);
-            }
-            
-            #mobileMenu {
-                padding-top: calc(70px + var(--safe-area-inset-top));
-                padding-left: var(--safe-area-inset-left);
-                padding-right: var(--safe-area-inset-right);
-                padding-bottom: var(--safe-area-inset-bottom);
-            }
-            
-            /* Enhanced touch targets */
-            button, a, input, select, textarea {
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                user-select: none;
-            }
-            
-            input, textarea {
-                -webkit-user-select: text;
-                user-select: text;
-            }
-            
             /* Prevent zoom on input focus */
             input[type="text"],
             input[type="email"],
@@ -1018,355 +997,559 @@
                 font-size: 16px !important;
                 transform: scale(1);
             }
-            
+
             /* Smooth scrolling improvements */
             html {
                 scroll-behavior: smooth;
                 -webkit-overflow-scrolling: touch;
+                overscroll-behavior: contain;
             }
-            
-            /* Better tap targets */
-            .btn-primary,
-            .nav-link,
-            button {
-                min-width: 44px;
-                min-height: 44px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                position: relative;
+
+            /* Better mobile performance */
+            * {
+                -webkit-transform: translateZ(0);
+                transform: translateZ(0);
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
             }
-            
-            /* Landscape mode adjustments */
-            @media (orientation: landscape) and (max-height: 500px) {
-                .hero-gradient {
-                    min-height: calc(100vh - var(--header-offset, 50px));
-                    padding: 2rem 1rem;
-                }
-                
-                header {
-                    height: 60px;
-                }
-                
-                section:first-of-type {
-                    padding-top: 60px;
-                }
+
+            /* Mobile-specific animations */
+            .mobile-fade-in {
+                animation: mobileFadeIn 0.5s ease-out;
             }
-            
-            /* Mobile star rating improvements */
-            .flex.items-center.space-x-6 {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                gap: 1.5rem;
-                margin-top: 2rem;
+
+            @keyframes mobileFadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
             }
-            
-            .flex.items-center.space-x-6 .flex.-space-x-2 {
-                margin-bottom: 1rem;
+
+            /* Better mobile spacing */
+            .mobile-spacing {
+                margin: 1rem 0;
+                padding: 1rem;
             }
-            
-            .flex.items-center.space-x-6 .flex.-space-x-2 img {
-                width: 3rem;
-                height: 3rem;
+
+            /* Mobile-friendly shadows */
+            .mobile-shadow {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             }
-            
-            .flex.items-center.space-x-6 > div:last-child {
-                text-align: center;
+
+            /* Better mobile images */
+            img {
+                max-width: 100%;
+                height: auto;
+                display: block;
             }
-            
-            .flex.items-center.space-x-6 > div:last-child p {
-                margin-bottom: 0.75rem;
-                font-size: 1rem;
+
+            /* Mobile-friendly tables */
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
             }
-            
-            .flex.items-center.space-x-6 .flex.items-center {
-                justify-content: center;
-                gap: 0.25rem;
+
+            /* Better mobile lists */
+            ul, ol {
+                padding-left: 1.5rem;
             }
-            
-            .flex.items-center.space-x-6 .flex.items-center i {
-                font-size: 1rem;
-                margin-right: 0.25rem;
-            }
-            
-            .flex.items-center.space-x-6 .flex.items-center span {
-                margin-left: 0.5rem;
-                font-size: 0.875rem;
-            }
-            
-            /* Mobile testimonial star improvements */
-            .testimonial-card .flex.items-center {
-                flex-direction: column;
-                text-align: center;
-                gap: 0.75rem;
-            }
-            
-            .testimonial-card .flex.items-center img {
-                margin-right: 0;
+
+            li {
                 margin-bottom: 0.5rem;
             }
-            
-            .testimonial-card .flex.items-center .flex.text-accent {
-                justify-content: center;
-                gap: 0.25rem;
-                margin-top: 0.5rem;
-            }
-            
-            .testimonial-card .flex.items-center .flex.text-accent i {
-                font-size: 1rem;
-                margin-right: 0;
-            }
-            
-            /* Hide stars and testimonial images on mobile */
-            .testimonial-card .flex.items-center img {
-                display: none;
-            }
-            
-            .testimonial-card .flex.text-accent {
-                display: none;
-            }
-            
-            /* Hide stars in hero section on mobile */
-            .flex.items-center.space-x-6 .flex.items-center i {
-                display: none;
-            }
-            
-            .flex.items-center.space-x-6 .flex.items-center span {
-                display: none;
-            }
-            
-            /* Hide member profile images in hero section on mobile */
-            .flex.items-center.space-x-6 .flex.-space-x-2 {
-                display: none;
-            }
-            
-            /* Mobile stats section improvements */
-            .grid.grid-cols-2.md\\:grid-cols-3 {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            
-            .grid.grid-cols-2.md\\:grid-cols-3 > div {
-                padding: 1.5rem;
-            }
-            
-            .grid.grid-cols-2.md\\:grid-cols-3 .w-16.h-16 {
-                width: 3rem;
-                height: 3rem;
-            }
-            
-            .grid.grid-cols-2.md\\:grid-cols-3 .text-4xl {
-                font-size: 2rem;
-            }
-            
-            /* Mobile about section improvements */
-            .grid.md\\:grid-cols-2 {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            
-            .grid.md\\:grid-cols-2 .flex.items-center h3 {
-                text-align: center;
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .grid.md\\:grid-cols-2 .flex.items-center .w-10.h-10 {
-                margin-right: 0;
-                margin-bottom: 0.5rem;
-            }
-            
-            /* Mobile join section improvements */
-            .grid.lg\\:grid-cols-2 {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            
-            .grid.lg\\:grid-cols-2 .bg-white {
-                padding: 1.5rem;
-            }
-            
-            .grid.lg\\:grid-cols-2 .flex.items-start {
-                flex-direction: column;
-                text-align: center;
-                gap: 1rem;
-            }
-            
-            .grid.lg\\:grid-cols-2 .flex.items-start .bg-primary\\/10 {
-                margin-right: 0;
-                margin-bottom: 0.5rem;
-            }
-            
-            /* Mobile floating image improvements */
-            .bg-white\\/10.backdrop-blur-sm.rounded-xl.p-4.border.border-white\\/10.shadow-2xl.floating {
-                max-width: 100% !important;
-                margin: 2rem auto 0 !important;
-            }
-            
-            /* Mobile text improvements */
-            .text-3xl.md\\:text-4xl {
-                font-size: 2rem;
-            }
-            
-            .text-2xl.md\\:text-3xl {
-                font-size: 1.5rem;
-            }
-            
-            .text-lg {
-                font-size: 1rem;
-            }
-            
-            /* Additional mobile improvements */
-            .space-y-6 > :not([hidden]) ~ :not([hidden]) {
-                margin-top: 1.5rem;
-            }
-            
-            .space-y-8 > :not([hidden]) ~ :not([hidden]) {
-                margin-top: 2rem;
-            }
-            
-            .space-y-12 > :not([hidden]) ~ :not([hidden]) {
-                margin-top: 3rem;
-            }
-            
-            /* Mobile button improvements */
-            .btn-primary {
+
+            /* Mobile-friendly modals */
+            .modal, .popup {
+                position: fixed;
+                top: 0;
+                left: 0;
                 width: 100%;
-                max-width: 300px;
-                margin: 0 auto;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 2000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 1rem;
+                box-sizing: border-box;
             }
-            
-            /* Mobile card spacing */
-            .card-hover {
+
+            /* Better mobile navigation */
+            .mobile-nav-item {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .mobile-nav-item::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                width: 0;
+                height: 2px;
+                background: #FF5F15;
+                transition: all 0.3s ease;
+                transform: translateX(-50%);
+            }
+
+            .mobile-nav-item:hover::after,
+            .mobile-nav-item:active::after {
+                width: 100%;
+            }
+
+            /* Mobile-friendly tooltips */
+            .tooltip {
+                position: relative;
+                display: inline-block;
+            }
+
+            .tooltip .tooltiptext {
+                visibility: hidden;
+                width: 200px;
+                background-color: #333;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 8px;
+                position: absolute;
+                z-index: 1;
+                bottom: 125%;
+                left: 50%;
+                margin-left: -100px;
+                opacity: 0;
+                transition: opacity 0.3s;
+                font-size: 14px;
+            }
+
+            .tooltip:hover .tooltiptext {
+                visibility: visible;
+                opacity: 1;
+            }
+
+            /* Better mobile loading states */
+            .loading {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+            }
+
+            .loading::after {
+                content: '';
+                width: 32px;
+                height: 32px;
+                border: 3px solid #f3f3f3;
+                border-top: 3px solid #FF5F15;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+
+            /* Mobile-friendly error messages */
+            .error-message {
+                background: #fee;
+                border: 1px solid #fcc;
+                color: #c33;
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+                font-size: 14px;
+            }
+
+            /* Better mobile success messages */
+            .success-message {
+                background: #efe;
+                border: 1px solid #cfc;
+                color: #3c3;
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+                font-size: 14px;
+            }
+
+            /* Mobile-friendly breadcrumbs */
+            .breadcrumb {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                font-size: 14px;
+                color: #666;
                 margin: 1rem 0;
             }
-            
-            /* Mobile image container improvements */
-            .bg-white\\/10.backdrop-blur-sm.rounded-xl.p-4.border.border-white\\/10.shadow-2xl.floating img {
-                border-radius: 0.5rem;
+
+            .breadcrumb a {
+                color: #FF5F15;
+                text-decoration: none;
             }
-            
-            /* Mobile testimonial grid improvements */
-            .grid.md\\:grid-cols-3 {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
+
+            .breadcrumb a:hover {
+                text-decoration: underline;
             }
-            
-            /* Mobile section padding adjustments */
-            section {
-                padding: 2rem 1rem;
-            }
-            
-            section.py-20 {
-                padding: 3rem 1rem;
-            }
-            
-            /* Mobile container improvements */
-            .container {
-                padding: 0 1rem;
-            }
-            
-            /* Mobile star rating specific improvements */
-            .testimonial-card {
-                padding: 1.5rem;
-                margin: 1rem 0;
-            }
-            
-            .testimonial-card .flex.items-center .flex.text-accent {
+
+            /* Better mobile pagination */
+            .pagination {
                 display: flex;
                 justify-content: center;
+                gap: 0.5rem;
+                margin: 2rem 0;
+            }
+
+            .pagination a, .pagination span {
+                padding: 0.75rem 1rem;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                text-decoration: none;
+                color: #333;
+                min-width: 44px;
+                text-align: center;
+                transition: all 0.2s ease;
+            }
+
+            .pagination a:hover,
+            .pagination a:active {
+                background: #FF5F15;
+                color: white;
+                border-color: #FF5F15;
+            }
+
+            .pagination .current {
+                background: #FF5F15;
+                color: white;
+                border-color: #FF5F15;
+            }
+
+            /* Additional mobile improvements */
+            /* Better mobile performance */
+            .mobile-optimized {
+                will-change: auto;
+                transform: translateZ(0);
+                -webkit-transform: translateZ(0);
+            }
+
+            /* Mobile-friendly hover states */
+            .mobile-hover {
+                transition: all 0.2s ease;
+            }
+
+            .mobile-hover:active {
+                transform: scale(0.98);
+                transition: transform 0.1s ease;
+            }
+
+            /* Better mobile text selection */
+            .mobile-selectable {
+                -webkit-user-select: text;
+                user-select: text;
+                -webkit-touch-callout: default;
+            }
+
+            /* Mobile-friendly focus states */
+            .mobile-focus:focus {
+                outline: 2px solid #FF5F15;
+                outline-offset: 2px;
+            }
+
+            /* Better mobile spacing utilities */
+            .mobile-mt-1 { margin-top: 0.25rem; }
+            .mobile-mt-2 { margin-top: 0.5rem; }
+            .mobile-mt-3 { margin-top: 0.75rem; }
+            .mobile-mt-4 { margin-top: 1rem; }
+            .mobile-mt-5 { margin-top: 1.25rem; }
+            .mobile-mt-6 { margin-top: 1.5rem; }
+
+            .mobile-mb-1 { margin-bottom: 0.25rem; }
+            .mobile-mb-2 { margin-bottom: 0.5rem; }
+            .mobile-mb-3 { margin-bottom: 0.75rem; }
+            .mobile-mb-4 { margin-bottom: 1rem; }
+            .mobile-mb-5 { margin-bottom: 1.25rem; }
+            .mobile-mb-6 { margin-bottom: 1.5rem; }
+
+            .mobile-p-1 { padding: 0.25rem; }
+            .mobile-p-2 { padding: 0.5rem; }
+            .mobile-p-3 { padding: 0.75rem; }
+            .mobile-p-4 { padding: 1rem; }
+            .mobile-p-5 { padding: 1.25rem; }
+            .mobile-p-6 { padding: 1.5rem; }
+
+            /* Mobile-friendly animations */
+            .mobile-animate {
+                animation-duration: 0.3s;
+                animation-timing-function: ease-out;
+            }
+
+            /* Better mobile accessibility */
+            .mobile-sr-only {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border: 0;
+            }
+
+            /* Mobile-friendly loading states */
+            .mobile-loading {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .mobile-loading::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+                animation: mobileShimmer 1.5s infinite;
+            }
+
+            @keyframes mobileShimmer {
+                0% { left: -100%; }
+                100% { left: 100%; }
+            }
+
+            /* Mobile-friendly tooltips */
+            .mobile-tooltip {
+                position: relative;
+                display: inline-block;
+            }
+
+            .mobile-tooltip .mobile-tooltiptext {
+                visibility: hidden;
+                width: 200px;
+                background-color: #333;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 8px;
+                position: absolute;
+                z-index: 1;
+                bottom: 125%;
+                left: 50%;
+                margin-left: -100px;
+                opacity: 0;
+                transition: opacity 0.3s;
+                font-size: 14px;
+            }
+
+            .mobile-tooltip:hover .mobile-tooltiptext {
+                visibility: visible;
+                opacity: 1;
+            }
+
+            /* Mobile-friendly modals */
+            .mobile-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 2000;
+                display: flex;
                 align-items: center;
-                gap: 0.125rem;
-                margin-top: 0.75rem;
-            }
-            
-            .testimonial-card .flex.items-center .flex.text-accent i {
-                font-size: 0.875rem;
-                color: #FF5F15;
-            }
-            
-            /* Mobile hero section star improvements */
-            .hero-gradient .flex.items-center.space-x-6 {
-                margin-top: 3rem;
-                padding: 0 1rem;
-            }
-            
-            .hero-gradient .flex.items-center.space-x-6 .flex.items-center {
-                background: rgba(255, 255, 255, 0.1);
+                justify-content: center;
                 padding: 1rem;
-                border-radius: 0.75rem;
-                backdrop-filter: blur(10px);
+                box-sizing: border-box;
             }
-            
-            /* Mobile stats star improvements */
-            .stats-section .grid > div {
-                text-align: center;
-                padding: 1.5rem 1rem;
-            }
-            
-            /* Mobile about section star improvements */
-            .about-section .flex.items-start {
-                text-align: center;
-                margin-bottom: 2rem;
-            }
-            
-            .about-section .flex.items-start .bg-accent-light {
-                margin: 0 auto 1rem;
-            }
-            
-            /* Mobile touch target improvements */
-            .testimonial-card .flex.items-center img {
-                width: 3rem;
-                height: 3rem;
-                min-width: 3rem;
-                min-height: 3rem;
-            }
-            
-            /* Mobile star spacing improvements */
-            .flex.text-accent.text-sm i {
-                margin-right: 0.125rem;
-                font-size: 0.875rem;
-            }
-            
-            /* Mobile grid improvements for better spacing */
-            .grid.md\\:grid-cols-3.gap-8 {
-                gap: 1.5rem;
-            }
-            
-            .grid.lg\\:grid-cols-2.gap-12 {
-                gap: 2rem;
-            }
-            
-            /* Mobile text size adjustments */
-            .text-sm {
-                font-size: 0.875rem;
-            }
-            
-            .text-base {
-                font-size: 1rem;
-            }
-            
-            /* Mobile margin improvements */
-            .mt-12 {
-                margin-top: 3rem;
-            }
-            
-            .mb-16 {
-                margin-bottom: 3rem;
-            }
-            
-            .mb-12 {
-                margin-bottom: 2rem;
-            }
-            
-            /* Mobile padding improvements */
-            .p-6 {
+
+            .mobile-modal-content {
+                background: white;
+                border-radius: 12px;
                 padding: 1.5rem;
+                max-width: 90%;
+                max-height: 90%;
+                overflow-y: auto;
+                position: relative;
             }
-            
-            .p-10 {
-                padding: 2rem;
+
+            .mobile-modal-close {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: #666;
+                padding: 0.5rem;
+                border-radius: 50%;
+                transition: all 0.2s ease;
+            }
+
+            .mobile-modal-close:hover {
+                background: #f0f0f0;
+                color: #333;
+            }
+
+            /* Additional mobile touch improvements */
+            /* Better mobile scrolling */
+            .mobile-scroll-smooth {
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior: contain;
+                scroll-behavior: smooth;
+            }
+
+            /* Mobile-friendly focus indicators */
+            .mobile-focus-ring:focus {
+                outline: 2px solid #FF5F15;
+                outline-offset: 2px;
+                border-radius: 4px;
+            }
+
+            /* Better mobile button states */
+            .mobile-btn-active:active {
+                transform: scale(0.98);
+                transition: transform 0.1s ease;
+            }
+
+            /* Mobile-friendly text selection */
+            .mobile-text-select {
+                -webkit-user-select: text;
+                user-select: text;
+                -webkit-touch-callout: default;
+            }
+
+            /* Mobile-friendly drag and drop */
+            .mobile-draggable {
+                touch-action: pan-x pan-y;
+                -webkit-user-drag: none;
+                user-select: none;
+            }
+
+            /* Better mobile form validation */
+            .mobile-form-error {
+                border-color: #dc2626 !important;
+                box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+            }
+
+            .mobile-form-success {
+                border-color: #16a34a !important;
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1) !important;
+            }
+
+            /* Mobile-friendly loading states */
+            .mobile-loading-spinner {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border: 2px solid #f3f3f3;
+                border-top: 2px solid #FF5F15;
+                border-radius: 50%;
+                animation: mobileSpin 1s linear infinite;
+            }
+
+            @keyframes mobileSpin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+
+            /* Mobile-friendly notifications */
+            .mobile-notification {
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #333;
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                z-index: 3000;
+                max-width: 90%;
+                text-align: center;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+
+            /* Mobile-friendly progress bars */
+            .mobile-progress {
+                width: 100%;
+                height: 8px;
+                background: #e5e7eb;
+                border-radius: 4px;
+                overflow: hidden;
+            }
+
+            .mobile-progress-bar {
+                height: 100%;
+                background: #FF5F15;
+                border-radius: 4px;
+                transition: width 0.3s ease;
+            }
+
+            /* Mobile-friendly tabs */
+            .mobile-tabs {
+                display: flex;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                border-bottom: 1px solid #e5e7eb;
+                margin-bottom: 1rem;
+            }
+
+            .mobile-tab {
+                flex-shrink: 0;
+                padding: 0.75rem 1rem;
+                border: none;
+                background: none;
+                color: #666;
+                cursor: pointer;
+                border-bottom: 2px solid transparent;
+                transition: all 0.2s ease;
+                white-space: nowrap;
+            }
+
+            .mobile-tab.active {
+                color: #FF5F15;
+                border-bottom-color: #FF5F15;
+            }
+
+            /* Mobile-friendly accordions */
+            .mobile-accordion {
+                border: 1px solid #e5e7eb;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .mobile-accordion-item {
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .mobile-accordion-item:last-child {
+                border-bottom: none;
+            }
+
+            .mobile-accordion-header {
+                padding: 1rem;
+                background: #f9fafb;
+                border: none;
+                width: 100%;
+                text-align: left;
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                transition: background-color 0.2s ease;
+            }
+
+            .mobile-accordion-header:hover {
+                background: #f3f4f6;
+            }
+
+            .mobile-accordion-content {
+                padding: 1rem;
+                background: white;
+                display: none;
+            }
+
+            .mobile-accordion-content.active {
+                display: block;
             }
         }
 
@@ -1608,6 +1791,75 @@
 
             .container { padding: 0 0.75rem; }
             section { padding: 2rem 0.75rem; }
+
+            /* Extra small mobile improvements */
+            .hero-gradient {
+                padding: 3rem 0.75rem 2rem;
+                min-height: calc(100vh - 70px);
+            }
+
+            .hero-gradient h2 {
+                font-size: 1.8rem;
+                line-height: 1.3;
+            }
+
+            .hero-gradient p {
+                font-size: 1rem;
+                line-height: 1.4;
+            }
+
+            /* Better button sizing for small screens */
+            .btn-primary, .bg-white, .bg-white\/20 {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9rem;
+                min-height: 44px;
+            }
+
+            /* Improved spacing for small screens */
+            .mobile-spacing {
+                margin: 0.75rem 0;
+                padding: 0.75rem;
+            }
+
+            /* Better form handling on small screens */
+            input, select, textarea {
+                padding: 0.875rem !important;
+                font-size: 16px !important;
+                min-height: 44px !important;
+            }
+
+            /* Improved mobile navigation */
+            #mobileMenu a {
+                padding: 1rem 0.75rem;
+                font-size: 1rem;
+            }
+
+            /* Better card spacing on small screens */
+            .card-hover {
+                padding: 1.25rem;
+                margin: 0.75rem 0;
+            }
+
+            /* Improved typography for small screens */
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.75rem; }
+            h3 { font-size: 1.25rem; }
+            h4 { font-size: 1.1rem; }
+
+            /* Better grid spacing */
+            .grid {
+                gap: 1rem;
+            }
+
+            /* Improved section padding */
+            section {
+                padding: 2rem 0.75rem;
+            }
+
+            /* Better mobile shadows */
+            .mobile-shadow {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
         }
         
         /* Comprehensive Mobile Layout Fixes */
@@ -3218,6 +3470,89 @@
                         console.log(`Memory usage: ${performance.memory.usedJSHeapSize / 1048576}MB`);
                     }, 10000);
                 }
+            },
+
+            // Enhanced mobile touch handling
+            initMobileTouch: function() {
+                // Prevent double-tap zoom on mobile
+                let lastTouchEnd = 0;
+                document.addEventListener('touchend', function (event) {
+                    const now = (new Date()).getTime();
+                    if (now - lastTouchEnd <= 300) {
+                        event.preventDefault();
+                    }
+                    lastTouchEnd = now;
+                }, false);
+
+                // Better mobile scroll handling
+                let isScrolling = false;
+                let scrollTimeout;
+
+                document.addEventListener('scroll', function() {
+                    isScrolling = true;
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(function() {
+                        isScrolling = false;
+                    }, 150);
+                });
+
+                // Improved mobile menu touch handling
+                if (this.elements.mobileMenu) {
+                    let startX = 0;
+                    let currentX = 0;
+                    let isDragging = false;
+
+                    this.elements.mobileMenu.addEventListener('touchstart', (e) => {
+                        startX = e.touches[0].clientX;
+                        isDragging = true;
+                    });
+
+                    this.elements.mobileMenu.addEventListener('touchmove', (e) => {
+                        if (!isDragging) return;
+                        currentX = e.touches[0].clientX;
+                        const diffX = startX - currentX;
+                        
+                        if (diffX > 50) { // Swipe left to close
+                            this.closeMenu();
+                            isDragging = false;
+                        }
+                    });
+
+                    this.elements.mobileMenu.addEventListener('touchend', () => {
+                        isDragging = false;
+                    });
+                }
+
+                // Better mobile form handling
+                const inputs = document.querySelectorAll('input, textarea, select');
+                inputs.forEach(input => {
+                    input.addEventListener('focus', function() {
+                        // Scroll to input on mobile
+                        setTimeout(() => {
+                            this.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'center' 
+                            });
+                        }, 300);
+                    });
+
+                    // Prevent zoom on iOS
+                    if (input.type === 'text' || input.type === 'email' || input.type === 'tel') {
+                        input.style.fontSize = '16px';
+                    }
+                });
+
+                // Mobile-friendly button interactions
+                const buttons = document.querySelectorAll('button, a.btn-primary, .btn-primary');
+                buttons.forEach(button => {
+                    button.addEventListener('touchstart', function() {
+                        this.style.transform = 'scale(0.98)';
+                    });
+
+                    button.addEventListener('touchend', function() {
+                        this.style.transform = 'scale(1)';
+                    });
+                });
             }
         };
 
@@ -3469,8 +3804,10 @@
                     <a href="#join" class="btn-primary text-white font-bold py-2 px-6 rounded-full ml-4 pulse">Pridruži se <i class="fas fa-arrow-right ml-2"></i></a>
                 </nav>
                 
-                <button class="lg:hidden text-gray-700 focus:outline-none" id="menuToggle">
-                    <i class="fas fa-bars text-2xl"></i>
+                <button class="lg:hidden text-gray-700 focus:outline-none mobile-hover mobile-focus mobile-btn-active" id="menuToggle" aria-label="Odpri meni" aria-expanded="false" aria-controls="mobileMenu">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-all duration-200 border border-transparent hover:border-gray-300">
+                        <i class="fas fa-bars text-xl"></i>
+                    </div>
                 </button>
             </div>
         </div>
@@ -3479,19 +3816,40 @@
     <!-- Mobile Menu -->
     <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform -translate-x-full transition-transform duration-300 lg:hidden">
         <div class="container h-full flex flex-col">
-            <div class="flex justify-between items-center py-4 border-b">
+            <div class="flex justify-between items-center py-4 border-b border-gray-200">
                 <img src="/images/soncelogo.jpg" alt="Logotip" class="h-10" loading="eager" decoding="async">
-                <button class="text-gray-700 focus:outline-none" id="menuClose">
-                    <i class="fas fa-times text-2xl"></i>
+                <button class="text-gray-700 focus:outline-none mobile-hover mobile-focus mobile-btn-active" id="menuClose" aria-label="Zapri meni">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-all duration-200 border border-transparent hover:border-gray-300">
+                        <i class="fas fa-times text-xl"></i>
+                    </div>
                 </button>
             </div>
-            <nav class="flex flex-col space-y-4 py-8">
-                <a href="#home" class="mobile-nav-item text-lg font-medium text-gray-800 hover:text-primary">Domov</a>
-                <a href="#about" class="mobile-nav-item text-lg font-medium text-gray-800 hover:text-primary">O nas</a>
-                <a href="#services" class="mobile-nav-item text-lg font-medium text-gray-800 hover:text-primary">Storitve</a>
-                <a href="#contact" class="mobile-nav-item text-lg font-medium text-gray-800 hover:text-primary">Kontakt</a>
-                <a href="#join" class="mobile-nav-item btn-primary text-white font-bold py-3 px-6 rounded-full text-center mt-4">Pridruži se <i class="fas fa-arrow-right ml-2"></i></a>
+            <nav class="flex flex-col space-y-2 py-6">
+                <a href="#home" class="mobile-nav-item text-lg font-medium text-gray-800 hover:text-primary mobile-hover mobile-focus mobile-selectable mobile-btn-active py-4 px-6 rounded-lg transition-all duration-200" aria-label="Pojdi na domov">
+                    <i class="fas fa-home mr-3 text-primary"></i>Domov
+                </a>
+                <a href="#about" class="mobile-nav-item text-lg font-medium text-gray-800 hover:text-primary mobile-hover mobile-focus mobile-selectable mobile-btn-active py-4 px-6 rounded-lg transition-all duration-200" aria-label="Pojdi na o nas">
+                    <i class="fas fa-info-circle mr-3 text-primary"></i>O nas
+                </a>
+                <a href="#services" class="mobile-nav-item text-lg font-medium text-gray-800 hover:text-primary mobile-hover mobile-focus mobile-selectable mobile-btn-active py-4 px-6 rounded-lg transition-all duration-200" aria-label="Pojdi na storitve">
+                    <i class="fas fa-cogs mr-3 text-primary"></i>Storitve
+                </a>
+                <a href="#contact" class="mobile-nav-item text-lg font-medium text-gray-800 hover:text-primary mobile-hover mobile-focus mobile-selectable mobile-btn-active py-4 px-6 rounded-lg transition-all duration-200" aria-label="Pojdi na kontakt">
+                    <i class="fas fa-envelope mr-3 text-primary"></i>Kontakt
+                </a>
+                <div class="pt-4 border-t border-gray-200 mt-4">
+                    <a href="#join" class="mobile-nav-item btn-primary text-white font-bold py-4 px-6 rounded-full text-center w-full mobile-hover mobile-focus mobile-btn-active" aria-label="Pridruži se sindikatu">
+                        <i class="fas fa-shield-alt mr-2"></i>Pridruži se nam
+                    </a>
+                </div>
             </nav>
+            <!-- Mobile menu footer -->
+            <div class="mt-auto py-6 border-t border-gray-200">
+                <div class="text-center text-sm text-gray-600">
+                    <p class="mb-2">Sindikat Sonce Koper</p>
+                    <p class="text-xs">Vaš zagovornik za delavske pravice</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -3513,10 +3871,10 @@
                     </h2>
                     <p class="text-xl mb-8 opacity-90 font-light">Smo več kot le pravna pisarna - smo vaš glas, vaša moč in vaš zagovornik. Z nami nikoli ne boste sami v boju za svoje pravice.</p>
                     <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                        <a href="#join" class="bg-white text-primary font-bold py-4 px-10 rounded-full text-center shine transform hover:scale-105 transition-transform duration-300" data-aos="zoom-in" data-aos-delay="200">
+                        <a href="#join" class="bg-white text-primary font-bold py-4 px-10 rounded-full text-center shine transform hover:scale-105 transition-transform duration-300 mobile-hover mobile-focus mobile-btn-active" data-aos="zoom-in" data-aos-delay="200" aria-label="Pridruži se sindikatu">
                             <i class="fas fa-shield-alt mr-2"></i>Pridruži se nam
                         </a>
-                        <a href="#services" class="bg-white/20 backdrop-blur-sm text-white font-bold py-4 px-10 rounded-full text-center hover:bg-white/30 transition-all duration-300 border border-white/30" data-aos="zoom-in" data-aos-delay="300">
+                        <a href="#services" class="bg-white/20 backdrop-blur-sm text-white font-bold py-4 px-10 rounded-full text-center hover:bg-white/30 transition-all duration-300 border border-white/30 mobile-hover mobile-focus mobile-btn-active" data-aos="zoom-in" data-aos-delay="300" aria-label="Poglej naše storitve">
                             <i class="fas fa-info-circle mr-2"></i>Naše storitve
                         </a>
                     </div>
@@ -3556,21 +3914,21 @@
     <section class="py-20 bg-gradient-to-br from-white to-gray-50">
         <div class="container">
             <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
-                <div class="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 group" data-aos="fade-up" data-aos-delay="100">
+                <div class="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 group mobile-hover mobile-focus" data-aos="fade-up" data-aos-delay="100">
                     <div class="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                         <i class="fas fa-calendar-alt text-2xl text-primary group-hover:scale-110 transition-transform duration-300"></i>
                     </div>
                     <div class="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2 counter group-hover:scale-110 transition-transform duration-300">10+</div>
                     <div class="text-gray-700 group-hover:text-primary transition-colors duration-300">Let izkušenj</div>
                 </div>
-                <div class="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 group" data-aos="fade-up" data-aos-delay="200">
+                <div class="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 group mobile-hover mobile-focus" data-aos="fade-up" data-aos-delay="200">
                     <div class="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                         <i class="fas fa-users text-2xl text-primary group-hover:scale-110 transition-transform duration-300"></i>
                     </div>
                     <div class="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2 counter group-hover:scale-110 transition-transform duration-300">1500+</div>
                     <div class="text-gray-700 group-hover:text-primary transition-colors duration-300">Članov</div>
                 </div>
-                <div class="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 group" data-aos="fade-up" data-aos-delay="300">
+                <div class="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 group mobile-hover mobile-focus" data-aos="fade-up" data-aos-delay="300">
                     <div class="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                         <i class="fas fa-chart-line text-2xl text-primary group-hover:scale-110 transition-transform duration-300"></i>
                     </div>
