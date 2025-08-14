@@ -10,7 +10,6 @@
     <link rel="preconnect" href="https://randomuser.me" crossorigin>
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -18,7 +17,6 @@
     <link rel="dns-prefetch" href="//randomuser.me">
     <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
     <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
-    <link rel="dns-prefetch" href="//unpkg.com">
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
@@ -27,7 +25,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
-    <link rel="manifest" href="/favicons/site.webmanifest" crossorigin="use-credentials">
+    <link rel="manifest" href="/favicons/site.webmanifest">
     <meta name="theme-color" content="#FF5F15">
     <meta name="msapplication-TileColor" content="#FF5F15">
     <meta name="msapplication-config" content="/favicons/browserconfig.xml">
@@ -275,8 +273,6 @@
     <!-- Performance optimizations -->
     <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
-    <link rel="preload" href="https://unpkg.com/aos@2.3.1/dist/aos.css" as="style">
-    <link rel="preload" href="https://unpkg.com/aos@2.3.1/dist/aos.js" as="script" crossorigin>
     <link rel="preload" href="https://i.imgur.com/vBKRRYp.jpeg" as="image" fetchpriority="high">
     
     <!-- Critical CSS and Scripts -->
@@ -299,18 +295,10 @@
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" media="all">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"></noscript>
     <style>
         /* Critical CSS for performance */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        
-        /* Preload critical fonts */
-        @font-face {
-            font-family: 'Poppins';
-            font-display: swap;
-        }
         
         /* Critical CSS optimizations */
         .lazy-image {

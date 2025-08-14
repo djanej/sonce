@@ -28,7 +28,6 @@ Allow: /pogoji-uporabe.html
 Allow: /pravilnik-o-zasebnosti.html
 Allow: /pravilnik-o-piskotkih.html
 Allow: /podpora.html
-Allow: /mobile-warning.html
 
 # Googlebot specific rules
 User-agent: Googlebot
