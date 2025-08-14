@@ -1,0 +1,43 @@
+# Jekyll Configuration
+title: "Sonce"
+description: "Spletna Stran Pisarne Sonce"
+url: "https://sonce.si"
+baseurl: ""
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: /:title/
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /blog/:title/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "Sonce"
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Exclude from processing
+exclude:
+  - README.md
+  - admin/
+  - .git/
+  - .htaccess
+  - robots.txt
+  - sitemap*.xml
+  - sw.js
+  - website todo list.txt
+  - *.pdf
