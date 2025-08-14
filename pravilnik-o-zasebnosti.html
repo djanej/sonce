@@ -84,11 +84,11 @@
     <script>
         (function(){
             function showErrorIfEmpty(){
-                var content = document.getElementById('content');
-                var error = document.getElementById('error-message');
+                const content = document.getElementById('content');
+                const error = document.getElementById('error-message');
                 if (!content || !error) { return; }
-                var hasElements = content.children && content.children.length > 0;
-                var hasText = (content.textContent || '').trim().length > 0;
+                const hasElements = content.children && content.children.length > 0;
+                const hasText = (content.textContent || '').trim().length > 0;
                 if (!hasElements && !hasText) {
                     error.style.display = 'block';
                 }

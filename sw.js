@@ -76,7 +76,19 @@ self.addEventListener('fetch', event => {
         return networkResponse;
       } catch (err) {
         const cached = await caches.match(OFFLINE_URL);
-        return cached || new Response('Offline', { headers: { 'Content-Type': 'text/plain' } });
+        if (cached) {
+          return cached;
+        }
+        // Return a proper offline page
+        return new Response(`
+          <!DOCTYPE html>
+          <html><head><title>Offline</title></head>
+          <body><h1>Trenutno nimate internetne povezave</h1>
+          <p>Poskusite znova, ko bo povezava vzpostavljena.</p></body></html>
+        `, { 
+          status: 200,
+          headers: { 'Content-Type': 'text/html; charset=utf-8' } 
+        });
       }
     })());
     return;
