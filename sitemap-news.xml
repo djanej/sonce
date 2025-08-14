@@ -1,8 +1,183 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
-    
-    <!-- News sitemap for better content discovery -->
-    <!-- Add news entries here when news content is available -->
-    
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
+        http://www.google.com/schemas/sitemap-news/0.9
+        http://www.google.com/schemas/sitemap-news/0.9/sitemap-news.xsd">
+
+    <!-- Main News Article -->
+    <url>
+        <loc>https://sonce.org/</loc>
+        <news:news>
+            <news:publication>
+                <news:name>Sindikat Sonce Koper</news:name>
+                <news:language>sl</news:language>
+            </news:publication>
+            <news:publication_date>2025-01-13T08:00:00+01:00</news:publication_date>
+            <news:title>Sindikat Sonce Koper - Brezplačna pravna pomoč in zaščita delavcev</news:title>
+            <news:keywords>sindikat, pravna pomoč, zaščita delavcev, Koper, Slovenija</news:keywords>
+            <news:stock_tickers>SI</news:stock_tickers>
+        </news:news>
+    </url>
+
+    <!-- Service Updates -->
+    <url>
+        <loc>https://sonce.org/brezplacna-pravna-pomoc</loc>
+        <news:news>
+            <news:publication>
+                <news:name>Sindikat Sonce Koper</news:name>
+                <news:language>sl</news:language>
+            </news:publication>
+            <news:publication_date>2025-01-13T09:00:00+01:00</news:publication_date>
+            <news:title>Brezplačna pravna pomoč za člane sindikata</news:title>
+            <news:keywords>brezplačna pravna pomoč, sindikat, članstvo, pravno svetovanje</news:keywords>
+            <news:stock_tickers>SI</news:stock_tickers>
+        </news:news>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/zascita-pred-mobingom</loc>
+        <news:news>
+            <news:publication>
+                <news:name>Sindikat Sonce Koper</news:name>
+                <news:language>sl</news:language>
+            </news:publication>
+            <news:publication_date>2025-01-13T10:00:00+01:00</news:publication_date>
+            <news:title>Zaščita pred mobingom na delovnem mestu</news:title>
+            <news:keywords>mobing, zaščita delavcev, delovno mesto, pravna pomoč</news:keywords>
+            <news:stock_tickers>SI</news:stock_tickers>
+        </news:news>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/delovni-spori</loc>
+        <news:news>
+            <news:publication>
+                <news:name>Sindikat Sonce Koper</news:name>
+                <news:language>sl</news:language>
+            </news:publication>
+            <news:publication_date>2025-01-13T11:00:00+01:00</news:publication_date>
+            <news:title>Reševanje delovnih sporov in konfliktov</news:title>
+            <news:keywords>delovni spori, konflikti, reševanje, sindikat</news:keywords>
+            <news:stock_tickers>SI</news:stock_tickers>
+        </news:news>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/kolektivne-pogodbe</loc>
+        <news:news>
+            <news:publication>
+                <news:name>Sindikat Sonce Koper</news:name>
+                <news:language>sl</news:language>
+            </news:publication>
+            <news:publication_date>2025-01-13T12:00:00+01:00</news:publication_date>
+            <news:title>Pomoč pri kolektivnih pogodbah</news:title>
+            <news:keywords>kolektivne pogodbe, pogajanja, sindikat, delavci</news:keywords>
+            <news:stock_tickers>SI</news:stock_tickers>
+        </news:news>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/odpoved-pogodbe</loc>
+        <news:news>
+            <news:publication>
+                <news:name>Sindikat Sonce Koper</news:name>
+                <news:language>sl</news:language>
+            </news:publication>
+            <news:publication_date>2025-01-13T13:00:00+01:00</news:publication_date>
+            <news:title>Pravna pomoč pri odpovedi pogodbe o zaposlitvi</news:title>
+            <news:keywords>odpoved pogodbe, zaposlitev, pravna pomoč, sindikat</news:keywords>
+            <news:stock_tickers>SI</news:stock_tickers>
+        </news:news>
+    </url>
+
+    <!-- Company Information -->
+    <url>
+        <loc>https://sonce.org/kontakt</loc>
+        <news:news>
+            <news:publication>
+                <news:name>Sindikat Sonce Koper</news:name>
+                <news:language>sl</news:language>
+            </news:publication>
+            <news:publication_date>2025-01-13T14:00:00+01:00</news:publication_date>
+            <news:title>Kontaktne informacije in lokacija pisarne</news:title>
+            <news:keywords>kontakt, lokacija, pisarna, Sindikat Sonce Koper</news:keywords>
+            <news:stock_tickers>SI</news:stock_tickers>
+        </news:news>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/o-nas</loc>
+        <news:news>
+            <news:publication>
+                <news:name>Sindikat Sonce Koper</news:name>
+                <news:language>sl</news:language>
+            </news:publication>
+            <news:publication_date>2025-01-13T15:00:00+01:00</news:publication_date>
+            <news:title>O sindikatu Sonce Koper</news:title>
+            <news:keywords>o nas, sindikat, zgodovina, tim, Koper</news:keywords>
+            <news:stock_tickers>SI</news:stock_tickers>
+        </news:news>
+    </url>
+
+    <!-- Legal Information -->
+    <url>
+        <loc>https://sonce.org/pogoji-uporabe.html</loc>
+        <news:news>
+            <news:publication>
+                <news:name>Sindikat Sonce Koper</news:name>
+                <news:language>sl</news:language>
+            </news:publication>
+            <news:publication_date>2025-01-13T16:00:00+01:00</news:publication_date>
+            <news:title>Pogoji uporabe spletne strani</news:title>
+            <news:keywords>pogoji uporabe, pravila, spletna stran, legal</news:keywords>
+            <news:stock_tickers>SI</news:stock_tickers>
+        </news:news>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/pravilnik-o-zasebnosti.html</loc>
+        <news:news>
+            <news:publication>
+                <news:name>Sindikat Sonce Koper</news:name>
+                <news:language>sl</news:language>
+            </news:publication>
+            <news:publication_date>2025-01-13T17:00:00+01:00</news:publication_date>
+            <news:title>Pravilnik o zasebnosti in varstvo podatkov</news:title>
+            <news:keywords>zasebnost, varstvo podatkov, GDPR, osebni podatki</news:keywords>
+            <news:stock_tickers>SI</news:stock_tickers>
+        </news:news>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/pravilnik-o-piskotkih.html</loc>
+        <news:news>
+            <news:publication>
+                <news:name>Sindikat Sonce Koper</news:name>
+                <news:language>sl</news:language>
+            </news:publication>
+            <news:publication_date>2025-01-13T18:00:00+01:00</news:publication_date>
+            <news:title>Pravilnik o uporabi piškotkov</news:title>
+            <news:keywords>piškotki, cookies, sledenje, spletna stran</news:keywords>
+            <news:stock_tickers>SI</news:stock_tickers>
+        </news:news>
+    </url>
+
+    <!-- Technical Support -->
+    <url>
+        <loc>https://sonce.org/podpora.html</loc>
+        <news:news>
+            <news:publication>
+                <news:name>Sindikat Sonce Koper</news:name>
+                <news:language>sl</news:language>
+            </news:publication>
+            <news:publication_date>2025-01-13T19:00:00+01:00</news:publication_date>
+            <news:title>Tehnična podpora za spletno stran</news:title>
+            <news:keywords>tehnična podpora, pomoč, spletna stran, težave</news:keywords>
+            <news:stock_tickers>SI</news:stock_tickers>
+        </news:news>
+    </url>
+
 </urlset>

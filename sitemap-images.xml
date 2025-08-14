@@ -1,50 +1,183 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-    
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
+        http://www.google.com/schemas/sitemap-image/1.1
+        http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd">
+
+    <!-- Main Logo -->
     <url>
         <loc>https://sonce.org/</loc>
         <image:image>
             <image:loc>https://sonce.org/images/soncelogo.jpg</image:loc>
-            <image:title>Sindikat Sonce Koper Logo</image:title>
-            <image:caption>Logo sindikata Sonce Koper - brezplačna pravna pomoč in zaščita delavcev</image:caption>
+            <image:title>Sindikat Sonce Koper - Brezplačna pravna pomoč in zaščita delavcev</image:title>
+            <image:caption>Sindikat Sonce Koper nudi brezplačno pravno pomoč in strokovno svetovanje za delavce v Kopru in Sloveniji</image:caption>
+            <image:geo_location>Koper, Slovenia</image:geo_location>
             <image:license>https://sonce.org/pogoji-uporabe.html</image:license>
         </image:image>
     </url>
-    
+
+    <!-- Support Page Images -->
     <url>
         <loc>https://sonce.org/podpora.html</loc>
         <image:image>
             <image:loc>https://sonce.org/images/soncelogo.jpg</image:loc>
-            <image:title>Tehnična podpora - Sindikat Sonce Koper</image:title>
-            <image:caption>Logo za tehnično podporo spletne strani</image:caption>
+            <image:title>Tehnična podpora - Pisarna pravne zaščite Sonce Slovenije</image:title>
+            <image:caption>Prijavite težave z delovanjem spletne strani in dobite hitro tehnično pomoč</image:caption>
+            <image:geo_location>Koper, Slovenia</image:geo_location>
         </image:image>
     </url>
-    
+
+    <!-- Terms of Use Page Images -->
     <url>
         <loc>https://sonce.org/pogoji-uporabe.html</loc>
         <image:image>
             <image:loc>https://sonce.org/images/soncelogo.jpg</image:loc>
-            <image:title>Pogoji uporabe - Sindikat Sonce Koper</image:title>
-            <image:caption>Logo za pogoje uporabe spletne strani</image:caption>
+            <image:title>Pogoji uporabe - Pisarna pravne zaščite Sonce Slovenije</image:title>
+            <image:caption>Pravila in pogoji za uporabo spletne strani in storitev</image:caption>
+            <image:geo_location>Koper, Slovenia</image:geo_location>
         </image:image>
     </url>
-    
+
+    <!-- Privacy Policy Page Images -->
     <url>
         <loc>https://sonce.org/pravilnik-o-zasebnosti.html</loc>
         <image:image>
             <image:loc>https://sonce.org/images/soncelogo.jpg</image:loc>
-            <image:title>Pravilnik o zasebnosti - Sindikat Sonce Koper</image:title>
-            <image:caption>Logo za pravilnik o zasebnosti</image:caption>
+            <image:title>Pravilnik o zasebnosti - Pisarna pravne zaščite Sonce Slovenije</image:title>
+            <image:caption>Varstvo osebnih podatkov in politika zasebnosti</image:caption>
+            <image:geo_location>Koper, Slovenia</image:geo_location>
         </image:image>
     </url>
-    
+
+    <!-- Cookie Policy Page Images -->
     <url>
         <loc>https://sonce.org/pravilnik-o-piskotkih.html</loc>
         <image:image>
             <image:loc>https://sonce.org/images/soncelogo.jpg</image:loc>
-            <image:title>Pravilnik o piškotkih - Sindikat Sonce Koper</image:title>
-            <image:caption>Logo za pravilnik o piškotkih</image:caption>
+            <image:title>Pravilnik o piškotkih - Pisarna pravne zaščite Sonce Slovenije</image:title>
+            <image:caption>Uporaba piškotkov in sledenje na spletni strani</image:caption>
+            <image:geo_location>Koper, Slovenia</image:geo_location>
         </image:image>
     </url>
+
+    <!-- Service Page Images -->
+    <url>
+        <loc>https://sonce.org/brezplacna-pravna-pomoc</loc>
+        <image:image>
+            <image:loc>https://sonce.org/images/soncelogo.jpg</image:loc>
+            <image:title>Brezplačna pravna pomoč - Sindikat Sonce Koper</image:title>
+            <image:caption>Brezplačno pravno svetovanje in zastopanje za člane sindikata</image:caption>
+            <image:geo_location>Koper, Slovenia</image:geo_location>
+        </image:image>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/zascita-pred-mobingom</loc>
+        <image:image>
+            <image:loc>https://sonce.org/images/soncelogo.jpg</image:loc>
+            <image:title>Zaščita pred mobingom - Sindikat Sonce Koper</image:title>
+            <image:caption>Pomoč pri zaščiti pred mobingom na delovnem mestu</image:caption>
+            <image:geo_location>Koper, Slovenia</image:geo_location>
+        </image:image>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/delovni-spori</loc>
+        <image:image>
+            <image:loc>https://sonce.org/images/soncelogo.jpg</image:loc>
+            <image:title>Delovni spori - Sindikat Sonce Koper</image:title>
+            <image:caption>Reševanje delovnih sporov in konfliktov na delovnem mestu</image:caption>
+            <image:geo_location>Koper, Slovenia</image:geo_location>
+        </image:image>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/kolektivne-pogodbe</loc>
+        <image:image>
+            <image:loc>https://sonce.org/images/soncelogo.jpg</image:loc>
+            <image:title>Kolektivne pogodbe - Sindikat Sonce Koper</image:title>
+            <image:caption>Pomoč pri pogajanjih o kolektivnih pogodbah</image:caption>
+            <image:geo_location>Koper, Slovenia</image:geo_location>
+        </image:image>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/odpoved-pogodbe</loc>
+        <image:image>
+            <image:loc>https://sonce.org/images/soncelogo.jpg</image:loc>
+            <image:title>Odpoved pogodbe o zaposlitvi - Sindikat Sonce Koper</image:title>
+            <image:caption>Pravna pomoč pri odpovedi pogodbe o zaposlitvi</image:caption>
+            <image:geo_location>Koper, Slovenia</image:geo_location>
+        </image:image>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/kontakt</loc>
+        <image:image>
+            <image:loc>https://sonce.org/images/soncelogo.jpg</image:loc>
+            <image:title>Kontakt - Sindikat Sonce Koper</image:title>
+            <image:caption>Kontaktne informacije in lokacija pisarne</image:caption>
+            <image:geo_location>Koper, Slovenia</image:geo_location>
+        </image:image>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/o-nas</loc>
+        <image:image>
+            <image:loc>https://sonce.org/images/soncelogo.jpg</image:loc>
+            <image:title>O nas - Sindikat Sonce Koper</image:title>
+            <image:caption>Informacije o sindikatu in našem timu</image:caption>
+            <image:geo_location>Koper, Slovenia</image:geo_location>
+        </image:image>
+    </url>
+
+    <!-- Favicon Images -->
+    <url>
+        <loc>https://sonce.org/</loc>
+        <image:image>
+            <image:loc>https://sonce.org/favicons/favicon.ico</image:loc>
+            <image:title>Sindikat Sonce Koper - Favicon</image:title>
+            <image:caption>Uradna ikona sindikata Sonce Koper</image:caption>
+        </image:image>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/</loc>
+        <image:image>
+            <image:loc>https://sonce.org/favicons/apple-touch-icon.png</image:loc>
+            <image:title>Sindikat Sonce Koper - Apple Touch Icon</image:title>
+            <image:caption>Apple touch icon za mobilne naprave</image:caption>
+        </image:image>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/</loc>
+        <image:image>
+            <image:loc>https://sonce.org/favicons/favicon-32x32.png</image:loc>
+            <image:title>Sindikat Sonce Koper - 32x32 Favicon</image:title>
+            <image:caption>32x32 pikslov favicon za brskalnike</image:caption>
+        </image:image>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/</loc>
+        <image:image>
+            <image:loc>https://sonce.org/favicons/favicon-16x16.png</image:loc>
+            <image:title>Sindikat Sonce Koper - 16x16 Favicon</image:title>
+            <image:caption>16x16 pikslov favicon za brskalnike</image:caption>
+        </image:image>
+    </url>
+
+    <url>
+        <loc>https://sonce.org/</loc>
+        <image:image>
+            <image:loc>https://sonce.org/favicons/safari-pinned-tab.svg</image:loc>
+            <image:title>Sindikat Sonce Koper - Safari Pinned Tab</image:title>
+            <image:caption>Safari pinned tab ikona</image:caption>
+        </image:image>
+    </url>
+
 </urlset>
