@@ -52,8 +52,8 @@ gem install jekyll bundler
 2. Click "New OAuth App"
 3. Fill in the following details:
    - Application name: "Sonce CMS"
-   - Homepage URL: `https://sonce.si`
-   - Authorization callback URL: `https://sonce.si/admin/`
+   - Homepage URL: `https://sonce.org`
+   - Authorization callback URL: `https://sonce.org/admin/`
 4. Copy the Client ID and Client Secret
 
 ### OAuth Proxy Deployment
@@ -70,7 +70,7 @@ Deploy an OAuth proxy to handle GitHub authentication:
 
 ### Configuration Updates
 1. Update `admin/config.yml`:
-   - Replace `OWNER/REPO` with your actual GitHub repository path (e.g., "djanej/sonce")
+   - Replace `OWNER/REPO` with your actual GitHub repository path (e.g., "djanej/sonce.org")
    - Uncomment and set `auth_endpoint` and `app_id` with your OAuth proxy details
 2. Ensure your repository has the correct branch name (default: "main")
 
@@ -79,12 +79,12 @@ The blog system includes:
 - **Jekyll setup**: Complete Jekyll configuration for static site generation
 - **Layouts**: Default and post-specific layouts
 - **Styling**: Basic CSS for blog appearance
-- **Collections**: Posts stored in `content/posts/`
+- **Collections**: Posts stored in `_posts/`
 - **RSS Feed**: Available at `/feed.xml`
 - **Sitemap**: Auto-generated sitemap
 
 ### Content Management
-- **Create posts**: Use Netlify CMS at `/admin` or create markdown files in `content/posts/`
+- **Create posts**: Use Netlify CMS at `/admin` or create markdown files in `_posts/`
 - **Post format**: Use front matter with title, date, description, author, and layout
 - **Images**: Store in `assets/uploads/` (automatically managed by CMS)
 - **Markdown**: Full markdown support for rich content
