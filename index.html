@@ -27,6 +27,7 @@
     <!-- Preload critical resources -->
     <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="preload" href="https://unpkg.com/aos@2.3.1/dist/aos.css" as="style">
     <link rel="preload" href="/images/soncelogo.jpg" as="image">
     <link rel="preload" href="/favicons/favicon.ico" as="image">
     
@@ -519,6 +520,7 @@
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"></noscript>
     <style>
@@ -647,6 +649,85 @@
             }
         }
 
+        /* Test animation to verify CSS animations work */
+        .test-animation {
+            animation: testPulse 2s infinite;
+        }
+        
+        @keyframes testPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Desktop animations - ensure they work */
+        @media (min-width: 769px) {
+            [data-aos] {
+                opacity: 1;
+                transform: none;
+                transition: none;
+                visibility: visible;
+            }
+            
+            [data-aos].aos-animate {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: all 0.8s ease !important;
+                visibility: visible !important;
+            }
+            
+            .floating, .pulse, .shine:after {
+                animation: auto !important;
+            }
+            
+            /* Ensure CSS animations work on desktop */
+            .floating {
+                animation: floating 6s ease-in-out infinite !important;
+            }
+            
+            .pulse {
+                animation: pulse 2s infinite !important;
+            }
+            
+            .shine:after {
+                animation: shine 3s infinite !important;
+            }
+            
+            /* Override any conflicting CSS */
+            [data-aos="fade-up"] {
+                transform: translateY(30px) !important;
+                opacity: 0 !important;
+                transition: all 0.8s ease !important;
+            }
+            
+            [data-aos="fade-up"].aos-animate {
+                transform: translateY(0) !important;
+                opacity: 1 !important;
+            }
+            
+            [data-aos="fade-right"] {
+                transform: translateX(-30px) !important;
+                opacity: 0 !important;
+                transition: all 0.8s ease !important;
+            }
+            
+            [data-aos="fade-right"].aos-animate {
+                transform: translateX(0) !important;
+                opacity: 1 !important;
+            }
+            
+            [data-aos="zoom-in"] {
+                transform: scale(0.8) !important;
+                opacity: 0 !important;
+                transition: all 0.8s ease !important;
+            }
+            
+            [data-aos="zoom-in"].aos-animate {
+                transform: scale(1) !important;
+                opacity: 1 !important;
+            }
+        }
+        
         /* Mobile styles */
         @media (max-width: 768px) {
             /* Base improvements */
@@ -878,7 +959,7 @@
                 margin-top: 1rem;
             }
 
-            /* Remove animations on mobile for better performance */
+            /* Disable animations on mobile for better performance */
             [data-aos] {
                 opacity: 1 !important;
                 transform: none !important;
@@ -1916,7 +1997,7 @@
                 -webkit-overflow-scrolling: touch;
             }
 
-            /* Remove animations on mobile */
+            /* Disable animations on mobile */
             [data-aos] {
                 opacity: 1 !important;
                 transform: none !important;
@@ -3370,6 +3451,9 @@
 
     <!-- Mobile warning removed for optimized mobile experience -->
 
+    <!-- Test Animation Element -->
+    <div class="test-animation" style="position: fixed; top: 10px; right: 10px; width: 50px; height: 50px; background: red; z-index: 9999; border-radius: 50%;"></div>
+    
     <!-- Header -->
     <header class="bg-white shadow-sm">
         <div class="container">
@@ -4277,18 +4361,50 @@
         });
     </script>
     <!-- Performance optimized scripts -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer id="aos-script"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" id="aos-script"></script>
     <script type="text/javascript">
-        // Initialize Animation on Scroll with safer defaults
+        // Initialize Animation on Scroll with better desktop support
         document.addEventListener('DOMContentLoaded', function() {
             const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            // On desktop, initialize AOS if available; otherwise, ensure elements are visible
+            const isMobile = window.innerWidth <= 768;
+            
             function initAOSIfReady() {
-                if (window.innerWidth > 768 && !prefersReducedMotion && window.AOS) {
+                // Only disable animations on mobile or if user prefers reduced motion
+                if (isMobile || prefersReducedMotion) {
+                    // Disable animations on mobile for performance
+                    document.querySelectorAll('[data-aos]').forEach(el => {
+                        el.style.opacity = '1';
+                        el.style.transform = 'none';
+                        el.style.visibility = 'visible';
+                        el.classList.add('aos-animate');
+                    });
+                } else if (window.AOS) {
+                    // Initialize AOS on desktop
                     try {
-                        AOS.init({ duration: 800, once: true, offset: 100 });
+                        console.log('AOS library found, initializing...');
+                        AOS.init({ 
+                            duration: 800, 
+                            once: true, 
+                            offset: 100,
+                            disable: false,
+                            startEvent: 'DOMContentLoaded',
+                            initClassName: 'aos-init',
+                            animatedClassName: 'aos-animate',
+                            useClassNames: false,
+                            disableMutationObserver: false,
+                            debounceDelay: 50,
+                            throttleDelay: 99
+                        });
+                        console.log('AOS initialized successfully on desktop');
+                        
+                        // Force refresh after initialization
+                        setTimeout(() => {
+                            AOS.refresh();
+                            console.log('AOS refreshed');
+                        }, 100);
                     } catch (e) {
-                        // If AOS init fails, reveal any [data-aos] elements
+                        console.error('AOS initialization failed:', e);
+                        // Fallback: ensure elements are visible
                         document.querySelectorAll('[data-aos]').forEach(el => {
                             el.style.opacity = '1';
                             el.style.transform = 'none';
@@ -4297,21 +4413,73 @@
                         });
                     }
                 } else {
-                    // No AOS or reduced motion: ensure [data-aos] elements are visible
-                    document.querySelectorAll('[data-aos]').forEach(el => {
-                        el.style.opacity = '1';
-                        el.style.transform = 'none';
-                        el.style.visibility = 'visible';
-                        el.classList.add('aos-animate');
-                    });
+                    // AOS not loaded yet, wait for it
+                    setTimeout(initAOSIfReady, 100);
                 }
             }
+            
             const aosScript = document.getElementById('aos-script');
-            if (aosScript && !window.AOS) {
-                aosScript.addEventListener('load', initAOSIfReady);
+            if (aosScript) {
+                aosScript.addEventListener('load', function() {
+                    console.log('AOS script loaded');
+                    // Small delay to ensure AOS is fully loaded
+                    setTimeout(initAOSIfReady, 50);
+                });
+            } else {
+                console.warn('AOS script element not found');
             }
-            // Call once in case script already loaded
+            
+            // Initial call
             initAOSIfReady();
+            
+            // Debug: Check if animations are working
+            setTimeout(() => {
+                if (!isMobile) {
+                    const aosElements = document.querySelectorAll('[data-aos]');
+                    console.log(`Found ${aosElements.length} AOS elements on desktop`);
+                    aosElements.forEach((el, index) => {
+                        if (index < 3) { // Log first 3 elements
+                            console.log(`AOS element ${index}:`, {
+                                element: el,
+                                hasAosClass: el.classList.contains('aos-animate'),
+                                dataAos: el.getAttribute('data-aos'),
+                                opacity: getComputedStyle(el).opacity,
+                                transform: getComputedStyle(el).transform,
+                                visibility: getComputedStyle(el).visibility
+                            });
+                        }
+                    });
+                    
+                    // Test manual animation trigger
+                    console.log('Testing manual animation trigger...');
+                    aosElements.forEach((el, index) => {
+                        if (index < 2) { // Test first 2 elements
+                            setTimeout(() => {
+                                el.classList.add('aos-animate');
+                                console.log(`Manually triggered animation for element ${index}`);
+                            }, (index + 1) * 500);
+                        }
+                    });
+                    
+                                // Check if AOS library is available
+            console.log('AOS library status:', {
+                windowAOS: !!window.AOS,
+                AOSInit: !!window.AOS?.init,
+                AOSRefresh: !!window.AOS?.refresh
+            });
+            
+            // Test basic CSS animation support
+            const testEl = document.querySelector('.test-animation');
+            if (testEl) {
+                const computedStyle = getComputedStyle(testEl);
+                console.log('Test animation computed style:', {
+                    animation: computedStyle.animation,
+                    animationName: computedStyle.animationName,
+                    transform: computedStyle.transform
+                });
+            }
+                }
+            }, 1000);
         });
     </script>
     <script>
