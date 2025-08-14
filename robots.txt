@@ -95,6 +95,8 @@ Sitemap: https://sonce.org/sitemap-index.xml
 Sitemap: https://sonce.org/sitemap.xml
 Sitemap: https://sonce.org/sitemap-sl.xml
 Sitemap: https://sonce.org/sitemap-images.xml
+Sitemap: https://sonce.org/sitemap-video.xml
+Sitemap: https://sonce.org/sitemap-news.xml
 
 # Preferred host
 Host: sonce.org 
