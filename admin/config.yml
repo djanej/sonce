@@ -1,0 +1,23 @@
+backend:
+  name: github
+  repo: "djanej/sonce"
+  branch: "main"
+  # After deploying OAuth proxy, uncomment and set:
+  # auth_endpoint: "https://YOUR_OAUTH_PROXY_URL/auth"
+  # app_id: "YOUR_GITHUB_OAUTH_CLIENT_ID"
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+collections:
+  - name: "posts"
+    label: "Posts"
+    folder: "_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Description", name: "description", widget: "string"}
+      - {label: "Body", name: "body", widget: "markdown"}
+      - {label: "Featured Image", name: "featuredImage", widget: "image", required: false}
