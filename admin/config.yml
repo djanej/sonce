@@ -1,0 +1,23 @@
+backend:
+  name: github
+  repo: "OWNER/REPO"       # <-- REPLACE OWNER/REPO later with actual repo path
+  branch: "main"
+  # If you use an OAuth proxy, set auth_endpoint and app_id below:
+  # auth_endpoint: "https://your-oauth-proxy.vercel.app/auth"
+  # app_id: "YOUR_GITHUB_CLIENT_ID"
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+collections:
+  - name: "blog"
+    label: "Blog"
+    folder: "content/posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Description", name: "description", widget: "string"}
+      - {label: "Body", name: "body", widget: "markdown"}
+      - {label: "Featured Image", name: "featuredImage", widget: "image", required: false}
