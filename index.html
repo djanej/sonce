@@ -902,6 +902,22 @@
                 -webkit-user-select: none;
                 user-select: none;
             }
+            
+            /* Better mobile positioning */
+            .hero-gradient {
+                position: relative;
+                overflow: hidden;
+            }
+            
+            /* Improve mobile content flow */
+            .hero-gradient .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: calc(100vh - 60px);
+                padding: 2rem 1rem;
+            }
 
             /* Container improvements */
             .container {
@@ -1005,28 +1021,39 @@
             /* Section improvements */
             section {
                 padding: 3rem 1rem;
-                margin-top: 70px;
+                margin-top: 0;
                 width: 100%;
                 box-sizing: border-box;
             }
 
             section:first-of-type {
-                margin-top: 70px;
-                padding-top: 3rem;
+                margin-top: 0;
+                padding-top: 2rem;
+            }
+            
+            /* Better mobile section spacing */
+            .py-20, .py-24 {
+                padding-top: 2rem !important;
+                padding-bottom: 2rem !important;
+            }
+            
+            .py-16 {
+                padding-top: 1.5rem !important;
+                padding-bottom: 1.5rem !important;
             }
 
             /* Hero section improvements */
             .hero-gradient {
-                padding: 5rem 1rem 3rem;
+                padding: 3rem 1rem 2rem;
                 text-align: center;
-                min-height: calc(100vh - 70px);
+                min-height: calc(100vh - 60px);
                 display: flex;
                 align-items: center;
                 justify-content: center;
             }
 
             .hero-gradient h2 {
-                font-size: 2.2rem;
+                font-size: 2rem;
                 line-height: 1.2;
                 margin-bottom: 1.5rem;
                 word-wrap: break-word;
@@ -1034,10 +1061,21 @@
             }
 
             .hero-gradient p {
-                font-size: 1.1rem;
+                font-size: 1rem;
                 line-height: 1.5;
                 margin-bottom: 2rem;
                 max-width: 100%;
+            }
+            
+            /* Better mobile text sizing */
+            .hero-gradient h1.tagline {
+                font-size: 0.8rem !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            .hero-gradient h2.verse {
+                font-size: 1.8rem !important;
+                line-height: 1.3 !important;
             }
 
             .hero-gradient .flex {
@@ -1057,6 +1095,17 @@
                 transition: all 0.2s ease;
                 -webkit-tap-highlight-color: transparent;
                 touch-action: manipulation;
+                width: 100%;
+                max-width: 280px;
+                margin: 0 auto;
+            }
+            
+            /* Better mobile button layout */
+            .flex.flex-col.sm\:flex-row .btn-primary,
+            .flex.flex-col.sm\:flex-row .bg-white\/20 {
+                width: 100% !important;
+                max-width: 280px !important;
+                margin: 0 auto !important;
             }
 
             .btn-primary:active, .bg-white:active, .bg-white\/20:active {
@@ -1089,6 +1138,46 @@
                 width: 100%;
                 max-width: 100%;
             }
+            
+            /* Better mobile grid layouts */
+            .grid.grid-cols-2 {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1rem !important;
+            }
+            
+            .grid.md\:grid-cols-2 {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+            
+            .grid.md\:grid-cols-3 {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+            
+            /* Stats section mobile improvements */
+            .stats-section .grid.grid-cols-2 {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1rem !important;
+            }
+            
+            .stats-section .card-hover {
+                padding: 1rem !important;
+                margin: 0 !important;
+            }
+            
+            /* Better mobile spacing for stats */
+            .stats-section .text-4xl {
+                font-size: 2rem !important;
+            }
+            
+            .stats-section .w-16 {
+                width: 3rem !important;
+                height: 3rem !important;
+            }
 
             /* Flex layout improvements */
             .flex {
@@ -1099,6 +1188,13 @@
 
             .flex.lg\:flex-row {
                 flex-direction: column;
+            }
+            
+            /* Better mobile flex layouts */
+            .flex.flex-col.sm\:flex-row {
+                flex-direction: column !important;
+                gap: 1rem !important;
+                align-items: center !important;
             }
 
             /* Card improvements */
@@ -1111,6 +1207,15 @@
                 max-width: 100%;
                 transition: all 0.2s ease;
                 -webkit-tap-highlight-color: transparent;
+            }
+            
+            /* Better mobile card positioning */
+            .card-hover:first-child {
+                margin-top: 0;
+            }
+            
+            .card-hover:last-child {
+                margin-bottom: 0;
             }
 
             .card-hover:active {
@@ -1128,6 +1233,21 @@
                 -webkit-appearance: none !important;
                 appearance: none !important;
                 min-height: 48px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            /* Better mobile form layout */
+            .contact-form {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+            }
+            
+            .contact-form .flex {
+                flex-direction: column !important;
+                gap: 1rem !important;
             }
 
             input:focus, select:focus, textarea:focus {
@@ -1143,6 +1263,157 @@
                 -webkit-tap-highlight-color: transparent;
                 touch-action: manipulation;
             }
+            
+                    /* Additional mobile positioning improvements */
+        .stats-section .grid {
+            gap: 1rem !important;
+        }
+        
+        .stats-section .card-hover {
+            padding: 1rem !important;
+            margin: 0.5rem 0 !important;
+        }
+        
+        /* Better mobile spacing for content sections */
+        .about-section, .services-section, .contact-section {
+            padding: 2rem 1rem !important;
+        }
+        
+        /* Services section mobile improvements */
+        .services-section .grid.md\:grid-cols-3 {
+            grid-template-columns: 1fr !important;
+            gap: 1.5rem !important;
+        }
+        
+        .services-section .card-hover {
+            padding: 1.5rem !important;
+            margin: 0 !important;
+        }
+        
+        /* About section mobile improvements */
+        .about-section .grid.md\:grid-cols-2 {
+            grid-template-columns: 1fr !important;
+            gap: 2rem !important;
+        }
+        
+        .about-section .lg\:w-1\/2 {
+            width: 100% !important;
+        }
+        
+        /* Improve mobile image positioning */
+        .lg\:w-1\/2 img, .md\:w-1\/2 img {
+            width: 100% !important;
+            height: auto !important;
+            max-width: 100% !important;
+            margin: 0 auto !important;
+            display: block !important;
+        }
+        
+        /* Better mobile content alignment */
+        .text-center {
+            text-align: center !important;
+        }
+        
+        .lg\:text-left {
+            text-align: center !important;
+        }
+        
+        /* Improve mobile spacing consistency */
+        .mb-8, .mb-12, .mb-16 {
+            margin-bottom: 1.5rem !important;
+        }
+        
+        .mt-8, .mt-12, .mt-16 {
+            margin-top: 1.5rem !important;
+        }
+        
+        /* Better mobile button spacing */
+        .space-y-4 > * + * {
+            margin-top: 1rem !important;
+        }
+        
+        .space-x-4 > * + * {
+            margin-left: 0 !important;
+        }
+        
+        /* Contact form mobile improvements */
+        .contact-form-grid {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
+        }
+        
+        /* Better mobile contact section layout */
+        .contact-section .flex.lg\:flex-row {
+            flex-direction: column !important;
+            gap: 2rem !important;
+        }
+        
+        .contact-section .lg\:w-1\/2 {
+            width: 100% !important;
+        }
+        
+        /* Improve mobile padding for contact cards */
+        .contact-section .bg-white {
+            padding: 1.5rem !important;
+        }
+        
+        /* Better mobile spacing for contact info */
+        .contact-section .space-y-8 {
+            gap: 1.5rem !important;
+        }
+        
+        .contact-section .space-y-8 > * + * {
+            margin-top: 1.5rem !important;
+        }
+        
+        /* FAQ section mobile improvements */
+        .faq-item {
+            padding: 1rem !important;
+            margin-bottom: 1rem !important;
+        }
+        
+        .faq-item .faq-question {
+            font-size: 1rem !important;
+            padding: 0.75rem 0 !important;
+        }
+        
+        .faq-item .faq-answer {
+            padding: 0.75rem 0 !important;
+        }
+        
+        /* Better mobile spacing for all sections */
+        .py-20, .py-24 {
+            padding-top: 2rem !important;
+            padding-bottom: 2rem !important;
+        }
+        
+        .py-16 {
+            padding-top: 1.5rem !important;
+            padding-bottom: 1.5rem !important;
+        }
+        
+        /* Final mobile positioning improvements */
+        .container {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+        
+        /* Better mobile text alignment */
+        .text-left, .lg\:text-left {
+            text-align: center !important;
+        }
+        
+        /* Improve mobile margins */
+        .mx-auto {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+        
+        /* Better mobile image display */
+        .lazy-image {
+            max-width: 100% !important;
+            height: auto !important;
+        }
 
             /* Prevent zoom on input focus */
             input[type="text"],
@@ -3325,13 +3596,69 @@
             .btn-primary { width: auto; min-height: 48px; padding-left: 1.25rem; padding-right: 1.25rem; }
         }
 
-        /* Mobile override: hide header completely */
+        /* Mobile layout improvements */
         @media (max-width: 768px) {
+            /* Keep header hidden on mobile as requested */
             header { display: none !important; }
+            
+            /* Proper spacing for mobile without header */
             html { scroll-padding-top: 0 !important; }
-            section:first-of-type { padding-top: 0 !important; }
-            .hero-gradient { min-height: 100vh; display: flex; align-items: center; }
+            
+            section:first-of-type { 
+                padding-top: 0 !important; 
+                margin-top: 0 !important;
+            }
+            
+            /* Hero section mobile optimization */
+            .hero-gradient { 
+                padding: 4rem 1rem 2rem !important;
+                min-height: 100vh !important;
+                text-align: center !important;
+            }
+            
+            /* Better mobile layout for hero content */
+            .hero-gradient .flex.lg\:flex-row {
+                flex-direction: column !important;
+                gap: 2rem !important;
+                align-items: center !important;
+            }
+            
+            /* Hero image positioning on mobile */
+            .hero-image-card { 
+                max-width: 90% !important; 
+                margin: 0 auto !important;
+                order: -1 !important;
+            }
+            
+            /* Mobile menu adjustments */
             #mobileMenu { padding-top: 0 !important; }
+            
+            /* Better mobile spacing */
+            .container { padding: 0 1rem !important; }
+            
+            /* Improve mobile grid layouts */
+            .grid.grid-cols-2.md\:grid-cols-3 {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1rem !important;
+            }
+            
+            .grid.md\:grid-cols-2 {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+            
+            /* Better mobile button layout */
+            .flex.flex-col.sm\:flex-row {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+            
+            .flex.flex-col.sm\:flex-row .btn-primary,
+            .flex.flex-col.sm\:flex-row .bg-white\/20 {
+                width: 100% !important;
+                max-width: 280px !important;
+                margin: 0 auto !important;
+            }
         }
     </style>
 
@@ -4060,7 +4387,7 @@
                     </div>
                 </div>
                 <div class="lg:w-1/2" data-aos="fade-left" data-aos-delay="300">
-                        <div class="hero-image-card bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10 shadow-2xl floating" style="max-width: 60%; margin: 0 auto;">
+                        <div class="hero-image-card bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10 shadow-2xl floating">
                         <img data-src="https://i.imgur.com/vBKRRYp.jpeg" 
                              alt="Pravna pomoč in sindikalna zaščita za zaposlene v Sloveniji" 
                              class="rounded-lg w-full h-auto object-cover lazy-image" 
@@ -4072,7 +4399,7 @@
     </section>
 
     <!-- Stats Section -->
-    <section class="py-20 bg-gradient-to-br from-white to-gray-50">
+    <section class="py-20 bg-gradient-to-br from-white to-gray-50 stats-section">
         <div class="container">
             <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
                 <div class="text-center p-6 rounded-2xl bg-white shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 group mobile-hover mobile-focus" data-aos="fade-up" data-aos-delay="100">
@@ -4101,7 +4428,7 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="bg-white">
+    <section id="about" class="bg-white about-section">
         <div class="container">
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-6 text-primary section-title" data-aos="zoom-in">
                 PISARNA DELAVSKE PRAVNE ZAŠČITE-SINDIKAT SONCE SLOVENIJE
@@ -4197,7 +4524,7 @@
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="py-16 bg-gray-50">
+    <section id="services" class="py-16 bg-gray-50 services-section">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16" data-aos="fade-up">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Pravna pomoč in zastopanje delavcev</h2>
@@ -4590,7 +4917,7 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="bg-gradient-to-br from-accent-light to-white py-20">
+    <section id="contact" class="bg-gradient-to-br from-accent-light to-white py-20 contact-section">
         <div class="container">
             <h2 class="text-4xl font-bold text-center mb-4 text-primary section-title" data-aos="zoom-in">Stopite v stik z nami</h2>
             <p class="text-center text-gray-600 max-w-2xl mx-auto mb-16" data-aos="fade-up">Smo tu za vas. Kontaktirajte nas za kakršnakoli vprašanja ali pomoč pri uveljavljanju vaših pravic.</p>
@@ -4677,7 +5004,7 @@
                                 Prišlo je do napake pri pošiljanju sporočila. Prosimo, poskusite znova ali nas kontaktirajte direktno na info@pisarnasonce.si
                             </div>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 contact-form-grid">
                             <div class="form-group">
                                     <label class="block text-gray-700 font-medium mb-2">Ime in priimek</label>
                                     <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" required>
@@ -4685,7 +5012,7 @@
                             
                             <div class="form-group">
                                     <label class="block text-gray-700 font-medium mb-2">E-pošta</label>
-                                    <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" required>
+                                    <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-300" required>
                                 </div>
                             </div>
                             
