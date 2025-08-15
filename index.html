@@ -1021,13 +1021,13 @@
             /* Section improvements */
             section {
                 padding: 3rem 1rem;
-                margin-top: 60px;
+                margin-top: 0;
                 width: 100%;
                 box-sizing: border-box;
             }
 
             section:first-of-type {
-                margin-top: 60px;
+                margin-top: 0;
                 padding-top: 2rem;
             }
             
@@ -1157,6 +1157,27 @@
                 grid-template-columns: 1fr !important;
                 gap: 1.5rem !important;
             }
+            
+            /* Stats section mobile improvements */
+            .stats-section .grid.grid-cols-2 {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1rem !important;
+            }
+            
+            .stats-section .card-hover {
+                padding: 1rem !important;
+                margin: 0 !important;
+            }
+            
+            /* Better mobile spacing for stats */
+            .stats-section .text-4xl {
+                font-size: 2rem !important;
+            }
+            
+            .stats-section .w-16 {
+                width: 3rem !important;
+                height: 3rem !important;
+            }
 
             /* Flex layout improvements */
             .flex {
@@ -1258,6 +1279,27 @@
             padding: 2rem 1rem !important;
         }
         
+        /* Services section mobile improvements */
+        .services-section .grid.md\:grid-cols-3 {
+            grid-template-columns: 1fr !important;
+            gap: 1.5rem !important;
+        }
+        
+        .services-section .card-hover {
+            padding: 1.5rem !important;
+            margin: 0 !important;
+        }
+        
+        /* About section mobile improvements */
+        .about-section .grid.md\:grid-cols-2 {
+            grid-template-columns: 1fr !important;
+            gap: 2rem !important;
+        }
+        
+        .about-section .lg\:w-1\/2 {
+            width: 100% !important;
+        }
+        
         /* Improve mobile image positioning */
         .lg\:w-1\/2 img, .md\:w-1\/2 img {
             width: 100% !important;
@@ -1292,6 +1334,85 @@
         
         .space-x-4 > * + * {
             margin-left: 0 !important;
+        }
+        
+        /* Contact form mobile improvements */
+        .contact-form-grid {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
+        }
+        
+        /* Better mobile contact section layout */
+        .contact-section .flex.lg\:flex-row {
+            flex-direction: column !important;
+            gap: 2rem !important;
+        }
+        
+        .contact-section .lg\:w-1\/2 {
+            width: 100% !important;
+        }
+        
+        /* Improve mobile padding for contact cards */
+        .contact-section .bg-white {
+            padding: 1.5rem !important;
+        }
+        
+        /* Better mobile spacing for contact info */
+        .contact-section .space-y-8 {
+            gap: 1.5rem !important;
+        }
+        
+        .contact-section .space-y-8 > * + * {
+            margin-top: 1.5rem !important;
+        }
+        
+        /* FAQ section mobile improvements */
+        .faq-item {
+            padding: 1rem !important;
+            margin-bottom: 1rem !important;
+        }
+        
+        .faq-item .faq-question {
+            font-size: 1rem !important;
+            padding: 0.75rem 0 !important;
+        }
+        
+        .faq-item .faq-answer {
+            padding: 0.75rem 0 !important;
+        }
+        
+        /* Better mobile spacing for all sections */
+        .py-20, .py-24 {
+            padding-top: 2rem !important;
+            padding-bottom: 2rem !important;
+        }
+        
+        .py-16 {
+            padding-top: 1.5rem !important;
+            padding-bottom: 1.5rem !important;
+        }
+        
+        /* Final mobile positioning improvements */
+        .container {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+        
+        /* Better mobile text alignment */
+        .text-left, .lg\:text-left {
+            text-align: center !important;
+        }
+        
+        /* Improve mobile margins */
+        .mx-auto {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+        
+        /* Better mobile image display */
+        .lazy-image {
+            max-width: 100% !important;
+            height: auto !important;
         }
 
             /* Prevent zoom on input focus */
@@ -3477,28 +3598,21 @@
 
         /* Mobile layout improvements */
         @media (max-width: 768px) {
-            /* Keep header visible but optimize for mobile */
-            header { 
-                height: 60px !important; 
-                background: rgba(255, 255, 255, 0.95) !important;
-            }
+            /* Keep header hidden on mobile as requested */
+            header { display: none !important; }
             
-            header .container { padding: 0 1rem !important; }
-            
-            header img { height: 35px !important; }
-            
-            /* Proper spacing for mobile */
-            html { scroll-padding-top: 60px !important; }
+            /* Proper spacing for mobile without header */
+            html { scroll-padding-top: 0 !important; }
             
             section:first-of-type { 
-                padding-top: 1rem !important; 
-                margin-top: 60px !important;
+                padding-top: 0 !important; 
+                margin-top: 0 !important;
             }
             
             /* Hero section mobile optimization */
             .hero-gradient { 
                 padding: 4rem 1rem 2rem !important;
-                min-height: calc(100vh - 60px) !important;
+                min-height: 100vh !important;
                 text-align: center !important;
             }
             
@@ -3517,7 +3631,7 @@
             }
             
             /* Mobile menu adjustments */
-            #mobileMenu { padding-top: 60px !important; }
+            #mobileMenu { padding-top: 0 !important; }
             
             /* Better mobile spacing */
             .container { padding: 0 1rem !important; }
@@ -4890,7 +5004,7 @@
                                 Prišlo je do napake pri pošiljanju sporočila. Prosimo, poskusite znova ali nas kontaktirajte direktno na info@pisarnasonce.si
                             </div>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 contact-form-grid">
                             <div class="form-group">
                                     <label class="block text-gray-700 font-medium mb-2">Ime in priimek</label>
                                     <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" required>
@@ -4898,7 +5012,7 @@
                             
                             <div class="form-group">
                                     <label class="block text-gray-700 font-medium mb-2">E-pošta</label>
-                                    <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300" required>
+                                    <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-300" required>
                                 </div>
                             </div>
                             
