@@ -1,0 +1,8 @@
+{
+	"services": [
+		{ "name": "Svetovanje", "price": 50.0 },
+		{ "name": "Analiza", "price": 120.0 },
+		{ "name": "Podpora", "price": 30.0 }
+	]
+}
+

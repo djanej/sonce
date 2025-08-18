@@ -1,0 +1,47 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: static/uploads
+public_folder: /uploads
+
+publish_mode: editorial_workflow
+locale: sl
+
+collections:
+  - name: news
+    label: Novice
+    label_singular: Novica
+    folder: content/news
+    create: true
+    slug: "{{slug}}"
+    sortable_fields: ["date", "title"]
+    view_filters:
+      - label: Objavljeno letos
+        field: date
+        pattern: "/^{{year}}/"
+    fields:
+      - { label: Naslov, name: title, widget: string }
+      - { label: Datum, name: date, widget: datetime, format: "YYYY-MM-DD" }
+      - { label: Povzetek, name: description, widget: text, required: false }
+      - { label: Vsebina, name: body, widget: markdown }
+      - { label: URL (permalink), name: permalink, widget: string, default: "news/{{slug}}/index.html", hint: "Pusti privzeto, razen če želiš custom URL." }
+      - { label: Postavitev, name: layout, widget: hidden, default: "layouts/post.njk" }
+
+  - name: prices
+    label: Cene
+    editor:
+      preview: false
+    files:
+      - label: Cene
+        name: prices
+        file: src/_data/prices.json
+        fields:
+          - label: Storitve
+            name: services
+            widget: list
+            summary: "{{fields.name}} — {{fields.price}} €"
+            fields:
+              - { label: Ime, name: name, widget: string }
+              - { label: Cena (€), name: price, widget: number, value_type: float, min: 0, step: 0.01 }
+
