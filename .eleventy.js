@@ -1,6 +1,18 @@
 module.exports = function(eleventyConfig) {
 	// Copy uploads to the root-level /uploads folder in the output
 	eleventyConfig.addPassthroughCopy({ "static/uploads": "uploads" });
+	// Passthrough copy for existing static site files and assets
+	eleventyConfig.addPassthroughCopy("robots.txt");
+	eleventyConfig.addPassthroughCopy("sw.js");
+	eleventyConfig.addPassthroughCopy("sitemap*.xml");
+	eleventyConfig.addPassthroughCopy("images");
+	eleventyConfig.addPassthroughCopy("favicons");
+	eleventyConfig.addPassthroughCopy("podpora.html");
+	eleventyConfig.addPassthroughCopy("pogoji-uporabe.html");
+	eleventyConfig.addPassthroughCopy("pravilnik-o-piskotkih.html");
+	eleventyConfig.addPassthroughCopy("pravilnik-o-zasebnosti.html");
+	eleventyConfig.addPassthroughCopy("pristopna-izjava.pdf");
+	eleventyConfig.addPassthroughCopy("prospekt-sindikata-sonce-slovenije.pdf");
 
 	// Watch admin and content folders for changes during dev
 	eleventyConfig.addWatchTarget("admin/");
