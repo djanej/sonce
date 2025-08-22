@@ -24,6 +24,18 @@
     </script>
     <link rel="stylesheet" href="/news/news.css">
     <script src="/news/markdown.js"></script>
+    <link rel="canonical" href="https://sonce.org/news/post.html">
+    <meta property="og:site_name" content="Sonce Slovenije">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Objava – Sonce Slovenije">
+    <meta property="og:description" content="Objava novic Sindikat Sonce Koper.">
+    <meta property="og:url" content="https://sonce.org/news/post.html">
+    <meta property="og:image" content="https://sonce.org/images/soncelogo.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Objava – Sonce Slovenije">
+    <meta name="twitter:description" content="Objava novic Sindikat Sonce Koper.">
+    <meta name="twitter:image" content="https://sonce.org/images/soncelogo.jpg">
+    <script id="post-jsonld" type="application/ld+json">{}</script>
 </head>
 <body class="bg-gray-50">
     <header class="bg-white shadow-sm border-b border-gray-200">
@@ -71,12 +83,36 @@
                             </svg>
                             <span id="author-text"></span>
                         </div>
+                        <div id="reading" class="flex items-center gap-2 hidden">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span id="reading-text"></span>
+                        </div>
                     </div>
                     <div id="tags" class="flex flex-wrap gap-2"></div>
+                    <nav id="toc" class="hidden border-t border-gray-100 pt-6 mt-6">
+                        <h2 class="text-base font-semibold text-gray-900 mb-3">Vsebina</h2>
+                        <ul id="toc-list" class="space-y-2 text-sm text-gray-700"></ul>
+                    </nav>
                 </header>
                 
                 <div id="content" class="news-article prose prose-lg max-w-none"></div>
                 <p id="post-empty" class="hidden text-gray-600 text-center py-12">Objava ni najdena.</p>
+                
+                <div id="share" class="hidden mt-8 flex flex-wrap items-center gap-3">
+                    <button id="share-btn" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-600 text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <span>Deli</span>
+                    </button>
+                    <button id="copy-link-btn" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        Kopiraj povezavo
+                    </button>
+                </div>
+                <nav id="prev-next" class="hidden mt-10 grid grid-cols-1 md:grid-cols-2 gap-4"></nav>
+                <section id="related" class="hidden mt-12">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Sorodne objave</h2>
+                    <div id="related-list" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+                </section>
             </div>
         </article>
     </main>
@@ -100,9 +136,20 @@
                 heroImg: document.getElementById('hero-img'),
                 tags: document.getElementById('tags'),
                 content: document.getElementById('content'),
-                empty: document.getElementById('post-empty')
+                empty: document.getElementById('post-empty'),
+                reading: document.getElementById('reading'),
+                readingText: document.getElementById('reading-text'),
+                toc: document.getElementById('toc'),
+                tocList: document.getElementById('toc-list'),
+                share: document.getElementById('share'),
+                shareBtn: document.getElementById('share-btn'),
+                copyLinkBtn: document.getElementById('copy-link-btn'),
+                prevNext: document.getElementById('prev-next'),
+                related: document.getElementById('related'),
+                relatedList: document.getElementById('related-list')
             };
 
+            const BASE_URL = 'https://sonce.org';
             const converter = new MarkdownConverter();
 
             function escapeHtml(str){
@@ -121,6 +168,19 @@
                 } catch(e){ 
                     return iso || ''; 
                 }
+            }
+
+            function truncate(text, max){
+                const limit = typeof max === 'number' ? max : 160;
+                if (!text) return '';
+                if (text.length <= limit) return text;
+                const cut = text.slice(0, limit);
+                const lastSpace = cut.lastIndexOf(' ');
+                return cut.slice(0, lastSpace > 60 ? lastSpace : limit).trim() + '…';
+            }
+
+            function slugify(s){
+                return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-');
             }
 
             function getParam(name){
@@ -149,6 +209,174 @@
                 els.tags.appendChild(frag);
             }
 
+            function buildToc(){
+                try {
+                    const headings = els.content.querySelectorAll('h2, h3');
+                    els.tocList.innerHTML = '';
+                    if (!headings || headings.length < 2){
+                        els.toc.classList.add('hidden');
+                        return;
+                    }
+                    headings.forEach(h => {
+                        if (!h.id){
+                            h.id = slugify(h.textContent || '');
+                        }
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.href = `#${h.id}`;
+                        a.textContent = h.textContent || '';
+                        a.className = 'hover:text-orange-600';
+                        li.className = h.tagName.toLowerCase() === 'h3' ? 'ml-4' : '';
+                        li.appendChild(a);
+                        els.tocList.appendChild(li);
+                    });
+                    els.toc.classList.remove('hidden');
+                } catch(e){}
+            }
+
+            function updateHeadMeta(post){
+                const pageUrl = BASE_URL + location.pathname + location.search;
+                const title = `${post.title || 'Objava'} – Sonce Slovenije`;
+                const description = truncate(post.summary || '', 160) || 'Objava novic Sindikat Sonce Koper.';
+                document.title = title;
+                const metaDesc = document.querySelector('meta[name="description"]');
+                if (metaDesc) metaDesc.setAttribute('content', description);
+                const linkCanonical = document.querySelector('link[rel="canonical"]');
+                if (linkCanonical) linkCanonical.setAttribute('href', pageUrl);
+                const ogTitle = document.querySelector('meta[property="og:title"]');
+                if (ogTitle) ogTitle.setAttribute('content', title);
+                const ogDesc = document.querySelector('meta[property="og:description"]');
+                if (ogDesc) ogDesc.setAttribute('content', description);
+                const ogUrl = document.querySelector('meta[property="og:url"]');
+                if (ogUrl) ogUrl.setAttribute('content', pageUrl);
+                const ogImg = document.querySelector('meta[property="og:image"]');
+                if (ogImg) ogImg.setAttribute('content', post.hero && post.hero.trim() ? post.hero : (BASE_URL + '/images/soncelogo.jpg'));
+                const twTitle = document.querySelector('meta[name="twitter:title"]');
+                if (twTitle) twTitle.setAttribute('content', title);
+                const twDesc = document.querySelector('meta[name="twitter:description"]');
+                if (twDesc) twDesc.setAttribute('content', description);
+                const twImg = document.querySelector('meta[name="twitter:image"]');
+                if (twImg) twImg.setAttribute('content', post.hero && post.hero.trim() ? post.hero : (BASE_URL + '/images/soncelogo.jpg'));
+
+                // JSON-LD
+                try {
+                    const json = {
+                        '@context': 'https://schema.org',
+                        '@type': 'NewsArticle',
+                        headline: post.title || '',
+                        description: description,
+                        datePublished: post.date || '',
+                        dateModified: post.date || '',
+                        author: post.author ? { '@type': 'Person', name: post.author } : undefined,
+                        image: post.hero && post.hero.trim() ? [post.hero] : [BASE_URL + '/images/soncelogo.jpg'],
+                        mainEntityOfPage: {
+                            '@type': 'WebPage',
+                            '@id': pageUrl
+                        },
+                        publisher: {
+                            '@type': 'Organization',
+                            name: 'Sonce Slovenije',
+                            logo: {
+                                '@type': 'ImageObject',
+                                url: BASE_URL + '/images/soncelogo.jpg'
+                            }
+                        }
+                    };
+                    const node = document.getElementById('post-jsonld');
+                    if (node) node.textContent = JSON.stringify(json);
+                } catch(e){}
+            }
+
+            function renderPrevNext(posts, current){
+                try {
+                    const sorted = posts.slice().sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+                    const idx = sorted.findIndex(p => String(p.slug) === String(current.slug));
+                    els.prevNext.innerHTML = '';
+                    if (idx === -1) return;
+                    let hasAny = false;
+                    if (idx > 0){
+                        const prev = sorted[idx - 1];
+                        const a = document.createElement('a');
+                        a.href = `/news/post.html?slug=${encodeURIComponent(prev.slug)}`;
+                        a.className = 'block p-4 border border-gray-200 rounded-xl hover:border-orange-300 hover:shadow-sm';
+                        a.innerHTML = `<div class="text-sm text-gray-500 mb-1">← Prejšnja</div><div class="font-medium text-gray-900 line-clamp-2">${escapeHtml(prev.title||'')}</div>`;
+                        els.prevNext.appendChild(a);
+                        hasAny = true;
+                    }
+                    if (idx < sorted.length - 1){
+                        const next = sorted[idx + 1];
+                        const a = document.createElement('a');
+                        a.href = `/news/post.html?slug=${encodeURIComponent(next.slug)}`;
+                        a.className = 'block p-4 border border-gray-200 rounded-xl hover:border-orange-300 hover:shadow-sm md:ml-auto';
+                        a.innerHTML = `<div class="text-sm text-gray-500 mb-1">Naslednja →</div><div class="font-medium text-gray-900 line-clamp-2">${escapeHtml(next.title||'')}</div>`;
+                        els.prevNext.appendChild(a);
+                        hasAny = true;
+                    }
+                    if (hasAny) els.prevNext.classList.remove('hidden');
+                } catch(e){}
+            }
+
+            function renderRelated(posts, current){
+                try {
+                    const tags = new Set(current.tags || []);
+                    const candidates = posts.filter(p => p.slug !== current.slug);
+                    const related = candidates.filter(p => (p.tags||[]).some(t => tags.has(t)))
+                        .sort((a,b)=> (b.date||'').localeCompare(a.date||''))
+                        .slice(0,3);
+                    const fallback = candidates.slice().sort((a,b)=> (b.date||'').localeCompare(a.date||'')).slice(0,3);
+                    const list = related.length ? related : fallback;
+                    els.relatedList.innerHTML = '';
+                    list.forEach(p => {
+                        const a = document.createElement('a');
+                        a.href = `/news/post.html?slug=${encodeURIComponent(p.slug)}`;
+                        a.className = 'news-card block rounded-xl overflow-hidden bg-white border border-gray-200 hover:shadow-md';
+                        const hasImage = (p.hero && p.hero.trim());
+                        a.innerHTML = `
+                            <div class="media aspect-[16/9] ${hasImage ? 'bg-gray-100' : 'bg-gradient-to-br from-orange-50 to-orange-100'} overflow-hidden">
+                                ${hasImage ? `<img src="${escapeHtml(p.hero)}" alt="${escapeHtml(p.title||'')}" class="w-full h-full object-cover" loading="lazy">` : ''}
+                            </div>
+                            <div class="p-4">
+                                <div class="text-sm text-gray-500 mb-1">${formatDate(p.date)}</div>
+                                <div class="font-semibold text-gray-900 line-clamp-2">${escapeHtml(p.title||'')}</div>
+                            </div>`;
+                        els.relatedList.appendChild(a);
+                    });
+                    if (list.length) els.related.classList.remove('hidden');
+                } catch(e){}
+            }
+
+            function setupShare(pageUrl, post){
+                try {
+                    if (!els.share || !els.shareBtn || !els.copyLinkBtn) return;
+                    els.share.classList.remove('hidden');
+                    els.shareBtn.addEventListener('click', async () => {
+                        try {
+                            if (navigator.share){
+                                await navigator.share({ title: post.title || 'Objava', text: post.summary || '', url: pageUrl });
+                            } else {
+                                await navigator.clipboard.writeText(pageUrl);
+                                els.shareBtn.textContent = 'Povezava kopirana';
+                                setTimeout(()=> els.shareBtn.textContent = 'Deli', 1500);
+                            }
+                        } catch(e){}
+                    });
+                    els.copyLinkBtn.addEventListener('click', async () => {
+                        try {
+                            await navigator.clipboard.writeText(pageUrl);
+                            els.copyLinkBtn.textContent = 'Kopirano';
+                            setTimeout(()=> els.copyLinkBtn.textContent = 'Kopiraj povezavo', 1500);
+                        } catch(e){}
+                    });
+                } catch(e){}
+            }
+
+            function renderPostReading(post){
+                if (post.readingTimeMinutes){
+                    els.readingText.textContent = `${post.readingTimeMinutes} min`;
+                    els.reading.classList.remove('hidden');
+                }
+            }
+
             async function load(){
                 const slug = getParam('slug');
                 if (!slug){ 
@@ -168,14 +396,8 @@
                         return; 
                     }
                     
-                    // Update page title
-                    document.title = `${post.title} – Sonce Slovenije`;
-                    
-                    // Update meta description
-                    const metaDesc = document.querySelector('meta[name="description"]');
-                    if (metaDesc && post.summary) {
-                        metaDesc.setAttribute('content', post.summary);
-                    }
+                    // Update page title & meta
+                    updateHeadMeta(post);
                     
                     // Set title
                     els.title.textContent = post.title || '';
@@ -188,6 +410,9 @@
                         els.authorText.textContent = post.author;
                         els.author.classList.remove('hidden');
                     }
+
+                    // Reading time
+                    renderPostReading(post);
                     
                     // Render tags
                     renderTags(post.tags || []);
@@ -225,6 +450,17 @@
                     // Convert Markdown to HTML
                     const html = converter.convert(content);
                     els.content.innerHTML = html;
+                    
+                    // Build ToC
+                    buildToc();
+                    
+                    // Prev/Next and Related
+                    renderPrevNext(posts, post);
+                    renderRelated(posts, post);
+
+                    // Share setup
+                    const pageUrl = BASE_URL + location.pathname + location.search;
+                    setupShare(pageUrl, post);
                     
                     // Show content
                     els.content.classList.remove('hidden');

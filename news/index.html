@@ -23,6 +23,18 @@
         }
     </script>
     <link rel="stylesheet" href="/news/news.css">
+    <link rel="canonical" href="https://sonce.org/news/">
+    <meta property="og:site_name" content="Sonce Slovenije">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="News – Sonce Slovenije">
+    <meta property="og:description" content="Najnovejše novice in objave iz sveta Sindikata Sonce Koper">
+    <meta property="og:url" content="https://sonce.org/news/">
+    <meta property="og:image" content="https://sonce.org/images/soncelogo.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="News – Sonce Slovenije">
+    <meta name="twitter:description" content="Najnovejše novice in objave iz sveta Sindikata Sonce Koper">
+    <meta name="twitter:image" content="https://sonce.org/images/soncelogo.jpg">
+    <script id="news-jsonld" type="application/ld+json">{}</script>
 </head>
 <body class="bg-gray-50">
     <header class="bg-white shadow-sm border-b border-gray-200">
@@ -130,6 +142,8 @@
                 query: '',
                 sortBy: 'date_desc'
             };
+
+            const BASE_URL = 'https://sonce.org';
 
             function escapeHtml(str){
                 const p = document.createElement('p');
@@ -257,13 +271,15 @@
                     const a = document.createElement('a');
                     a.href = `/news/post.html?slug=${encodeURIComponent(p.slug)}`;
                     a.className = 'news-card block rounded-2xl overflow-hidden bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1';
+                    a.setAttribute('aria-label', `${p.title || 'Objava'} – ${formatDate(p.date)}${p.author ? `, ${p.author}` : ''}`);
                     
                                     const excerpt = generateExcerpt(p);
                 const hasImage = (p.hero && p.hero.trim()) || (p.image && p.image.trim());
                 const imageSrc = p.hero || p.image || '';
+                const readingTime = (Number.isFinite(p.readingTimeMinutes) && p.readingTimeMinutes > 0) ? `${p.readingTimeMinutes} min` : '';
                 
                 a.innerHTML = `
-                    <div class="aspect-[16/9] ${hasImage ? 'bg-gray-100' : 'bg-gradient-to-br from-orange-50 to-orange-100'} overflow-hidden">
+                    <div class="media aspect-[16/9] ${hasImage ? 'bg-gray-100' : 'bg-gradient-to-br from-orange-50 to-orange-100'} overflow-hidden">
                         ${hasImage ? 
                             `<img src="${escapeHtml(imageSrc)}" alt="${escapeHtml(p.title || '')}" class="w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentElement.classList.add('bg-gradient-to-br', 'from-orange-50', 'to-orange-100');">` :
                                 `<div class="w-full h-full flex items-center justify-center">
@@ -280,8 +296,9 @@
                                 </svg>
                                 <span>${formatDate(p.date)}</span>
                                 ${p.author ? `<span class="mx-2">•</span><span>${escapeHtml(p.author)}</span>` : ''}
+                                ${readingTime ? `<span class="mx-2">•</span><span aria-label="Čas branja">${readingTime}</span>` : ''}
                             </div>
-                            <h2 class="text-xl font-bold text-gray-900 mb-3 leading-tight">${escapeHtml(p.title || '')}</h2>
+                            <h2 class="text-xl font-bold text-gray-900 mb-2 leading-tight line-clamp-2">${escapeHtml(p.title || '')}</h2>
                             <p class="text-gray-700 leading-relaxed mb-4 line-clamp-3">${escapeHtml(excerpt)}</p>
                             ${p.tags && p.tags.length ? `<div class="flex flex-wrap gap-2 mb-4">${p.tags.map(t => `<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">${escapeHtml(t)}</span>`).join('')}</div>` : ''}
                             <div class="flex items-center gap-2 text-orange-600 font-medium text-sm">
@@ -395,6 +412,51 @@
                 tags.forEach(t => elements.tagFilter.appendChild(makeTag(t, t)));
             }
 
+            function updateHeadMeta(){
+                const pageUrl = BASE_URL + location.pathname + location.search;
+                const titleParts = ['News'];
+                if (state.activeTag) titleParts.push(`Tag: ${state.activeTag}`);
+                if (state.query) titleParts.push(`Iskanje: ${state.query}`);
+                const title = `${titleParts.join(' – ')} – Sonce Slovenije`;
+                document.title = title;
+                const desc = state.filteredPosts.length ? `Na strani je ${state.filteredPosts.length} objav.` : 'Najnovejše novice in objave Sindikata Sonce Koper.';
+                const metaDesc = document.querySelector('meta[name="description"]');
+                if (metaDesc) metaDesc.setAttribute('content', desc);
+                const ogTitle = document.querySelector('meta[property="og:title"]');
+                if (ogTitle) ogTitle.setAttribute('content', title);
+                const ogDesc = document.querySelector('meta[property="og:description"]');
+                if (ogDesc) ogDesc.setAttribute('content', desc);
+                const ogUrl = document.querySelector('meta[property="og:url"]');
+                if (ogUrl) ogUrl.setAttribute('content', pageUrl);
+                const twTitle = document.querySelector('meta[name="twitter:title"]');
+                if (twTitle) twTitle.setAttribute('content', title);
+                const twDesc = document.querySelector('meta[name="twitter:description"]');
+                if (twDesc) twDesc.setAttribute('content', desc);
+            }
+
+            function updateJsonLd(){
+                try {
+                    const list = state.filteredPosts.slice(0, 10).map((p, idx) => ({
+                        '@type': 'ListItem',
+                        position: idx + 1,
+                        url: BASE_URL + '/news/post.html?slug=' + encodeURIComponent(p.slug),
+                        name: p.title || ''
+                    }));
+                    const json = {
+                        '@context': 'https://schema.org',
+                        '@type': 'CollectionPage',
+                        name: 'News – Sonce Slovenije',
+                        url: BASE_URL + '/news/',
+                        hasPart: {
+                            '@type': 'ItemList',
+                            itemListElement: list
+                        }
+                    };
+                    const node = document.getElementById('news-jsonld');
+                    if (node) node.textContent = JSON.stringify(json);
+                } catch (e) {}
+            }
+
             function applyFilters(){
                 state.filteredPosts = state.activeTag ? 
                     state.allPosts.filter(p => (p.tags || []).includes(state.activeTag)) : 
@@ -444,6 +506,8 @@
                 renderPosts();
                 renderPagination();
                 renderTagFilter();
+                updateHeadMeta();
+                updateJsonLd();
             }
 
             async function load(){
