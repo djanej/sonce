@@ -297,7 +297,7 @@
                     if (idx > 0){
                         const prev = sorted[idx - 1];
                         const a = document.createElement('a');
-                        a.href = `/news/post.html?slug=${encodeURIComponent(prev.slug)}`;
+                        a.href = (prev.path || prev.link) ? `/news/post.html?path=${encodeURIComponent(prev.path || prev.link)}` : `/news/post.html?slug=${encodeURIComponent(prev.slug)}`;
                         a.className = 'block p-4 border border-gray-200 rounded-xl hover:border-orange-300 hover:shadow-sm';
                         a.innerHTML = `<div class="text-sm text-gray-500 mb-1">← Prejšnja</div><div class="font-medium text-gray-900 line-clamp-2">${escapeHtml(prev.title||'')}</div>`;
                         els.prevNext.appendChild(a);
@@ -306,7 +306,7 @@
                     if (idx < sorted.length - 1){
                         const next = sorted[idx + 1];
                         const a = document.createElement('a');
-                        a.href = `/news/post.html?slug=${encodeURIComponent(next.slug)}`;
+                        a.href = (next.path || next.link) ? `/news/post.html?path=${encodeURIComponent(next.path || next.link)}` : `/news/post.html?slug=${encodeURIComponent(next.slug)}`;
                         a.className = 'block p-4 border border-gray-200 rounded-xl hover:border-orange-300 hover:shadow-sm md:ml-auto';
                         a.innerHTML = `<div class="text-sm text-gray-500 mb-1">Naslednja →</div><div class="font-medium text-gray-900 line-clamp-2">${escapeHtml(next.title||'')}</div>`;
                         els.prevNext.appendChild(a);
@@ -328,7 +328,7 @@
                     els.relatedList.innerHTML = '';
                     list.forEach(p => {
                         const a = document.createElement('a');
-                        a.href = `/news/post.html?slug=${encodeURIComponent(p.slug)}`;
+                        a.href = (p.path || p.link) ? `/news/post.html?path=${encodeURIComponent(p.path || p.link)}` : `/news/post.html?slug=${encodeURIComponent(p.slug)}`;
                         a.className = 'news-card block rounded-xl overflow-hidden bg-white border border-gray-200 hover:shadow-md';
                         const hasImage = (p.hero && p.hero.trim());
                         a.innerHTML = `
@@ -378,8 +378,9 @@
             }
 
             async function load(){
+                const pathParam = getParam('path');
                 const slug = getParam('slug');
-                if (!slug){ 
+                if (!pathParam && !slug){ 
                     showEmpty('Manjka parameter objave.'); 
                     return; 
                 }
@@ -389,7 +390,13 @@
                     const res = await fetch('/content/news/index.json', { cache: 'no-cache' });
                     const data = await res.json().catch(()=>[]);
                     const posts = Array.isArray(data) ? data : Array.isArray(data.posts) ? data.posts : [];
-                    const post = posts.find(p => String(p.slug) === slug);
+                    let post = null;
+                    if (pathParam){
+                        post = posts.find(p => String(p.path || p.link) === String(pathParam));
+                    }
+                    if (!post && slug){
+                        post = posts.find(p => String(p.slug) === String(slug));
+                    }
                     
                     if (!post){ 
                         showEmpty('Objava ni najdena.'); 
@@ -435,7 +442,8 @@
                     }
                     
                     // Load and convert Markdown content
-                    const markdownRes = await fetch(`/content/news/${encodeURIComponent(post.filename)}`, { cache: 'no-cache' });
+                    const contentPath = post.path || post.link || `/content/news/${post.filename}`;
+                    const markdownRes = await fetch(contentPath, { cache: 'no-cache' });
                     if (!markdownRes.ok){ 
                         showEmpty('Vsebina objave ni na voljo.'); 
                         return; 
