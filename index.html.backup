@@ -3108,54 +3108,7 @@
                 if (!this.validateForm()) {
                     return;
                 }
-                
-                // Show loading state
-                const submitBtn = this.elements.submitButton;
-                const buttonText = document.getElementById('buttonText');
-                const buttonSpinner = document.getElementById('buttonSpinner');
-                
-                if (submitBtn && buttonText && buttonSpinner) {
-                    submitBtn.disabled = true;
-                    buttonText.textContent = 'Pošiljam...';
-                    buttonSpinner.classList.remove('hidden');
-                }
-                
-                // Prepare form data
-                const formData = {
-                    name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value,
-                    subject: document.getElementById('subject').value,
-                    message: document.getElementById('message').value
-                };
-                
-                // Send email using EmailJS
-                if (window.emailjs) {
-                    window.emailjs.send('service_sonce', 'template_sonce', formData)
-                        .then(() => {
-                            this.showFormSuccess('Sporočilo je bilo uspešno poslano! Hvala za vašo sporočilo.');
-                            this.resetForm();
-                        })
-                        .catch((error) => {
-                            console.error('EmailJS error:', error);
-                            this.showFormError('Prišlo je do napake pri pošiljanju sporočila. Poskusite ponovno.');
-                        })
-                        .finally(() => {
-                            // Reset button state
-                            if (submitBtn && buttonText && buttonSpinner) {
-                                submitBtn.disabled = false;
-                                buttonText.textContent = 'Pošlji sporočilo';
-                                buttonSpinner.classList.add('hidden');
-                            }
-                        });
-                } else {
-                    this.showFormError('EmailJS ni na voljo. Poskusite osvežiti stran.');
-                    if (submitBtn && buttonText && buttonSpinner) {
-                        submitBtn.disabled = false;
-                        buttonText.textContent = 'Pošlji sporočilo';
-                        buttonSpinner.classList.add('hidden');
-                    }
-                }
+                // Form submission logic
             },
 
             validateForm: function() {
@@ -4618,6 +4571,289 @@
                         item.classList.add('bg-gray-50');
                     }
                 });
+            });
+        });
+
+        // Global variables and initialization
+        const website = {
+            // DOM elements
+            elements: {
+                mobileMenu: null,
+                menuToggle: null,
+                mobileNavItems: null,
+                sections: null,
+                contactForm: null,
+                faqSection: null,
+                heroSection: null
+            },
+
+            // State management
+            state: {
+                isMenuOpen: false,
+                currentSection: null,
+                isScrolling: false
+            },
+
+            // Initialize website
+            init: function() {
+                this.cacheElements();
+                this.bindEvents();
+                this.checkErrors();
+                this.monitorPerformance();
+            },
+
+            // Cache DOM elements
+            cacheElements: function() {
+                this.elements.mobileMenu = document.getElementById('mobileMenu');
+                this.elements.menuToggle = document.getElementById('menuToggle');
+                this.elements.mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+                this.elements.sections = document.querySelectorAll('section');
+                this.elements.contactForm = document.querySelector('.contact-form');
+                this.elements.faqSection = document.querySelector('.faq-section');
+                this.elements.heroSection = document.querySelector('.hero-gradient');
+            },
+
+            // Bind event listeners
+            bindEvents: function() {
+                // Menu toggle
+                if (this.elements.menuToggle) {
+                    this.elements.menuToggle.addEventListener('click', () => this.toggleMenu());
+                }
+
+                // Mobile navigation
+                if (this.elements.mobileNavItems) {
+                    this.elements.mobileNavItems.forEach(item => {
+                        item.addEventListener('click', () => this.closeMenu());
+                    });
+                }
+
+                // Mobile menu close button
+                const menuClose = document.getElementById('menuClose');
+                if (menuClose) {
+                    menuClose.addEventListener('click', () => this.closeMenu());
+                }
+
+                // Close menu when clicking outside
+                if (this.elements.mobileMenu) {
+                    this.elements.mobileMenu.addEventListener('click', (e) => {
+                        if (e.target === this.elements.mobileMenu) {
+                            this.closeMenu();
+                        }
+                    });
+                }
+
+                // Handle window resize
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth > 768 && this.state.isMenuOpen) {
+                        this.closeMenu();
+                    }
+                });
+
+                // Form submission
+                if (this.elements.contactForm) {
+                    this.elements.contactForm.addEventListener('submit', (e) => this.handleFormSubmit(e));
+                }
+
+                // FAQ section
+                if (this.elements.faqSection) {
+                    this.elements.faqSection.addEventListener('click', (e) => this.handleFaqClick(e));
+                }
+
+                // Scroll handling
+                window.addEventListener('scroll', () => this.handleScroll());
+            },
+
+            // Enhanced Menu functions for mobile
+            toggleMenu: function() {
+                this.state.isMenuOpen = !this.state.isMenuOpen;
+                if (this.elements.mobileMenu) {
+                    if (this.state.isMenuOpen) {
+                        this.elements.mobileMenu.classList.add('open');
+                        this.elements.mobileMenu.style.transform = 'translateX(0)';
+                        document.body.style.overflow = 'hidden'; // Prevent background scroll
+                        
+                        // Update menu toggle icon
+                        const menuToggle = document.getElementById('menuToggle');
+                        if (menuToggle) {
+                            const icon = menuToggle.querySelector('i');
+                            if (icon) {
+                                icon.className = 'fas fa-times text-2xl';
+                            }
+                        }
+                    } else {
+                        this.closeMenu();
+                    }
+                }
+            },
+
+            closeMenu: function() {
+                this.state.isMenuOpen = false;
+                if (this.elements.mobileMenu) {
+                    this.elements.mobileMenu.classList.remove('open');
+                    this.elements.mobileMenu.style.transform = 'translateX(-100%)';
+                    document.body.style.overflow = ''; // Restore background scroll
+                    
+                    // Reset menu toggle icon
+                    const menuToggle = document.getElementById('menuToggle');
+                    if (menuToggle) {
+                        const icon = menuToggle.querySelector('i');
+                        if (icon) {
+                            icon.className = 'fas fa-bars text-2xl';
+                        }
+                    }
+                }
+            },
+
+            // Form handling
+            handleFormSubmit: function(e) {
+                e.preventDefault();
+                if (!this.validateForm()) {
+                    return;
+                }
+                // Form submission logic
+            },
+
+            validateForm: function() {
+                const form = this.elements.contactForm;
+                if (!form) return false;
+
+                const inputs = form.querySelectorAll('input, textarea');
+                let isValid = true;
+
+                inputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        isValid = false;
+                        input.classList.add('error');
+                    } else {
+                        input.classList.remove('error');
+                    }
+                });
+
+                return isValid;
+            },
+
+            // FAQ handling
+            handleFaqClick: function(e) {
+                const question = e.target.closest('.faq-question');
+                if (!question) return;
+
+                const answer = question.nextElementSibling;
+                if (!answer) return;
+
+                const isOpen = answer.style.maxHeight;
+                answer.style.maxHeight = isOpen ? null : answer.scrollHeight + 'px';
+                question.classList.toggle('active');
+            },
+
+            // Scroll handling
+            handleScroll: function() {
+                if (this.state.isScrolling) return;
+                this.state.isScrolling = true;
+
+                requestAnimationFrame(() => {
+                    this.updateActiveSection();
+                    this.state.isScrolling = false;
+                });
+            },
+
+            updateActiveSection: function() {
+                const scrollPosition = window.scrollY + 100;
+
+                this.elements.sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.offsetHeight;
+
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                        this.state.currentSection = section.id;
+                        this.updateNavigation();
+                    }
+                });
+            },
+
+            updateNavigation: function() {
+                this.elements.mobileNavItems.forEach(item => {
+                    item.classList.toggle('active', item.getAttribute('href') === `#${this.state.currentSection}`);
+                });
+            },
+
+            // Error checking
+            checkErrors: function() {
+                // Check critical elements
+                Object.entries(this.elements).forEach(([key, element]) => {
+                    if (!element) {
+                        console.error(`Critical element not found: ${key}`);
+                    }
+                });
+
+                // Check for console errors
+                const originalConsoleError = console.error;
+                console.error = function() {
+                    originalConsoleError.apply(console, arguments);
+                    // Log errors to server or display to user
+                };
+
+                // Check for JavaScript errors
+                window.onerror = function(msg, url, line) {
+                    console.error(`Error: ${msg}\nURL: ${url}\nLine: ${line}`);
+                };
+            },
+
+            // Form helper functions
+            showFormSuccess: function(message) {
+                const successDiv = document.getElementById('formSuccess');
+                const errorDiv = document.getElementById('formError');
+                
+                if (successDiv && errorDiv) {
+                    successDiv.textContent = message;
+                    successDiv.classList.remove('hidden');
+                    errorDiv.classList.add('hidden');
+                    
+                    // Hide success message after 5 seconds
+                    setTimeout(() => {
+                        successDiv.classList.add('hidden');
+                    }, 5000);
+                }
+            },
+            
+            showFormError: function(message) {
+                const successDiv = document.getElementById('formSuccess');
+                const errorDiv = document.getElementById('formError');
+                
+                if (successDiv && errorDiv) {
+                    errorDiv.textContent = message;
+                    errorDiv.classList.remove('hidden');
+                    successDiv.classList.add('hidden');
+                    
+                    // Hide error message after 5 seconds
+                    setTimeout(() => {
+                        errorDiv.classList.add('hidden');
+                    }, 5000);
+                }
+            },
+            
+            resetForm: function() {
+                const form = this.elements.contactForm;
+                if (form) {
+                    form.reset();
+                    // Remove error classes
+                    form.querySelectorAll('input, textarea').forEach(input => {
+                        input.classList.remove('error');
+                    });
+                }
+            },
+            
+            // Performance monitoring
+            monitorPerformance: function() {
+                if ('performance' in window) {
+                    const paintEntries = performance.getEntriesByType('paint');
+                    paintEntries.forEach(entry => {
+                        console.log(`${entry.name}: ${entry.startTime}`);
+                    });
+                }
+            }
+        };
+ 
+        // Initialize website
         document.addEventListener('DOMContentLoaded', () => website.init());
     </script>
     <style>
