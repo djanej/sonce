@@ -1,0 +1,14 @@
+{{ define "main" }}
+<article class="container mx-auto px-4 py-12 max-w-3xl">
+	<header class="mb-8">
+		<h1 class="text-3xl font-bold mb-2">{{ .Title }}</h1>
+		<p class="text-sm text-gray-500">{{ .Date.Format "02. 01. 2006" }}</p>
+		{{ with .Params.hero }}
+			<img src="{{ . | relURL }}" alt="{{ $.Title }}" class="mt-6 rounded-lg w-full h-auto" loading="lazy">
+		{{ end }}
+	</header>
+	<div class="prose max-w-none">
+		{{ .Content }}
+	</div>
+</article>
+{{ end }}
