@@ -193,7 +193,14 @@
                     renderTags(post.tags || []);
                     
                     // Handle hero image
-                    if (post.image && post.image.trim()) {
+                    if (post.hero && post.hero.trim()) {
+                        els.heroImg.src = post.hero;
+                        els.heroImg.alt = post.imageAlt || post.title || '';
+                        els.hero.classList.remove('hidden');
+                        els.heroImg.onerror = () => { 
+                            els.hero.classList.add('hidden'); 
+                        };
+                    } else if (post.image && post.image.trim()) {
                         els.heroImg.src = post.image;
                         els.heroImg.alt = post.imageAlt || post.title || '';
                         els.hero.classList.remove('hidden');
