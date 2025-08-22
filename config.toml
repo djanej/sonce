@@ -1,7 +1,7 @@
 baseURL = "https://sonce.org"
 languageCode = "sl"
 title = "Sindikat Sonce Koper"
-theme = ""
+theme = "ananke"
 
 [params]
   description = "Sindikat Sonce Koper nudi brezplačno pravno pomoč in strokovno svetovanje."
