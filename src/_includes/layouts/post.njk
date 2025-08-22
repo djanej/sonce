@@ -1,0 +1,11 @@
+{% extends "layouts/base.njk" %}
+
+{% block content %}
+<article>
+	<h1>{{ title }}</h1>
+	{% if date %}<p class="time">{{ date | dateDisplay }}</p>{% endif %}
+	{% if description %}<p><em>{{ description }}</em></p>{% endif %}
+	{{ content | safe }}
+</article>
+{% endblock %}
+

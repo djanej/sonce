@@ -1,0 +1,15 @@
+{
+	"name": "site-eleventy-cms",
+	"private": true,
+	"version": "1.0.0",
+	"description": "Static site with Eleventy and Netlify CMS",
+	"scripts": {
+		"build": "eleventy",
+		"start": "eleventy --serve --port=8080",
+		"clean": "rm -rf _site"
+	},
+	"devDependencies": {
+		"@11ty/eleventy": "^2.0.1"
+	}
+}
+
