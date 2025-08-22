@@ -1,0 +1,138 @@
+{{ define "head" }}
+<link href="https://cdn.tailwindcss.com/3.3.0" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    :root {
+        --primary-color: #FF5F15;
+        --text-dark: #1a202c;
+        --text-gray: #4a5568;
+        --bg-light: #f7fafc;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #E3170A 100%);
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 9999px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(255, 95, 21, 0.3);
+    }
+    
+    .nav-link {
+        color: var(--text-gray);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+    
+    .nav-link:hover {
+        color: var(--primary-color);
+    }
+    
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    
+    .shine {
+        transition: transform 0.3s ease;
+    }
+    
+    .shine:hover {
+        transform: scale(1.1);
+    }
+    
+    .news-card {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .news-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+</style>
+{{ end }}
+
+{{ define "main" }}
+<section class="py-20 bg-gradient-to-br from-orange-50 to-red-50">
+    <div class="container">
+        <div class="text-center mb-16">
+            <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+                {{ if eq .Section "posts" }}Novice{{ else }}{{ .Title }}{{ end }}
+            </h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Najnovejše novice in obvestila iz Sindikata Sonce Koper
+            </p>
+        </div>
+        
+        {{ if .Pages }}
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {{ range .Pages }}
+            <article class="news-card">
+                {{ if .Params.featured_image }}
+                <div class="aspect-w-16 aspect-h-9">
+                    <img src="{{ .Params.featured_image }}" alt="{{ .Title }}" class="w-full h-48 object-cover">
+                </div>
+                {{ end }}
+                <div class="p-6">
+                    <div class="text-sm text-gray-500 mb-2">
+                        <time datetime="{{ .Date.Format "2006-01-02" }}">
+                            {{ .Date.Format "2. January 2006" }}
+                        </time>
+                        {{ if .Params.author }}
+                        <span class="mx-2">•</span>
+                        <span>{{ .Params.author }}</span>
+                        {{ end }}
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-900 mb-3">
+                        <a href="{{ .Permalink }}" class="hover:text-primary transition-colors">
+                            {{ .Title }}
+                        </a>
+                    </h2>
+                    {{ if .Params.summary }}
+                    <p class="text-gray-600 mb-4">{{ .Params.summary }}</p>
+                    {{ else }}
+                    <p class="text-gray-600 mb-4">{{ .Summary }}</p>
+                    {{ end }}
+                    <a href="{{ .Permalink }}" class="text-primary font-semibold hover:underline">
+                        Preberi več <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </article>
+            {{ end }}
+        </div>
+        {{ else }}
+        <div class="text-center py-16">
+            <i class="fas fa-newspaper text-6xl text-gray-300 mb-6"></i>
+            <h3 class="text-2xl font-bold text-gray-600 mb-4">Še ni objavljenih novic</h3>
+            <p class="text-gray-500">Novice bodo kmalu na voljo.</p>
+        </div>
+        {{ end }}
+    </div>
+</section>
+{{ end }}
+
+{{ define "footer" }}
+<!-- Footer will be added later or inherited from main layout -->
+{{ end }}

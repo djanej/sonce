@@ -1,0 +1,331 @@
+{{ define "head" }}
+<link href="https://cdn.tailwindcss.com/3.3.0" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    :root {
+        --primary-color: #FF5F15;
+        --text-dark: #1a202c;
+        --text-gray: #4a5568;
+        --bg-light: #f7fafc;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #E3170A 100%);
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 9999px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(255, 95, 21, 0.3);
+    }
+    
+    .nav-link {
+        color: var(--text-gray);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+        position: relative;
+    }
+    
+    .nav-link:hover {
+        color: var(--primary-color);
+    }
+    
+    .nav-link:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -5px;
+        left: 0;
+        background: var(--primary-color);
+        transition: width 0.3s ease;
+        border-radius: 3px;
+    }
+    
+    .nav-link:hover:after {
+        width: 100%;
+    }
+    
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    
+    .shine {
+        transition: transform 0.3s ease;
+    }
+    
+    .shine:hover {
+        transform: scale(1.1);
+    }
+    
+    .prose {
+        max-width: none;
+        line-height: 1.8;
+    }
+    
+    .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+        color: var(--text-dark);
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .prose h2 {
+        font-size: 1.875rem;
+        font-weight: 700;
+    }
+    
+    .prose h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    
+    .prose p {
+        margin-bottom: 1.5rem;
+        color: var(--text-gray);
+    }
+    
+    .prose ul, .prose ol {
+        margin-bottom: 1.5rem;
+        padding-left: 2rem;
+    }
+    
+    .prose li {
+        margin-bottom: 0.5rem;
+        color: var(--text-gray);
+    }
+    
+    .prose a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .prose a:hover {
+        text-decoration: underline;
+    }
+    
+    .prose strong {
+        color: var(--text-dark);
+        font-weight: 700;
+    }
+    
+    .prose blockquote {
+        border-left: 4px solid var(--primary-color);
+        padding-left: 1.5rem;
+        margin: 2rem 0;
+        font-style: italic;
+        color: var(--text-gray);
+    }
+
+    /* Header styles */
+    header {
+        position: static;
+        height: 70px;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        z-index: 50;
+        width: 100%;
+    }
+
+    header .container {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1rem;
+    }
+
+    header img {
+        height: 45px;
+        width: auto;
+    }
+
+    /* Mobile menu improvements */
+    #mobileMenu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: white;
+        padding-top: 70px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 49;
+        overflow-y: auto;
+    }
+
+    #mobileMenu.open {
+        transform: translateX(0);
+    }
+
+    .mobile-menu-item {
+        display: block;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        font-size: 1.1rem;
+        color: #333;
+        text-decoration: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        header { display: none !important; }
+        #mobileMenu { padding-top: 0 !important; }
+    }
+</style>
+{{ end }}
+
+{{ define "main" }}
+<article class="py-20 min-h-screen">
+    <div class="container">
+        <div class="max-w-4xl mx-auto">
+            <!-- Article Header -->
+            <header class="mb-12">
+                <div class="text-sm text-gray-500 mb-4">
+                    <a href="/news/" class="hover:text-primary transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Nazaj na novice
+                    </a>
+                </div>
+                
+                {{ if .Params.featured_image }}
+                <div class="mb-8">
+                    <img src="{{ .Params.featured_image }}" alt="{{ .Title }}" class="w-full h-64 md:h-96 object-cover rounded-2xl">
+                </div>
+                {{ end }}
+                
+                <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">{{ .Title }}</h1>
+                
+                <div class="flex flex-wrap items-center text-gray-600 mb-6">
+                    <time datetime="{{ .Date.Format "2006-01-02" }}" class="mr-6">
+                        <i class="fas fa-calendar mr-2"></i>
+                        {{ .Date.Format "2. January 2006" }}
+                    </time>
+                    {{ if .Params.author }}
+                    <span class="mr-6">
+                        <i class="fas fa-user mr-2"></i>
+                        {{ .Params.author }}
+                    </span>
+                    {{ end }}
+                    {{ if .ReadingTime }}
+                    <span>
+                        <i class="fas fa-clock mr-2"></i>
+                        {{ .ReadingTime }} min branja
+                    </span>
+                    {{ end }}
+                </div>
+                
+                {{ if .Params.summary }}
+                <p class="text-xl text-gray-600 leading-relaxed border-l-4 border-primary pl-6 py-4 bg-orange-50 rounded-r-lg">{{ .Params.summary }}</p>
+                {{ end }}
+            </header>
+            
+            <!-- Article Content -->
+            <div class="prose prose-lg max-w-none">
+                {{ .Content }}
+            </div>
+            
+            <!-- Tags -->
+            {{ if .Params.tags }}
+            <footer class="mt-12 pt-8 border-t border-gray-200">
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-gray-600 mr-2">Ključne besede:</span>
+                    {{ range .Params.tags }}
+                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">#{{ . }}</span>
+                    {{ end }}
+                </div>
+            </footer>
+            {{ end }}
+            
+            <!-- Navigation -->
+            <nav class="mt-12 pt-8 border-t border-gray-200">
+                <div class="flex flex-col sm:flex-row justify-between gap-4">
+                    {{ with .PrevInSection }}
+                    <a href="{{ .Permalink }}" class="flex items-center text-primary hover:underline">
+                        <i class="fas fa-chevron-left mr-2"></i>
+                        <div>
+                            <div class="text-sm text-gray-500">Prejšnja novica</div>
+                            <div class="font-semibold">{{ .Title }}</div>
+                        </div>
+                    </a>
+                    {{ end }}
+                    
+                    {{ with .NextInSection }}
+                    <a href="{{ .Permalink }}" class="flex items-center text-primary hover:underline ml-auto text-right">
+                        <div>
+                            <div class="text-sm text-gray-500">Naslednja novica</div>
+                            <div class="font-semibold">{{ .Title }}</div>
+                        </div>
+                        <i class="fas fa-chevron-right ml-2"></i>
+                    </a>
+                    {{ end }}
+                </div>
+                
+                <div class="text-center mt-8">
+                    <a href="/news/" class="btn-primary">
+                        <i class="fas fa-list mr-2"></i>Vse novice
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</article>
+
+<script>
+    // Mobile menu functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuClose = document.getElementById('closeMenu');
+
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('open');
+                mobileMenu.style.transform = mobileMenu.classList.contains('open') ? 'translateX(0)' : 'translateX(-100%)';
+            });
+        }
+
+        if (menuClose && mobileMenu) {
+            menuClose.addEventListener('click', function() {
+                mobileMenu.classList.remove('open');
+                mobileMenu.style.transform = 'translateX(-100%)';
+            });
+        }
+
+        // Close menu when clicking on a link
+        const mobileLinks = mobileMenu?.querySelectorAll('a');
+        if (mobileLinks) {
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('open');
+                    mobileMenu.style.transform = 'translateX(-100%)';
+                });
+            });
+        }
+    });
+</script>
+{{ end }}
+
+{{ define "footer" }}
+<!-- Footer content will be inherited from main layout -->
+{{ end }}
