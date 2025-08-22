@@ -1,0 +1,167 @@
+{{ define "head" }}
+<link href="https://cdn.tailwindcss.com/3.3.0" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    :root {
+        --primary-color: #FF5F15;
+        --text-dark: #1a202c;
+        --text-gray: #4a5568;
+        --bg-light: #f7fafc;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #E3170A 100%);
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 9999px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(255, 95, 21, 0.3);
+    }
+    
+    .nav-link {
+        color: var(--text-gray);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+    
+    .nav-link:hover {
+        color: var(--primary-color);
+    }
+    
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    
+    .shine {
+        transition: transform 0.3s ease;
+    }
+    
+    .shine:hover {
+        transform: scale(1.1);
+    }
+    
+    .prose {
+        max-width: none;
+    }
+    
+    .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+        color: var(--text-dark);
+    }
+    
+    .prose a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+    
+    .prose a:hover {
+        text-decoration: underline;
+    }
+</style>
+{{ end }}
+
+{{ define "main" }}
+<article class="py-20">
+    <div class="container">
+        <div class="max-w-4xl mx-auto">
+            <!-- Article Header -->
+            <header class="mb-12">
+                <div class="text-sm text-gray-500 mb-4">
+                    <a href="/news/" class="hover:text-primary transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Nazaj na novice
+                    </a>
+                </div>
+                
+                {{ if .Params.featured_image }}
+                <div class="mb-8">
+                    <img src="{{ .Params.featured_image }}" alt="{{ .Title }}" class="w-full h-64 md:h-96 object-cover rounded-2xl">
+                </div>
+                {{ end }}
+                
+                <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">{{ .Title }}</h1>
+                
+                <div class="flex flex-wrap items-center text-gray-600 mb-6">
+                    <time datetime="{{ .Date.Format "2006-01-02" }}" class="mr-6">
+                        <i class="fas fa-calendar mr-2"></i>
+                        {{ .Date.Format "2. January 2006" }}
+                    </time>
+                    {{ if .Params.author }}
+                    <span class="mr-6">
+                        <i class="fas fa-user mr-2"></i>
+                        {{ .Params.author }}
+                    </span>
+                    {{ end }}
+                    {{ if .ReadingTime }}
+                    <span>
+                        <i class="fas fa-clock mr-2"></i>
+                        {{ .ReadingTime }} min branja
+                    </span>
+                    {{ end }}
+                </div>
+                
+                {{ if .Params.summary }}
+                <p class="text-xl text-gray-600 leading-relaxed">{{ .Params.summary }}</p>
+                {{ end }}
+            </header>
+            
+            <!-- Article Content -->
+            <div class="prose prose-lg max-w-none">
+                {{ .Content }}
+            </div>
+            
+            <!-- Tags -->
+            {{ if .Params.tags }}
+            <footer class="mt-12 pt-8 border-t border-gray-200">
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-gray-600 mr-2">Ključne besede:</span>
+                    {{ range .Params.tags }}
+                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">#{{ . }}</span>
+                    {{ end }}
+                </div>
+            </footer>
+            {{ end }}
+            
+            <!-- Navigation -->
+            <nav class="mt-12 pt-8 border-t border-gray-200">
+                <div class="flex justify-between">
+                    {{ with .PrevInSection }}
+                    <a href="{{ .Permalink }}" class="flex items-center text-primary hover:underline">
+                        <i class="fas fa-chevron-left mr-2"></i>
+                        <span class="hidden sm:inline">Prejšnja novica: </span>{{ .Title }}
+                    </a>
+                    {{ end }}
+                    
+                    {{ with .NextInSection }}
+                    <a href="{{ .Permalink }}" class="flex items-center text-primary hover:underline ml-auto">
+                        <span class="hidden sm:inline">Naslednja novica: </span>{{ .Title }}
+                        <i class="fas fa-chevron-right ml-2"></i>
+                    </a>
+                    {{ end }}
+                </div>
+            </nav>
+        </div>
+    </div>
+</article>
+{{ end }}
+
+{{ define "footer" }}
+<!-- Footer will be inherited from main layout -->
+{{ end }}

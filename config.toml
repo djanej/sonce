@@ -1,0 +1,42 @@
+baseURL = "https://sonce.org"
+languageCode = "sl"
+title = "Sindikat Sonce Koper"
+theme = ""
+
+[params]
+  description = "Sindikat Sonce Koper nudi brezplačno pravno pomoč in strokovno svetovanje."
+  author = "Sindikat Sonce Koper"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[menu]
+  [[menu.main]]
+    name = "Domov"
+    url = "/"
+    weight = 10
+  [[menu.main]]
+    name = "O nas"
+    url = "/#about"
+    weight = 20
+  [[menu.main]]
+    name = "Storitve"
+    url = "/#services"
+    weight = 30
+  [[menu.main]]
+    name = "Novice"
+    url = "/news/"
+    weight = 35
+  [[menu.main]]
+    name = "Kontakt"
+    url = "/#contact"
+    weight = 40
+  [[menu.main]]
+    name = "Pridruži se"
+    url = "/#join"
+    weight = 50
