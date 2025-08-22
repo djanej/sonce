@@ -1,22 +1,23 @@
 [
   {
-    "id": "2024-12-01-test-post-for-compatibility",
-    "title": "Test Post for Compatibility",
+    "id": "2024-12-01-test-post",
+    "title": "Test Post - System Working!",
     "date": "2024-12-01",
-    "author": "Test User",
-    "summary": "Testing the system compatibility",
+    "author": "Sonce Team",
+    "summary": "This is a test post to verify the news system is working correctly.",
     "image": "",
-    "imageAlt": "Test Post for Compatibility",
+    "imageAlt": "Test post image",
     "tags": [
       "test",
-      "compatibility"
+      "system",
+      "working"
     ],
-    "slug": "test-post-for-compatibility",
-    "filename": "20241201-test-post-for-compatibility.md",
-    "path": "/content/news/20241201-test-post-for-compatibility.md",
-    "link": "/content/news/20241201-test-post-for-compatibility.md",
-    "readingTimeMinutes": 1,
-    "readingTimeLabel": "1 min"
+    "slug": "test-post",
+    "filename": "20241201-test-post.md",
+    "path": "/content/news/20241201-test-post.md",
+    "link": "/content/news/20241201-test-post.md",
+    "readingTimeMinutes": 2,
+    "readingTimeLabel": "2 min"
   },
   {
     "id": "2024-12-01-welcome-post",
@@ -35,7 +36,26 @@
     "filename": "20241201-welcome-post.md",
     "path": "/content/news/20241201-welcome-post.md",
     "link": "/content/news/20241201-welcome-post.md",
-    "readingTimeMinutes": 2,
-    "readingTimeLabel": "2 min"
+    "readingTimeMinutes": 3,
+    "readingTimeLabel": "3 min"
+  },
+  {
+    "id": "2024-12-01-test-post-for-compatibility",
+    "title": "Test Post for Compatibility",
+    "date": "2024-12-01",
+    "author": "Test User",
+    "summary": "Testing the system compatibility",
+    "image": "",
+    "imageAlt": "Test Post for Compatibility",
+    "tags": [
+      "test",
+      "compatibility"
+    ],
+    "slug": "test-post-for-compatibility",
+    "filename": "20241201-test-post-for-compatibility.md",
+    "path": "/content/news/20241201-test-post-for-compatibility.md",
+    "link": "/content/news/20241201-test-post-for-compatibility.md",
+    "readingTimeMinutes": 1,
+    "readingTimeLabel": "1 min"
   }
 ]
