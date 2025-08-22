@@ -30,7 +30,20 @@
 
     <main class="container mx-auto px-4 py-10 max-w-6xl">
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8">News</h1>
+        <div id="news-controls" class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <div id="tag-filter" class="flex flex-wrap gap-2"></div>
+            <div class="flex items-center gap-2">
+                <label for="page-size" class="text-sm text-gray-600">Na stran</label>
+                <select id="page-size" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                    <option value="6">6</option>
+                    <option value="9">9</option>
+                    <option value="12" selected>12</option>
+                    <option value="18">18</option>
+                </select>
+            </div>
+        </div>
         <div id="news-list" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+        <nav id="pagination" class="mt-8 flex items-center justify-center gap-2"></nav>
         <p id="empty-state" class="hidden text-gray-600">Ni objav za prikaz.</p>
     </main>
 
@@ -40,51 +53,258 @@
 
     <script>
         (function(){
+            const elements = {
+                list: document.getElementById('news-list'),
+                empty: document.getElementById('empty-state'),
+                pagination: document.getElementById('pagination'),
+                tagFilter: document.getElementById('tag-filter'),
+                pageSizeSelect: document.getElementById('page-size'),
+                year: document.getElementById('year')
+            };
+
+            const state = {
+                allPosts: [],
+                filteredPosts: [],
+                currentPage: 1,
+                pageSize: 12,
+                activeTag: null
+            };
+
             function escapeHtml(str){
                 const p = document.createElement('p');
                 p.appendChild(document.createTextNode(str || ''));
                 return p.innerHTML;
             }
-            function formatDate(iso){
-                try { return new Date(iso).toLocaleDateString('sl-SI', { year:'numeric', month:'long', day:'numeric' }); } catch(e){ return iso || ''; }
+
+            function stripHtml(input){
+                if (!input) return '';
+                const div = document.createElement('div');
+                div.innerHTML = String(input);
+                return (div.textContent || div.innerText || '').trim();
             }
-            function render(posts){
-                const list = document.getElementById('news-list');
-                const empty = document.getElementById('empty-state');
-                if (!posts || posts.length === 0){ empty.classList.remove('hidden'); return; }
+
+            function truncate(text, max){
+                const limit = typeof max === 'number' ? max : 180;
+                if (!text) return '';
+                if (text.length <= limit) return text;
+                const sliced = text.slice(0, limit);
+                const lastSpace = sliced.lastIndexOf(' ');
+                const safeCut = lastSpace > limit * 0.6 ? lastSpace : limit;
+                return sliced.slice(0, safeCut).trim() + '…';
+            }
+
+            function generateExcerpt(post){
+                const candidate = post.excerpt || post.description || post.summary || post.teaser;
+                if (candidate) return truncate(stripHtml(candidate), 180);
+                const source = post.html || post.content || post.body || post.text;
+                if (source){
+                    const firstBlock = String(source).split(/\n{2,}/)[0];
+                    return truncate(stripHtml(firstBlock), 180);
+                }
+                return '';
+            }
+
+            function formatDate(iso){
+                try {
+                    return new Date(iso).toLocaleDateString('sl-SI', { year:'numeric', month:'long', day:'numeric' });
+                } catch(e){
+                    return iso || '';
+                }
+            }
+
+            function normalizeTags(tags){
+                if (!tags) return [];
+                if (Array.isArray(tags)) return tags.map(t => String(t).trim()).filter(Boolean);
+                if (typeof tags === 'string') return tags.split(',').map(t => t.trim()).filter(Boolean);
+                return [];
+            }
+
+            function normalizePost(p){
+                const slug = p.slug || (p.title ? String(p.title).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') : '');
+                const hero = p.hero || p.image || p.cover || '';
+                const tags = normalizeTags(p.tags || p.tag || p.categories || p.category);
+                return { ...p, slug, hero, tags };
+            }
+
+            function getUniqueTags(posts){
+                const s = new Set();
+                posts.forEach(p => (p.tags || []).forEach(t => s.add(t)));
+                return Array.from(s).sort((a,b)=> a.localeCompare(b,'sl'));
+            }
+
+            function readQuery(){
+                const qs = new URLSearchParams(location.search);
+                const page = parseInt(qs.get('page') || '1', 10);
+                const size = parseInt(qs.get('size') || '', 10);
+                state.currentPage = Number.isFinite(page) && page > 0 ? page : 1;
+                state.pageSize = Number.isFinite(size) && size > 0 ? size : state.pageSize;
+                const tag = qs.get('tag');
+                state.activeTag = tag && tag.trim() ? tag.trim() : null;
+                if (elements.pageSizeSelect) elements.pageSizeSelect.value = String(state.pageSize);
+            }
+
+            function writeQuery(){
+                const qs = new URLSearchParams();
+                if (state.currentPage > 1) qs.set('page', String(state.currentPage));
+                if (state.pageSize !== 12) qs.set('size', String(state.pageSize));
+                if (state.activeTag) qs.set('tag', state.activeTag);
+                const q = qs.toString();
+                const url = q ? `?${q}` : location.pathname;
+                history.replaceState(null, '', url);
+            }
+
+            function renderPosts(){
+                elements.list.innerHTML = '';
+                const total = state.filteredPosts.length;
+                if (!total){
+                    elements.empty.textContent = 'Ni objav za prikaz.';
+                    elements.empty.classList.remove('hidden');
+                    return;
+                }
+                elements.empty.classList.add('hidden');
+                const start = (state.currentPage - 1) * state.pageSize;
+                const end = start + state.pageSize;
+                const pagePosts = state.filteredPosts.slice(start, end);
                 const frag = document.createDocumentFragment();
-                posts.forEach(p => {
+                pagePosts.forEach(p => {
                     const a = document.createElement('a');
                     a.href = `/news/post.html?slug=${encodeURIComponent(p.slug)}`;
                     a.className = 'news-card block rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow';
+                    const excerpt = generateExcerpt(p);
                     a.innerHTML = `
                         <div class="aspect-[16/9] bg-gray-100 overflow-hidden">
                             <img src="${escapeHtml(p.hero || '')}" alt="${escapeHtml(p.title || '')}" class="w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.style.display='none'">
                         </div>
                         <div class="p-5">
                             <div class="text-sm text-gray-500">${formatDate(p.date)}${p.author ? ` • ${escapeHtml(p.author)}` : ''}</div>
-                            <h2 class="mt-2 text-xl font-semibold text-gray-900">${escapeHtml(p.title)}</h2>
-                            <p class="mt-2 text-gray-700 line-clamp-3">${escapeHtml(p.excerpt || '')}</p>
+                            <h2 class="mt-2 text-xl font-semibold text-gray-900">${escapeHtml(p.title || '')}</h2>
+                            <p class="mt-2 text-gray-700 line-clamp-3">${escapeHtml(excerpt)}</p>
+                            ${p.tags && p.tags.length ? `<div class="mt-3 flex flex-wrap gap-2">${p.tags.map(t => `<span class=\"tag-pill\">${escapeHtml(t)}</span>`).join('')}</div>` : ''}
                             <span class="mt-4 inline-flex items-center gap-2 text-primary font-medium">Preberi več <i class="fa-solid fa-arrow-right"></i></span>
                         </div>`;
                     frag.appendChild(a);
                 });
-                list.appendChild(frag);
+                elements.list.appendChild(frag);
             }
+
+            function renderPagination(){
+                const total = state.filteredPosts.length;
+                const totalPages = Math.max(1, Math.ceil(total / state.pageSize));
+                elements.pagination.innerHTML = '';
+                if (totalPages <= 1){
+                    return;
+                }
+                const makeBtn = (label, page, disabled, isActive) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.textContent = label;
+                    btn.className = `pagination-btn ${isActive ? 'active' : ''}`;
+                    if (disabled){
+                        btn.disabled = true;
+                    } else {
+                        btn.addEventListener('click', () => {
+                            state.currentPage = page;
+                            writeQuery();
+                            renderPosts();
+                            renderPagination();
+                        });
+                    }
+                    return btn;
+                };
+                const prev = makeBtn('Prejšnja', Math.max(1, state.currentPage - 1), state.currentPage === 1, false);
+                elements.pagination.appendChild(prev);
+                const windowSize = 5;
+                let start = Math.max(1, state.currentPage - Math.floor(windowSize/2));
+                let end = Math.min(totalPages, start + windowSize - 1);
+                if (end - start + 1 < windowSize){
+                    start = Math.max(1, end - windowSize + 1);
+                }
+                if (start > 1){
+                    elements.pagination.appendChild(makeBtn('1', 1, false, state.currentPage === 1));
+                    if (start > 2){
+                        const dots = document.createElement('span');
+                        dots.textContent = '…';
+                        dots.className = 'px-1 text-gray-400';
+                        elements.pagination.appendChild(dots);
+                    }
+                }
+                for (let i = start; i <= end; i++){
+                    elements.pagination.appendChild(makeBtn(String(i), i, false, state.currentPage === i));
+                }
+                if (end < totalPages){
+                    if (end < totalPages - 1){
+                        const dots = document.createElement('span');
+                        dots.textContent = '…';
+                        dots.className = 'px-1 text-gray-400';
+                        elements.pagination.appendChild(dots);
+                    }
+                    elements.pagination.appendChild(makeBtn(String(totalPages), totalPages, false, state.currentPage === totalPages));
+                }
+                const next = makeBtn('Naslednja', Math.min(totalPages, state.currentPage + 1), state.currentPage === totalPages, false);
+                elements.pagination.appendChild(next);
+            }
+
+            function renderTagFilter(){
+                const tags = getUniqueTags(state.allPosts);
+                elements.tagFilter.innerHTML = '';
+                if (!tags.length){
+                    elements.tagFilter.parentElement?.classList?.add('hidden');
+                    return;
+                }
+                elements.tagFilter.parentElement?.classList?.remove('hidden');
+                const makeTag = (label, value) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.textContent = label;
+                    btn.className = `tag-pill ${state.activeTag === value ? 'active' : ''}`;
+                    btn.addEventListener('click', () => {
+                        state.activeTag = value;
+                        state.currentPage = 1;
+                        writeQuery();
+                        applyFilters();
+                    });
+                    return btn;
+                };
+                elements.tagFilter.appendChild(makeTag('Vse', null));
+                tags.forEach(t => elements.tagFilter.appendChild(makeTag(t, t)));
+            }
+
+            function applyFilters(){
+                state.filteredPosts = state.activeTag ? state.allPosts.filter(p => (p.tags || []).includes(state.activeTag)) : state.allPosts.slice();
+                state.filteredPosts.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+                const totalPages = Math.max(1, Math.ceil(state.filteredPosts.length / state.pageSize));
+                if (state.currentPage > totalPages) state.currentPage = 1;
+                renderPosts();
+                renderPagination();
+                renderTagFilter();
+            }
+
             async function load(){
                 try {
                     const res = await fetch('/content/news/index.json', { cache: 'no-cache' });
                     if (!res.ok) throw new Error('Failed to load index.json');
                     const data = await res.json();
-                    const posts = Array.isArray(data) ? data : Array.isArray(data.posts) ? data.posts : [];
-                    posts.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
-                    render(posts);
+                    const raw = Array.isArray(data) ? data : Array.isArray(data.posts) ? data.posts : [];
+                    state.allPosts = raw.map(normalizePost);
+                    readQuery();
+                    applyFilters();
                 } catch (e) {
-                    document.getElementById('empty-state').textContent = 'Napaka pri nalaganju novic.';
-                    document.getElementById('empty-state').classList.remove('hidden');
+                    elements.empty.textContent = 'Napaka pri nalaganju novic.';
+                    elements.empty.classList.remove('hidden');
                 }
             }
-            document.getElementById('year').textContent = new Date().getFullYear();
+
+            if (elements.year) elements.year.textContent = new Date().getFullYear();
+            if (elements.pageSizeSelect){
+                elements.pageSizeSelect.addEventListener('change', () => {
+                    const val = parseInt(elements.pageSizeSelect.value, 10);
+                    state.pageSize = Number.isFinite(val) && val > 0 ? val : state.pageSize;
+                    state.currentPage = 1;
+                    writeQuery();
+                    renderPosts();
+                    renderPagination();
+                });
+            }
             load();
         })();
     </script>
