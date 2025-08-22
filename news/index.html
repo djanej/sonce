@@ -23,6 +23,18 @@
         }
     </script>
     <link rel="stylesheet" href="/news/news.css">
+    <link rel="canonical" href="https://sonce.org/news/">
+    <meta property="og:site_name" content="Sonce Slovenije">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="News – Sonce Slovenije">
+    <meta property="og:description" content="Najnovejše novice in objave iz sveta Sindikata Sonce Koper">
+    <meta property="og:url" content="https://sonce.org/news/">
+    <meta property="og:image" content="https://sonce.org/images/soncelogo.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="News – Sonce Slovenije">
+    <meta name="twitter:description" content="Najnovejše novice in objave iz sveta Sindikata Sonce Koper">
+    <meta name="twitter:image" content="https://sonce.org/images/soncelogo.jpg">
+    <script id="news-jsonld" type="application/ld+json">{}</script>
 </head>
 <body class="bg-gray-50">
     <header class="bg-white shadow-sm border-b border-gray-200">
@@ -48,7 +60,25 @@
         
         <div id="news-controls" class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
             <div id="tag-filter" class="flex flex-wrap gap-2"></div>
+            <div class="w-full md:w-80">
+                <label for="search" class="sr-only">Išči</label>
+                <div class="relative">
+                    <input id="search" type="search" placeholder="Išči novice..." class="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 text-sm bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500" autocomplete="off">
+                    <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M10 18a8 8 0 110-16 8 8 0 010 16z"></path>
+                    </svg>
+                </div>
+            </div>
             <div class="flex items-center gap-3">
+                <label for="sort-by" class="text-sm font-medium text-gray-700">Razvrsti:</label>
+                <select id="sort-by" class="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                    <option value="date_desc" selected>Najnovejše</option>
+                    <option value="date_asc">Najstarejše</option>
+                    <option value="title_asc">Naslov A–Ž</option>
+                    <option value="title_desc">Naslov Ž–A</option>
+                    <option value="readtime_asc">Čas branja ↑</option>
+                    <option value="readtime_desc">Čas branja ↓</option>
+                </select>
                 <label for="page-size" class="text-sm font-medium text-gray-700">Na stran:</label>
                 <select id="page-size" class="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
                     <option value="6">6</option>
@@ -98,6 +128,8 @@
                 pagination: document.getElementById('pagination'),
                 tagFilter: document.getElementById('tag-filter'),
                 pageSizeSelect: document.getElementById('page-size'),
+                searchInput: document.getElementById('search'),
+                sortSelect: document.getElementById('sort-by'),
                 year: document.getElementById('year')
             };
 
@@ -106,8 +138,12 @@
                 filteredPosts: [],
                 currentPage: 1,
                 pageSize: 12,
-                activeTag: null
+                activeTag: null,
+                query: '',
+                sortBy: 'date_desc'
             };
+
+            const BASE_URL = 'https://sonce.org';
 
             function escapeHtml(str){
                 const p = document.createElement('p');
@@ -158,6 +194,18 @@
                 return [];
             }
 
+            function normalizeText(s){
+                return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            }
+
+            function debounce(fn, wait){
+                let t;
+                return (...args) => {
+                    clearTimeout(t);
+                    t = setTimeout(() => fn.apply(null, args), wait);
+                };
+            }
+
             function normalizePost(p){
                 const slug = p.slug || (p.title ? String(p.title).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') : '');
                 const hero = p.hero || p.image || p.cover || '';
@@ -179,7 +227,14 @@
                 state.pageSize = Number.isFinite(size) && size > 0 ? size : state.pageSize;
                 const tag = qs.get('tag');
                 state.activeTag = tag && tag.trim() ? tag.trim() : null;
+                const q = qs.get('q') || '';
+                state.query = q.trim();
+                const sort = qs.get('sort') || '';
+                const allowedSorts = ['date_desc','date_asc','title_asc','title_desc','readtime_asc','readtime_desc'];
+                state.sortBy = allowedSorts.includes(sort) ? sort : 'date_desc';
                 if (elements.pageSizeSelect) elements.pageSizeSelect.value = String(state.pageSize);
+                if (elements.searchInput) elements.searchInput.value = state.query;
+                if (elements.sortSelect) elements.sortSelect.value = state.sortBy;
             }
 
             function writeQuery(){
@@ -187,6 +242,8 @@
                 if (state.currentPage > 1) qs.set('page', String(state.currentPage));
                 if (state.pageSize !== 12) qs.set('size', String(state.pageSize));
                 if (state.activeTag) qs.set('tag', state.activeTag);
+                if (state.query) qs.set('q', state.query);
+                if (state.sortBy && state.sortBy !== 'date_desc') qs.set('sort', state.sortBy);
                 const q = qs.toString();
                 const url = q ? `?${q}` : location.pathname;
                 history.replaceState(null, '', url);
@@ -214,13 +271,15 @@
                     const a = document.createElement('a');
                     a.href = `/news/post.html?slug=${encodeURIComponent(p.slug)}`;
                     a.className = 'news-card block rounded-2xl overflow-hidden bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1';
+                    a.setAttribute('aria-label', `${p.title || 'Objava'} – ${formatDate(p.date)}${p.author ? `, ${p.author}` : ''}`);
                     
                                     const excerpt = generateExcerpt(p);
                 const hasImage = (p.hero && p.hero.trim()) || (p.image && p.image.trim());
                 const imageSrc = p.hero || p.image || '';
+                const readingTime = (Number.isFinite(p.readingTimeMinutes) && p.readingTimeMinutes > 0) ? `${p.readingTimeMinutes} min` : '';
                 
                 a.innerHTML = `
-                    <div class="aspect-[16/9] ${hasImage ? 'bg-gray-100' : 'bg-gradient-to-br from-orange-50 to-orange-100'} overflow-hidden">
+                    <div class="media aspect-[16/9] ${hasImage ? 'bg-gray-100' : 'bg-gradient-to-br from-orange-50 to-orange-100'} overflow-hidden">
                         ${hasImage ? 
                             `<img src="${escapeHtml(imageSrc)}" alt="${escapeHtml(p.title || '')}" class="w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentElement.classList.add('bg-gradient-to-br', 'from-orange-50', 'to-orange-100');">` :
                                 `<div class="w-full h-full flex items-center justify-center">
@@ -237,8 +296,9 @@
                                 </svg>
                                 <span>${formatDate(p.date)}</span>
                                 ${p.author ? `<span class="mx-2">•</span><span>${escapeHtml(p.author)}</span>` : ''}
+                                ${readingTime ? `<span class="mx-2">•</span><span aria-label="Čas branja">${readingTime}</span>` : ''}
                             </div>
-                            <h2 class="text-xl font-bold text-gray-900 mb-3 leading-tight">${escapeHtml(p.title || '')}</h2>
+                            <h2 class="text-xl font-bold text-gray-900 mb-2 leading-tight line-clamp-2">${escapeHtml(p.title || '')}</h2>
                             <p class="text-gray-700 leading-relaxed mb-4 line-clamp-3">${escapeHtml(excerpt)}</p>
                             ${p.tags && p.tags.length ? `<div class="flex flex-wrap gap-2 mb-4">${p.tags.map(t => `<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">${escapeHtml(t)}</span>`).join('')}</div>` : ''}
                             <div class="flex items-center gap-2 text-orange-600 font-medium text-sm">
@@ -352,12 +412,93 @@
                 tags.forEach(t => elements.tagFilter.appendChild(makeTag(t, t)));
             }
 
+            function updateHeadMeta(){
+                const pageUrl = BASE_URL + location.pathname + location.search;
+                const titleParts = ['News'];
+                if (state.activeTag) titleParts.push(`Tag: ${state.activeTag}`);
+                if (state.query) titleParts.push(`Iskanje: ${state.query}`);
+                const title = `${titleParts.join(' – ')} – Sonce Slovenije`;
+                document.title = title;
+                const desc = state.filteredPosts.length ? `Na strani je ${state.filteredPosts.length} objav.` : 'Najnovejše novice in objave Sindikata Sonce Koper.';
+                const metaDesc = document.querySelector('meta[name="description"]');
+                if (metaDesc) metaDesc.setAttribute('content', desc);
+                const ogTitle = document.querySelector('meta[property="og:title"]');
+                if (ogTitle) ogTitle.setAttribute('content', title);
+                const ogDesc = document.querySelector('meta[property="og:description"]');
+                if (ogDesc) ogDesc.setAttribute('content', desc);
+                const ogUrl = document.querySelector('meta[property="og:url"]');
+                if (ogUrl) ogUrl.setAttribute('content', pageUrl);
+                const twTitle = document.querySelector('meta[name="twitter:title"]');
+                if (twTitle) twTitle.setAttribute('content', title);
+                const twDesc = document.querySelector('meta[name="twitter:description"]');
+                if (twDesc) twDesc.setAttribute('content', desc);
+            }
+
+            function updateJsonLd(){
+                try {
+                    const list = state.filteredPosts.slice(0, 10).map((p, idx) => ({
+                        '@type': 'ListItem',
+                        position: idx + 1,
+                        url: BASE_URL + '/news/post.html?slug=' + encodeURIComponent(p.slug),
+                        name: p.title || ''
+                    }));
+                    const json = {
+                        '@context': 'https://schema.org',
+                        '@type': 'CollectionPage',
+                        name: 'News – Sonce Slovenije',
+                        url: BASE_URL + '/news/',
+                        hasPart: {
+                            '@type': 'ItemList',
+                            itemListElement: list
+                        }
+                    };
+                    const node = document.getElementById('news-jsonld');
+                    if (node) node.textContent = JSON.stringify(json);
+                } catch (e) {}
+            }
+
             function applyFilters(){
                 state.filteredPosts = state.activeTag ? 
                     state.allPosts.filter(p => (p.tags || []).includes(state.activeTag)) : 
                     state.allPosts.slice();
                 
-                state.filteredPosts.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+                if (state.query){
+                    const q = normalizeText(state.query);
+                    state.filteredPosts = state.filteredPosts.filter(p => {
+                        const hay = normalizeText([
+                            p.title,
+                            p.summary || p.description || p.excerpt,
+                            (p.tags || []).join(' '),
+                            p.author
+                        ].filter(Boolean).join(' '));
+                        return hay.includes(q);
+                    });
+                }
+                
+                const sortKey = state.sortBy;
+                state.filteredPosts.sort((a,b)=>{
+                    switch (sortKey){
+                        case 'date_asc':
+                            return (a.date||'').localeCompare(b.date||'');
+                        case 'title_asc':
+                            return (a.title||'').localeCompare(b.title||'', 'sl', { sensitivity: 'base' });
+                        case 'title_desc':
+                            return (b.title||'').localeCompare(a.title||'', 'sl', { sensitivity: 'base' });
+                        case 'readtime_asc': {
+                            const av = Number.isFinite(a.readingTimeMinutes) ? a.readingTimeMinutes : Number.POSITIVE_INFINITY;
+                            const bv = Number.isFinite(b.readingTimeMinutes) ? b.readingTimeMinutes : Number.POSITIVE_INFINITY;
+                            return av - bv;
+                        }
+                        case 'readtime_desc': {
+                            const av = Number.isFinite(a.readingTimeMinutes) ? a.readingTimeMinutes : Number.NEGATIVE_INFINITY;
+                            const bv = Number.isFinite(b.readingTimeMinutes) ? b.readingTimeMinutes : Number.NEGATIVE_INFINITY;
+                            return bv - av;
+                        }
+                        case 'date_desc':
+                        default:
+                            return (b.date||'').localeCompare(a.date||'');
+                    }
+                });
                 
                 const totalPages = Math.max(1, Math.ceil(state.filteredPosts.length / state.pageSize));
                 if (state.currentPage > totalPages) state.currentPage = 1;
@@ -365,6 +506,8 @@
                 renderPosts();
                 renderPagination();
                 renderTagFilter();
+                updateHeadMeta();
+                updateJsonLd();
             }
 
             async function load(){
@@ -395,8 +538,26 @@
                     state.pageSize = Number.isFinite(val) && val > 0 ? val : state.pageSize;
                     state.currentPage = 1;
                     writeQuery();
-                    renderPosts();
-                    renderPagination();
+                    applyFilters();
+                });
+            }
+
+            if (elements.searchInput){
+                const onSearch = debounce(() => {
+                    state.query = elements.searchInput.value.trim();
+                    state.currentPage = 1;
+                    writeQuery();
+                    applyFilters();
+                }, 200);
+                elements.searchInput.addEventListener('input', onSearch);
+            }
+
+            if (elements.sortSelect){
+                elements.sortSelect.addEventListener('change', () => {
+                    state.sortBy = elements.sortSelect.value;
+                    state.currentPage = 1;
+                    writeQuery();
+                    applyFilters();
                 });
             }
             
