@@ -5,7 +5,7 @@
     "date": "2024-12-01",
     "author": "Sonce Team",
     "summary": "This is a test post to verify the news system is working correctly.",
-    "image": "",
+    "hero": "",
     "imageAlt": "Test post image",
     "tags": [
       "test",
@@ -25,7 +25,7 @@
     "date": "2024-12-01",
     "author": "Sonce Team",
     "summary": "Welcome to the new Sonce news system with improved compatibility and features.",
-    "image": "/static/uploads/news/2024/12/2024-12-01-welcome-post-hero.jpg",
+    "hero": "/static/uploads/news/2024/12/2024-12-01-welcome-post-hero.jpg",
     "imageAlt": "Welcome to our news section",
     "tags": [
       "news",
@@ -45,7 +45,7 @@
     "date": "2024-12-01",
     "author": "Test User",
     "summary": "Testing the system compatibility",
-    "image": "",
+    "hero": "",
     "imageAlt": "Test Post for Compatibility",
     "tags": [
       "test",
