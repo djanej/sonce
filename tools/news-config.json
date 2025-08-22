@@ -1,0 +1,29 @@
+{
+  "compatibility": {
+    "version": "1.0.0",
+    "sonceNewsGenerator": "100% compatible",
+    "requiredStructure": {
+      "contentDir": "content/news",
+      "uploadsDir": "static/uploads/news",
+      "indexFile": "index.json"
+    },
+    "fileNaming": {
+      "format": "YYYY-MM-DD-slug.md",
+      "dateFormat": "ISO 8601 (YYYY-MM-DD)",
+      "slugFormat": "lowercase-hyphenated"
+    },
+    "frontmatter": {
+      "required": ["title", "date"],
+      "optional": ["author", "slug", "image", "imageAlt", "summary", "tags"]
+    },
+    "imagePaths": {
+      "heroFormat": "/static/uploads/news/YYYY/MM/YYYY-MM-DD-slug-hero.ext",
+      "additionalFormat": "/static/uploads/news/YYYY/MM/YYYY-MM-DD-slug-description.ext"
+    }
+  },
+  "cli": {
+    "commands": ["create", "rebuild-index", "slug"],
+    "autoIndex": true,
+    "imageCopy": true
+  }
+}
