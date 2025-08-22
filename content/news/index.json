@@ -1,1 +1,41 @@
-[]
+[
+  {
+    "id": "2024-12-01-test-post-for-compatibility",
+    "title": "Test Post for Compatibility",
+    "date": "2024-12-01",
+    "author": "Test User",
+    "summary": "Testing the system compatibility",
+    "image": "",
+    "imageAlt": "Test Post for Compatibility",
+    "tags": [
+      "test",
+      "compatibility"
+    ],
+    "slug": "test-post-for-compatibility",
+    "filename": "20241201-test-post-for-compatibility.md",
+    "path": "/content/news/20241201-test-post-for-compatibility.md",
+    "link": "/content/news/20241201-test-post-for-compatibility.md",
+    "readingTimeMinutes": 1,
+    "readingTimeLabel": "1 min"
+  },
+  {
+    "id": "2024-12-01-welcome-post",
+    "title": "Welcome to Sonce News",
+    "date": "2024-12-01",
+    "author": "Sonce Team",
+    "summary": "Welcome to the new Sonce news system with improved compatibility and features.",
+    "image": "/static/uploads/news/2024/12/2024-12-01-welcome-post-hero.jpg",
+    "imageAlt": "Welcome to our news section",
+    "tags": [
+      "news",
+      "welcome",
+      "announcement"
+    ],
+    "slug": "welcome-post",
+    "filename": "20241201-welcome-post.md",
+    "path": "/content/news/20241201-welcome-post.md",
+    "link": "/content/news/20241201-welcome-post.md",
+    "readingTimeMinutes": 2,
+    "readingTimeLabel": "2 min"
+  }
+]
