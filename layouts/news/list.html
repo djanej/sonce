@@ -1,0 +1,27 @@
+{{ define "main" }}
+<section class="container mx-auto px-4 py-12 max-w-4xl">
+	<h1 class="text-3xl font-bold mb-6">Novice</h1>
+	{{ $p := .Paginate (where .Pages "Type" "news") }}
+	{{ if gt $p.TotalNumberOfElements 0 }}
+		<ul class="space-y-8">
+			{{ range $p.Pages }}
+			<li class="border-b pb-6">
+				<h2 class="text-2xl font-semibold">
+					<a href="{{ .RelPermalink }}" class="hover:text-primary">{{ .Title }}</a>
+				</h2>
+				<p class="text-sm text-gray-500 mt-1">{{ .Date.Format "02. 01. 2006" }}</p>
+				{{ with .Params.excerpt }}
+					<p class="mt-3 text-gray-700">{{ . }}</p>
+				{{ else }}
+					<p class="mt-3 text-gray-700">{{ .Summary }}</p>
+				{{ end }}
+				<a class="inline-block mt-3 text-primary font-medium" href="{{ .RelPermalink }}">Preberi več →</a>
+			</li>
+			{{ end }}
+		</ul>
+		<div class="mt-8">{{ template "_internal/pagination.html" . }}</div>
+	{{ else }}
+		<p>Ni objav.</p>
+	{{ end }}
+</section>
+{{ end }}
