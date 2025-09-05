@@ -1,60 +1,20 @@
 [
   {
-    "id": "2024-12-01-test-post",
-    "title": "Test Post - System Working!",
-    "date": "2024-12-01",
-    "author": "Sonce Team",
-    "summary": "This is a test post to verify the news system is working correctly.",
-    "hero": "",
-    "imageAlt": "Test post image",
+    "id": "2025-09-05-system-test-2",
+    "title": "system test 2",
+    "date": "2025-09-05",
+    "author": "system test3",
+    "summary": "system testing.",
+    "excerpt": "system testing.",
+    "description": "system testing.",
+    "imageAlt": "system test 2",
     "tags": [
-      "test",
-      "system",
-      "working"
+      "system test"
     ],
-    "slug": "test-post",
-    "filename": "20241201-test-post.md",
-    "path": "/content/news/20241201-test-post.md",
-    "link": "/content/news/20241201-test-post.md",
-    "readingTimeMinutes": 2,
-    "readingTimeLabel": "2 min"
-  },
-  {
-    "id": "2024-12-01-welcome-post",
-    "title": "Welcome to Sonce News",
-    "date": "2024-12-01",
-    "author": "Sonce Team",
-    "summary": "Welcome to the new Sonce news system with improved compatibility and features.",
-    "hero": "/static/uploads/news/2024/12/2024-12-01-welcome-post-hero.jpg",
-    "imageAlt": "Welcome to our news section",
-    "tags": [
-      "news",
-      "welcome",
-      "announcement"
-    ],
-    "slug": "welcome-post",
-    "filename": "20241201-welcome-post.md",
-    "path": "/content/news/20241201-welcome-post.md",
-    "link": "/content/news/20241201-welcome-post.md",
-    "readingTimeMinutes": 3,
-    "readingTimeLabel": "3 min"
-  },
-  {
-    "id": "2024-12-01-test-post-for-compatibility",
-    "title": "Test Post for Compatibility",
-    "date": "2024-12-01",
-    "author": "Test User",
-    "summary": "Testing the system compatibility",
-    "hero": "",
-    "imageAlt": "Test Post for Compatibility",
-    "tags": [
-      "test",
-      "compatibility"
-    ],
-    "slug": "test-post-for-compatibility",
-    "filename": "20241201-test-post-for-compatibility.md",
-    "path": "/content/news/20241201-test-post-for-compatibility.md",
-    "link": "/content/news/20241201-test-post-for-compatibility.md",
+    "slug": "system-test-2",
+    "filename": "2025-09-05-system-test-2.md",
+    "path": "/content/news/2025-09-05-system-test-2.md",
+    "link": "/content/news/2025-09-05-system-test-2.md",
     "readingTimeMinutes": 1,
     "readingTimeLabel": "1 min"
   }
