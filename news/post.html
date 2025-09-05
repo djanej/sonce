@@ -237,7 +237,7 @@
             function updateHeadMeta(post){
                 const pageUrl = BASE_URL + location.pathname + location.search;
                 const title = `${post.title || 'Objava'} – Sonce Slovenije`;
-                const description = truncate(post.summary || '', 160) || 'Objava novic Sindikat Sonce Koper.';
+                const description = truncate(post.summary || post.excerpt || post.description || '', 160) || 'Objava novic Sindikat Sonce Koper.';
                 document.title = title;
                 const metaDesc = document.querySelector('meta[name="description"]');
                 if (metaDesc) metaDesc.setAttribute('content', description);

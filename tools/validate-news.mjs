@@ -17,6 +17,22 @@ function toSlug(input){
     .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
+function truncate(text, max = 180){
+  const s = String(text || '');
+  if (s.length <= max) return s;
+  const sliced = s.slice(0, max);
+  const lastSpace = sliced.lastIndexOf(' ');
+  const safeCut = lastSpace > max * 0.6 ? lastSpace : max;
+  return sliced.slice(0, safeCut).trim() + '…';
+}
+
+function normalizeTags(tags){
+  if (!tags) return [];
+  if (Array.isArray(tags)) return tags.map(t => String(t).trim()).filter(Boolean);
+  if (typeof tags === 'string') return tags.split(',').map(t => t.trim()).filter(Boolean);
+  return [];
+}
+
 function pick(obj, keys){
   const out = {};
   for (const k of keys){ if (Object.prototype.hasOwnProperty.call(obj, k)) out[k] = obj[k]; }
@@ -92,15 +108,28 @@ async function buildIndexEntry(filename, yaml, markdown){
   const body = bodyMatch ? bodyMatch[1] : '';
   const words = String(body).split(/\s+/).filter(Boolean).length;
   const readingTimeMinutes = Math.max(1, Math.ceil(words / 200));
+  // Compute excerpt: prefer frontmatter summary/description, otherwise first paragraph of body (markdown stripped lightly)
+  const firstPara = String(body).split(/\n{2,}/)[0] || '';
+  const bodyPlain = firstPara
+    .replace(/!\[[^\]]*\]\([^\)]+\)/g, '') // images
+    .replace(/\[[^\]]*\]\([^\)]+\)/g, '$1') // links -> text
+    .replace(/`{1,3}[^`]*`{1,3}/g, '') // inline code
+    .replace(/^\s*[>#*-]+\s*/gm, '') // list markers / blockquotes
+    .replace(/[*_]{1,3}([^*_]+)[*_]{1,3}/g, '$1') // emphasis
+    .replace(/\s+/g, ' ') // collapse whitespace
+    .trim();
+  const excerpt = truncate(yaml.excerpt || yaml.summary || yaml.description || bodyPlain, 180);
   const base = {
     id: `${date}-${slug}`,
     title: String(yaml.title || ''),
     date,
     author: String(yaml.author || ''),
-    summary: String(yaml.summary || ''),
+    summary: String(yaml.summary || yaml.description || ''),
+    excerpt,
+    description: excerpt,
     hero: String(yaml.hero || yaml.image || ''),
     imageAlt: String(yaml.imageAlt || yaml.title || ''),
-    tags: Array.isArray(yaml.tags) ? yaml.tags : [],
+    tags: normalizeTags(yaml.tags),
     slug,
     filename,
     path: pathAbs,
