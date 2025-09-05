@@ -23,6 +23,32 @@
         }
     </script>
     <link rel="stylesheet" href="/news/news.css">
+    <style>
+        .news-lock-overlay { display: none; }
+        .news-locked .news-lock-overlay { display: flex; }
+        .news-locked body > *:not(.news-lock-overlay) { filter: blur(2px); pointer-events: none; user-select: none; }
+    </style>
+    <script>
+        (function(){
+            var CORRECT_PIN = '4532';
+            try {
+                var params = new URLSearchParams(location.search);
+                var pin = params.get('pin');
+                if (pin === CORRECT_PIN){
+                    try { localStorage.setItem('newsUnlocked','1'); } catch(e){}
+                    params.delete('pin');
+                    var qs = params.toString();
+                    var newUrl = location.pathname + (qs ? ('?' + qs) : '');
+                    history.replaceState(null, '', newUrl);
+                }
+            } catch(e){}
+            var unlocked = false;
+            try { unlocked = localStorage.getItem('newsUnlocked') === '1'; } catch(e){}
+            if (!unlocked){
+                document.documentElement.classList.add('news-locked');
+            }
+        })();
+    </script>
     <link rel="canonical" href="https://sonce.org/news/">
     <meta property="og:site_name" content="Sonce Slovenije">
     <meta property="og:type" content="website">
@@ -37,6 +63,46 @@
     <script id="news-jsonld" type="application/ld+json">{}</script>
 </head>
 <body class="bg-gray-50">
+    <div class="news-lock-overlay fixed inset-0 z-50 bg-white/90 backdrop-blur flex items-center justify-center p-6">
+        <div class="max-w-md w-full bg-white border border-gray-200 rounded-2xl shadow-xl p-8 text-center">
+            <div class="mx-auto mb-4 w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.656 0 3-1.344 3-3s-1.344-3-3-3-3 1.344-3 3 1.344 3 3 3zM5 21v-2a7 7 0 0114 0v2H5z"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Stran v razvoju</h2>
+            <p class="text-gray-600 mb-6">Za ogled novic vnesite PIN za testiranje.</p>
+            <form id="news-pin-form" class="flex items-center gap-3" autocomplete="off">
+                <input id="news-pin-input" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" placeholder="PIN" class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
+                <button type="submit" class="px-4 py-2 rounded-lg bg-orange-600 text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500">Odkljeni</button>
+            </form>
+            <p id="news-pin-error" class="mt-3 text-sm text-red-600 hidden" role="alert" aria-live="polite">Napačen PIN. Poskusite znova.</p>
+            <p class="mt-4 text-xs text-gray-500">Namig: PIN je 4532 ali dodajte ?pin=4532 v URL.</p>
+        </div>
+    </div>
+    <script>
+        (function(){
+            var CORRECT_PIN = '4532';
+            var form = document.getElementById('news-pin-form');
+            var input = document.getElementById('news-pin-input');
+            var error = document.getElementById('news-pin-error');
+            if (form && input){
+                form.addEventListener('submit', function(e){
+                    e.preventDefault();
+                    var value = (input.value || '').trim();
+                    if (value === CORRECT_PIN){
+                        try { localStorage.setItem('newsUnlocked','1'); } catch(e){}
+                        document.documentElement.classList.remove('news-locked');
+                        if (error) error.classList.add('hidden');
+                    } else {
+                        if (error) error.classList.remove('hidden');
+                        input.focus();
+                        if (input.select) input.select();
+                    }
+                });
+            }
+        })();
+    </script>
     <header class="bg-white shadow-sm border-b border-gray-200">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
