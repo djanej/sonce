@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sonce.org/schemas/news-index-entry.schema.json",
+  "title": "Sonce News Index Entry",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "id", "title", "date", "slug", "filename", "path", "link"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "author": { "type": "string" },
+    "summary": { "type": "string" },
+    "hero": { "type": "string" },
+    "image": { "type": "string" },
+    "imageAlt": { "type": "string" },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "filename": {
+      "type": "string",
+      "pattern": "^(?:\\d{8}|\\d{4}-\\d{2}-\\d{2})-[a-z0-9]+(?:-[a-z0-9]+)*\\.md$"
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^/content/news/(?:\\d{8}|\\d{4}-\\d{2}-\\d{2})-[a-z0-9-]+\\.md$"
+    },
+    "link": {
+      "type": "string",
+      "pattern": "^/content/news/(?:\\d{8}|\\d{4}-\\d{2}-\\d{2})-[a-z0-9-]+\\.md$"
+    },
+    "readingTimeMinutes": { "type": "integer", "minimum": 0 },
+    "readingTimeLabel": { "type": "string" }
+  }
+}
+

@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:news": "node scripts/news-build.mjs"
+    "build:news": "node scripts/news-build.mjs",
+    "validate:news": "node tools/validate-news.mjs",
+    "sitemap:news": "node scripts/generate-news-sitemap.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
