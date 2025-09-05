@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sonce.org/schemas/news-frontmatter.schema.json",
+  "title": "Sonce News Frontmatter",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["title", "date"],
+  "properties": {
+    "title": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "author": { "type": "string", "minLength": 1 },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "image": { "type": "string", "pattern": "^/static/uploads/news/\\d{4}/\\d{2}/[A-Za-z0-9._/-]+$" },
+    "imageAlt": { "type": "string", "minLength": 1 },
+    "summary": { "type": "string", "maxLength": 200 },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": false,
+      "minItems": 1
+    }
+  }
+}
+
