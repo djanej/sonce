@@ -6,7 +6,9 @@
   "scripts": {
     "build:news": "node scripts/news-build.mjs",
     "validate:news": "node tools/validate-news.mjs",
-    "sitemap:news": "node scripts/generate-news-sitemap.mjs"
+    "sitemap:news": "node scripts/generate-news-sitemap.mjs",
+    "news:rebuild": "node tools/validate-news.mjs && node scripts/generate-news-sitemap.mjs",
+    "news:rebuild:commit": "npm run news:rebuild && git add content/news/index.json sitemap-news.xml && git commit -m 'chore(news): rebuild index & sitemap' || true"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
