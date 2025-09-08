@@ -17,6 +17,25 @@
     "readingTimeLabel": "1 min"
   },
   {
+    "id": "2025-09-08-544",
+    "title": "hertzerzerz",
+    "date": "2025-09-08",
+    "author": "retzet",
+    "summary": "sdsd",
+    "excerpt": "sdsd",
+    "description": "sdsd",
+    "imageAlt": "hertzerzerz",
+    "tags": [
+      "Testing4"
+    ],
+    "slug": "544",
+    "filename": "2025-09-08-544.md",
+    "path": "/content/news/2025-09-08-544.md",
+    "link": "/content/news/2025-09-08-544.md",
+    "readingTimeMinutes": 1,
+    "readingTimeLabel": "1 min"
+  },
+  {
     "id": "2025-09-05-system-test-2",
     "title": "system test 2",
     "date": "2025-09-05",
