@@ -6,6 +6,7 @@ import sys
 import zipfile
 import shutil
 import unicodedata
+import subprocess
 from datetime import datetime
 from pathlib import Path
 
@@ -19,7 +20,7 @@ except Exception as e:
     raise
 
 
-APP_TITLE = "Sonce News Generator (Draft Only)"
+APP_TITLE = "Sonce News Maker (Simple)"
 OUTPUT_ROOT = Path(__file__).parent / "output"
 
 
@@ -71,6 +72,34 @@ def yaml_escape(text: str) -> str:
     return s
 
 
+class _Tooltip:
+    def __init__(self, widget, text: str):
+        self.widget = widget
+        self.text = text
+        self.tipwindow: tk.Toplevel | None = None
+        widget.bind("<Enter>", self.show)
+        widget.bind("<Leave>", self.hide)
+
+    def show(self, _event=None):
+        if self.tipwindow is not None:
+            return
+        x = self.widget.winfo_rootx() + 20
+        y = self.widget.winfo_rooty() + 20
+        self.tipwindow = tw = tk.Toplevel(self.widget)
+        tw.wm_overrideredirect(True)
+        tw.wm_geometry(f"+{x}+{y}")
+        label = tk.Label(tw, text=self.text, justify=tk.LEFT,
+                         background="#ffffe0", relief=tk.SOLID, borderwidth=1,
+                         font=("tahoma", "9"), padx=6, pady=3)
+        label.pack(ipadx=1)
+
+    def hide(self, _event=None):
+        tw = self.tipwindow
+        self.tipwindow = None
+        if tw is not None:
+            tw.destroy()
+
+
 class NewsGeneratorApp:
     def __init__(self, master: tk.Tk):
         self.master = master
@@ -80,6 +109,7 @@ class NewsGeneratorApp:
         self.hero_image_path: Path | None = None
         self.additional_images: list[Path] = []
         self.last_generated_paths: list[Path] = []
+        self.last_zip_path: Path | None = None
 
         # Variables
         self.var_title = tk.StringVar()
@@ -99,41 +129,53 @@ class NewsGeneratorApp:
 
         # Form grid
         row = 0
-        ttk.Label(container, text="Title").grid(row=row, column=0, sticky="w")
+        ttk.Label(container, text="Title (headline)").grid(row=row, column=0, sticky="w")
         e_title = ttk.Entry(container, textvariable=self.var_title, width=60)
         e_title.grid(row=row, column=1, columnspan=3, sticky="ew", padx=(8,0))
         e_title.bind("<KeyRelease>", self._on_title_change)
+        self._add_tooltip(e_title, "Write the big headline for your news.")
         row += 1
 
         ttk.Label(container, text="Date (YYYY-MM-DD)").grid(row=row, column=0, sticky="w")
-        ttk.Entry(container, textvariable=self.var_date, width=20).grid(row=row, column=1, sticky="w", padx=(8,0))
+        entry_date = ttk.Entry(container, textvariable=self.var_date, width=20)
+        entry_date.grid(row=row, column=1, sticky="w", padx=(8,0))
+        self._add_tooltip(entry_date, "Publication date. Click Today if unsure.")
         ttk.Button(container, text="Today", command=lambda: self.var_date.set(today_date_str())).grid(row=row, column=2, sticky="w", padx=(8,0))
         row += 1
 
-        ttk.Label(container, text="Datetime (ISO 8601)").grid(row=row, column=0, sticky="w")
-        ttk.Entry(container, textvariable=self.var_datetime, width=40).grid(row=row, column=1, sticky="w", padx=(8,0))
+        ttk.Label(container, text="Exact time (optional)").grid(row=row, column=0, sticky="w")
+        entry_dt = ttk.Entry(container, textvariable=self.var_datetime, width=40)
+        entry_dt.grid(row=row, column=1, sticky="w", padx=(8,0))
+        self._add_tooltip(entry_dt, "Exact time with timezone. You can leave this as-is or click Now.")
         ttk.Button(container, text="Now", command=lambda: self.var_datetime.set(now_iso_local())).grid(row=row, column=2, sticky="w", padx=(8,0))
         row += 1
 
-        ttk.Label(container, text="Author").grid(row=row, column=0, sticky="w")
-        ttk.Entry(container, textvariable=self.var_author, width=40).grid(row=row, column=1, columnspan=2, sticky="ew", padx=(8,0))
+        ttk.Label(container, text="Author (optional)").grid(row=row, column=0, sticky="w")
+        entry_author = ttk.Entry(container, textvariable=self.var_author, width=40)
+        entry_author.grid(row=row, column=1, columnspan=2, sticky="ew", padx=(8,0))
+        self._add_tooltip(entry_author, "Who wrote this? You can leave it empty.")
         row += 1
 
-        ttk.Label(container, text="Slug").grid(row=row, column=0, sticky="w")
-        ttk.Entry(container, textvariable=self.var_slug, width=40).grid(row=row, column=1, sticky="w", padx=(8,0))
+        ttk.Label(container, text="Web address name (slug)").grid(row=row, column=0, sticky="w")
+        entry_slug = ttk.Entry(container, textvariable=self.var_slug, width=40)
+        entry_slug.grid(row=row, column=1, sticky="w", padx=(8,0))
+        self._add_tooltip(entry_slug, "Short web-friendly name. Letters, numbers, and dashes only.")
         ttk.Button(container, text="Regenerate", command=self._regen_slug).grid(row=row, column=2, sticky="w", padx=(8,0))
         row += 1
 
-        ttk.Label(container, text="Summary (short)").grid(row=row, column=0, sticky="nw")
+        ttk.Label(container, text="Summary (one or two sentences)").grid(row=row, column=0, sticky="nw")
         self.txt_summary = tk.Text(container, width=60, height=4)
         self.txt_summary.grid(row=row, column=1, columnspan=3, sticky="ew", padx=(8,0))
+        self._add_tooltip(self.txt_summary, "A short preview. Keep it simple—one or two sentences.")
         row += 1
 
-        ttk.Label(container, text="Tags (comma-separated)").grid(row=row, column=0, sticky="w")
-        ttk.Entry(container, textvariable=self.var_tags, width=60).grid(row=row, column=1, columnspan=3, sticky="ew", padx=(8,0))
+        ttk.Label(container, text="Tags (optional, comma-separated)").grid(row=row, column=0, sticky="w")
+        entry_tags = ttk.Entry(container, textvariable=self.var_tags, width=60)
+        entry_tags.grid(row=row, column=1, columnspan=3, sticky="ew", padx=(8,0))
+        self._add_tooltip(entry_tags, "Words that describe the news, e.g. news, community.")
         row += 1
 
-        ttk.Checkbutton(container, text="Draft (recommended)", variable=self.var_draft).grid(row=row, column=0, sticky="w")
+        ttk.Checkbutton(container, text="Keep as Draft (recommended)", variable=self.var_draft).grid(row=row, column=0, sticky="w")
         row += 1
 
         # Images
@@ -141,10 +183,13 @@ class NewsGeneratorApp:
         self.lbl_hero = ttk.Label(container, text="None selected")
         self.lbl_hero.grid(row=row, column=1, columnspan=2, sticky="w", padx=(8,0))
         ttk.Button(container, text="Choose…", command=self.choose_hero).grid(row=row, column=3, sticky="w")
+        self._add_tooltip(self.lbl_hero, "Main picture shown with the news. Optional but recommended.")
         row += 1
 
-        ttk.Label(container, text="Image alt text").grid(row=row, column=0, sticky="w")
-        ttk.Entry(container, textvariable=self.var_image_alt, width=60).grid(row=row, column=1, columnspan=3, sticky="ew", padx=(8,0))
+        ttk.Label(container, text="Image description (alt text)").grid(row=row, column=0, sticky="w")
+        entry_alt = ttk.Entry(container, textvariable=self.var_image_alt, width=60)
+        entry_alt.grid(row=row, column=1, columnspan=3, sticky="ew", padx=(8,0))
+        self._add_tooltip(entry_alt, "A short description of the image for accessibility.")
         row += 1
 
         ttk.Label(container, text="Additional images (optional)").grid(row=row, column=0, sticky="nw")
@@ -160,14 +205,24 @@ class NewsGeneratorApp:
         ttk.Label(container, text="Body (optional)").grid(row=row, column=0, sticky="nw")
         self.txt_body = tk.Text(container, width=60, height=12)
         self.txt_body.grid(row=row, column=1, columnspan=3, sticky="ew", padx=(8,0))
+        self._add_tooltip(self.txt_body, "The full text of your news. You can leave it empty.")
         row += 1
 
         # Actions
         actions = ttk.Frame(container)
         actions.grid(row=row, column=0, columnspan=4, sticky="ew", pady=(8,0))
-        ttk.Button(actions, text="Generate Draft", command=self.generate_draft).grid(row=0, column=0, padx=(0,8))
-        ttk.Button(actions, text="Create ZIP for Editor", command=self.create_zip).grid(row=0, column=1, padx=(0,8))
-        ttk.Button(actions, text="Reset Form", command=self.reset_form).grid(row=0, column=2)
+        btn_gen = ttk.Button(actions, text="Generate Draft", command=self.generate_draft)
+        btn_gen.grid(row=0, column=0, padx=(0,8))
+        self._add_tooltip(btn_gen, "Create the files on your computer (no publishing).")
+
+        btn_zip = ttk.Button(actions, text="Create ZIP", command=self.create_zip)
+        btn_zip.grid(row=0, column=1, padx=(0,8))
+        self._add_tooltip(btn_zip, "Packs the draft and images into one ZIP.")
+
+        ttk.Button(actions, text="Open Output Folder", command=self.open_output_folder).grid(row=0, column=2, padx=(0,8))
+        ttk.Button(actions, text="Copy ZIP to incoming…", command=self.copy_zip_to_incoming).grid(row=0, column=3, padx=(0,8))
+        ttk.Button(actions, text="Reset Form", command=self.reset_form).grid(row=0, column=4, padx=(0,8))
+        ttk.Button(actions, text="How it works", command=self.show_help).grid(row=0, column=5)
 
         # Status
         row += 1
@@ -348,8 +403,66 @@ class NewsGeneratorApp:
                     # Keep content/ and static/ folder roots inside the archive
                     zf.write(abs_path, arcname=str(rel))
 
+        self.last_zip_path = zip_path
         self.var_status.set(f"ZIP created: {zip_path}")
-        messagebox.showinfo("ZIP ready", f"ZIP created at:\n{zip_path}\n\nSend this ZIP to the editor.")
+        messagebox.showinfo("ZIP ready", f"ZIP created at:\n{zip_path}\n\nYou can now copy it into your website folder's incoming/ directory.")
+
+    def open_output_folder(self):
+        ensure_dir(OUTPUT_ROOT)
+        try:
+            if sys.platform == 'win32':
+                os.startfile(str(OUTPUT_ROOT))  # type: ignore[attr-defined]
+            elif sys.platform == 'darwin':
+                subprocess.run(['open', str(OUTPUT_ROOT)], check=False)
+            else:
+                subprocess.run(['xdg-open', str(OUTPUT_ROOT)], check=False)
+        except Exception as e:
+            messagebox.showerror("Cannot open folder", f"Please open this folder manually:\n{OUTPUT_ROOT}\n\nError: {e}")
+
+    def copy_zip_to_incoming(self):
+        if not self.last_zip_path or not self.last_zip_path.exists():
+            # Try to find a recent ZIP in OUTPUT_ROOT
+            candidates = sorted(OUTPUT_ROOT.glob('news-draft-*.zip'), key=lambda p: p.stat().st_mtime, reverse=True)
+            if candidates:
+                self.last_zip_path = candidates[0]
+            else:
+                messagebox.showwarning("No ZIP found", "Please click 'Create ZIP' first.")
+                return
+
+        messagebox.showinfo(
+            "Choose website folder",
+            "Select your website folder. If you click on the 'incoming' folder itself, that's okay too."
+        )
+        selected = filedialog.askdirectory(title="Select your website folder (or incoming)")
+        if not selected:
+            return
+        target = Path(selected)
+        incoming_dir = target if target.name.lower() == 'incoming' else (target / 'incoming')
+        try:
+            incoming_dir.mkdir(parents=True, exist_ok=True)
+            dest = incoming_dir / self.last_zip_path.name
+            shutil.copy2(self.last_zip_path, dest)
+            self.var_status.set(f"Copied ZIP to: {dest}")
+            messagebox.showinfo("Copied", f"ZIP copied to:\n{dest}\n\nCommit and push this to GitHub (main). The site will import it automatically.")
+        except Exception as e:
+            messagebox.showerror("Copy failed", f"Could not copy to incoming/:\n{e}")
+
+    def show_help(self):
+        steps = (
+            "1) Title: Write the headline.\n"
+            "2) Date: Click Today (or choose the publication date).\n"
+            "3) Optional: Choose a hero image and write a short description.\n"
+            "4) Click Generate Draft.\n"
+            "5) Click Create ZIP.\n"
+            "6) Click Copy ZIP to incoming… and pick your website folder.\n\n"
+            "After you push to GitHub (main), the site automatically places files in the right folders."
+        )
+        messagebox.showinfo("How it works", steps)
+
+    # Simple tooltip helper
+    def _add_tooltip(self, widget, text: str):
+        tip = _Tooltip(widget, text)
+        return tip
 
     def reset_form(self):
         self.var_title.set("")
@@ -380,4 +493,31 @@ def main():
 
 if __name__ == '__main__':
     main()
+class _Tooltip:
+    def __init__(self, widget, text: str):
+        self.widget = widget
+        self.text = text
+        self.tipwindow: tk.Toplevel | None = None
+        widget.bind("<Enter>", self.show)
+        widget.bind("<Leave>", self.hide)
+
+    def show(self, _event=None):
+        if self.tipwindow is not None:
+            return
+        x = self.widget.winfo_rootx() + 20
+        y = self.widget.winfo_rooty() + 20
+        self.tipwindow = tw = tk.Toplevel(self.widget)
+        tw.wm_overrideredirect(True)
+        tw.wm_geometry(f"+{x}+{y}")
+        label = tk.Label(tw, text=self.text, justify=tk.LEFT,
+                         background="#ffffe0", relief=tk.SOLID, borderwidth=1,
+                         font=("tahoma", "9"), padx=6, pady=3)
+        label.pack(ipadx=1)
+
+    def hide(self, _event=None):
+        tw = self.tipwindow
+        self.tipwindow = None
+        if tw is not None:
+            tw.destroy()
+
 

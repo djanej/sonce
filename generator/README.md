@@ -1,6 +1,6 @@
-### Sonce News Generator (Offline, Draft-Only)
+### Sonce News Maker (Simple, Offline)
 
-This folder contains a small, offline tool that creates draft news files compatible with the website. It does not publish or push anything. It simply produces files you can hand to an editor.
+This folder contains a tiny offline app that creates draft news files compatible with the website. It does not publish or push anything. It simply produces files you can send or copy into the website.
 
 ## What you get
 - A simple app to type in a news title, date, summary, author, tags, and pick images
@@ -14,25 +14,25 @@ This folder contains a small, offline tool that creates draft news files compati
 3. Double‑click one of these:
    - On Windows: `run_windows.bat`
    - On Mac or Linux: `run_mac_linux.sh` (you may need to right‑click > Open)
-4. Fill in the form and click “Generate Draft”.
+4. Fill in the form and click “Generate Draft”. Tooltips explain each field.
 5. The draft will be saved into `generator/output/` as:
    - `content/news/YYYY-MM-DD-slug.md` (your news file)
    - `static/uploads/news/YYYY/MM/...` (renamed images if you selected them)
-6. Optionally click “Create ZIP for Editor” to produce one ZIP containing both the Markdown and image files in the exact structure the website expects.
+6. Click “Create ZIP” to produce one ZIP containing both the Markdown and image files in the exact structure the website expects.
+7. Click “Copy ZIP to incoming…” and choose your website folder (or its `incoming/` folder). The file will be copied there.
 
 Note: The tool works fully offline. If your computer does not have Python installed, install it once from `python.org` and then double‑click the run file again.
 
 ## What to send to the editor
-- If you used “Create ZIP for Editor”: send the ZIP file found in `generator/output/` (for example: `news-draft-2025-01-15-welcome-post.zip`). The editor can unzip it into the website repository root and commit.
+- If you used “Create ZIP”: use the “Copy ZIP to incoming…” button, or send the ZIP file found in `generator/output/` (e.g. `news-draft-2025-01-15-welcome-post.zip`). The editor can copy it into the website repo under `incoming/`.
 - If you did not create a ZIP: send both of these from `generator/output/`:
   - `content/news/YYYY-MM-DD-slug.md`
   - the entire folder `static/uploads/news/YYYY/MM/` that contains your images
 
-## What the editor does (for reference)
-- Place the Markdown file under the website repo at `content/news/`.
-- Place the images under `static/uploads/news/YYYY/MM/`.
-- Optionally run validation: `node tools/validate-news.mjs` (not required for you).
-- Publish only after review. Drafts are not published automatically.
+## What happens next (automatic)
+- If you push the ZIP to GitHub on the `main` branch under `incoming/`, an automation imports it and moves files into the correct places.
+- Locally, you can also run `run_watch_incoming.*` from the repository root to import ZIPs you drop into `incoming/`.
+- Drafts are not published automatically; they remain drafts until reviewed.
 
 ## Format (simple schema)
 All fields are entered in the app. The generated Markdown file has a YAML front matter block:
@@ -61,6 +61,17 @@ See `generator/examples/` for two ready‑to‑drop drafts.
 - From the repository root or from this folder, run the packaging script:
   - Linux/Mac: `generator/scripts/package-generator-zip.sh`
 - This creates `generator/dist/news-generator.zip` containing only the generator and documentation.
+
+## ZIP file format (what the app creates)
+- The ZIP contains two top-level folders when applicable:
+  - `content/news/` with your `YYYY-MM-DD-slug.md`
+  - `static/uploads/news/YYYY/MM/` with your renamed images
+- Details are in `generator/ZIP_FORMAT.md`.
+
+## For Dad: three simple steps
+1. Type the title, click Today, optionally pick an image, and click Generate Draft.
+2. Click Create ZIP.
+3. Click Copy ZIP to incoming… and pick the website folder. Done.
 
 ## Safety and privacy
 - No sign‑in or internet is required.
