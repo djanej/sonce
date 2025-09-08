@@ -185,6 +185,27 @@
     justify-content: center;
 }
 
+/* Prev/Next nav buttons on post page */
+#prev-next a {
+    min-height: 4.5rem; /* ensure consistent height */
+    border-width: 2px;
+}
+
+#prev-next a:hover {
+    border-color: #f97316;
+}
+
+#prev-next a:focus-visible {
+    outline: 2px solid #f97316;
+    outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+    #prev-next a {
+        min-height: 4rem;
+    }
+}
+
 .pagination-btn:hover { 
     border-color: #f97316; 
     color: #f97316;
