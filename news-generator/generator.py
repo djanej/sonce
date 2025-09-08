@@ -9,7 +9,7 @@ Run from the repository root:
   python3 news-generator/generator.py --title "My Post" --date 2025-09-05 --image /path/to/hero.jpg
 
 Or interactively:
-  python3 news-generator/generator.py
+  python3 news-generator/generator.py --interactive --bundle-zip --verify
 """
 from __future__ import annotations
 
@@ -20,12 +20,15 @@ import re
 import sys
 from pathlib import Path
 import shutil
-from typing import List, Optional
+from typing import List, Optional, Tuple
+import subprocess
+import zipfile
 
 
 RE_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 RE_SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"}
+IMAGE_WEB_PATH_RE = re.compile(r"^/static/uploads/news/(\d{4})/(\d{2})/([A-Za-z0-9._-]+)$")
 
 
 def get_repo_root() -> Path:
@@ -77,7 +80,8 @@ def ensure_directory(path: Path) -> None:
 	path.mkdir(parents=True, exist_ok=True)
 
 
-def copy_image_to_uploads(source: Path, uploads_root: Path, date_obj: dt.date, slug_value: str, image_name_hint: str) -> str:
+def copy_image_to_uploads(source: Path, uploads_root: Path, date_obj: dt.date, slug_value: str, image_name_hint: str) -> Tuple[str, Path]:
+	"""Copy image and return (web_path, local_destination_path)."""
 	if not source.exists() or not source.is_file():
 		raise FileNotFoundError(f"Image not found: {source}")
 	extension = source.suffix.lower()
@@ -93,7 +97,7 @@ def copy_image_to_uploads(source: Path, uploads_root: Path, date_obj: dt.date, s
 	shutil.copy2(str(source), str(destination_path))
 	# Return absolute web path starting with /static
 	web_path = f"/static/uploads/news/{year_str}/{month_str}/{destination_filename}"
-	return web_path
+	return web_path, destination_path
 
 
 def yaml_escape(value: str) -> str:
@@ -140,6 +144,59 @@ def read_text_file(file_path: Path) -> str:
 	return file_path.read_text(encoding="utf-8")
 
 
+def verify_generated_post(markdown_path: Path) -> List[str]:
+	"""Lightweight checks to ensure compatibility."""
+	errors: List[str] = []
+	try:
+		text = markdown_path.read_text(encoding="utf-8")
+	except Exception as exc:  # noqa: BLE001 (explicitly capturing for user-friendly output)
+		errors.append(f"Cannot read file: {markdown_path} ({exc})")
+		return errors
+	if not text.startswith("---\n"):
+		errors.append("Front matter must start with '---'")
+	if "\ntitle:" not in text:
+		errors.append("Missing 'title' in front matter")
+	if "\ndate:" not in text:
+		errors.append("Missing 'date' in front matter")
+	# Validate image path shape if present
+	for line in text.splitlines():
+		if line.startswith("image:"):
+			value = line.split(":", 1)[1].strip().strip('"')
+			if value:
+				if not IMAGE_WEB_PATH_RE.match(value):
+					errors.append("Image path must be like /static/uploads/news/YYYY/MM/filename.ext")
+	return errors
+
+
+def maybe_run_auto_index(repo_root: Path) -> None:
+	"""If Node tooling exists, rebuild the index to keep listings fresh."""
+	cli = shutil.which("node")
+	tool_path = repo_root / "tools" / "news-cli.mjs"
+	if cli and tool_path.exists():
+		try:
+			subprocess.run([cli, str(tool_path), "rebuild-index"], check=True)
+			print("🔄 Rebuilt content/news/index.json using tools/news-cli.mjs")
+		except Exception as exc:  # noqa: BLE001
+			print(f"⚠️  Could not rebuild index automatically: {exc}")
+	else:
+		print("ℹ️  Skipping index rebuild (Node or tools/news-cli.mjs not found)")
+
+
+def create_upload_zip(repo_root: Path, markdown_path: Path, local_image_path: Optional[Path], zip_dir: Path) -> Path:
+	"""Create a single upload ZIP containing the markdown and optional image at repo-relative paths."""
+	ensure_directory(zip_dir)
+	timestamp = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+	zip_path = zip_dir / f"news-upload-{timestamp}.zip"
+	repo_rel_markdown = markdown_path.relative_to(repo_root)
+	with zipfile.ZipFile(zip_path, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
+		zf.write(markdown_path, arcname=str(repo_rel_markdown))
+		if local_image_path and local_image_path.exists():
+			repo_rel_img = local_image_path.relative_to(repo_root)
+			zf.write(local_image_path, arcname=str(repo_rel_img))
+	print(f"📦 Created upload bundle: {zip_path.relative_to(repo_root)}")
+	return zip_path
+
+
 def main(argv: Optional[List[str]] = None) -> int:
 	parser = argparse.ArgumentParser(description="Generate a Sonce-compatible news post")
 	parser.add_argument("--title", help="Post title")
@@ -160,12 +217,17 @@ def main(argv: Optional[List[str]] = None) -> int:
 	parser.add_argument("--interactive", action="store_true", help="Prompt for missing fields interactively")
 	parser.add_argument("--output-dir", default=str(get_repo_root() / "content/news"), help="Output directory for markdown (default: content/news)")
 	parser.add_argument("--uploads-dir", default=str(get_repo_root() / "static/uploads/news"), help="Uploads directory for images (default: static/uploads/news)")
+	parser.add_argument("--bundle-zip", action="store_true", help="Create a single ZIP containing the markdown and image for easy upload")
+	parser.add_argument("--zip-dir", default=str(get_repo_root() / "news-generator/output"), help="Directory to put the upload ZIP (default: news-generator/output)")
+	parser.add_argument("--verify", action="store_true", help="Run basic compatibility checks after generation")
+	parser.add_argument("--auto-index", action="store_true", help="If available, rebuild index using Node tools/news-cli.mjs")
 
 	args = parser.parse_args(argv)
 
 	repo_root = get_repo_root()
 	output_dir = Path(args.output_dir)
 	uploads_root = Path(args.uploads_dir)
+	zip_dir = Path(args.zip_dir)
 
 	# Collect values, prompt if interactive
 	title_value: Optional[str] = args.title
@@ -239,8 +301,9 @@ def main(argv: Optional[List[str]] = None) -> int:
 
 	# Handle image copy if provided
 	image_web_path: Optional[str] = None
+	local_image_path: Optional[Path] = None
 	if image_source_path is not None:
-		image_web_path = copy_image_to_uploads(image_source_path, uploads_root, date_obj, slug_value, image_name_hint)
+		image_web_path, local_image_path = copy_image_to_uploads(image_source_path, uploads_root, date_obj, slug_value, image_name_hint)
 
 	frontmatter_text = format_frontmatter(
 		title=title_value,
@@ -267,6 +330,27 @@ def main(argv: Optional[List[str]] = None) -> int:
 	print(f"✅ Created {markdown_path.relative_to(repo_root)}")
 	if image_web_path:
 		print(f"🖼️  Copied hero image to {image_web_path}")
+
+	if args.verify:
+		errors = verify_generated_post(markdown_path)
+		if errors:
+			print("❌ Post failed basic verification:")
+			for e in errors:
+				print(" -", e)
+			return 2
+		else:
+			print("✅ Basic compatibility checks passed")
+
+	if args.auto_index:
+		maybe_run_auto_index(repo_root)
+
+	zip_path: Optional[Path] = None
+	if args.bundle_zip:
+		zip_path = create_upload_zip(repo_root, markdown_path, local_image_path, zip_dir)
+		print("\nNEXT STEP: Upload this one file to your server and unzip it in the website folder:")
+		print(f"  {zip_path}")
+		print("This ZIP places files into content/news/... and static/uploads/news/... automatically.")
+
 	print("Tip: Rebuild index if needed: node tools/news-cli.mjs rebuild-index")
 	return 0
 

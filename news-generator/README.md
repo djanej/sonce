@@ -8,23 +8,37 @@ A simple, standalone Python tool to create Sonce-compatible news posts without t
 
 See `SCHEMA.md` for the required front matter fields and examples.
 
-## Quick start
+## Easiest steps (for your father)
 
-1) Download just the generator (choose one):
-- ZIP of the whole repo: download, then keep only the `news-generator/` folder
-- Release ZIP: download `news-generator.zip` from Releases (if provided)
-- Git: `git clone` the repo and use the `news-generator/` folder
+Do this once:
+- Download the repository as a ZIP
+- Unzip it and open the folder
 
-2) Requirements:
-- Python 3.8+ installed
-- Run from the repository root so it can write to `content/` and `static/`
+Every time you want to publish news:
+1) Put your photo somewhere on your computer (optional)
+2) Open the folder in File Explorer / Finder
+3) Double-click the start script:
+   - Windows: `news-generator/start-windows.cmd`
+   - macOS: `news-generator/start-mac.command` (you may need to allow it once in System Settings)
+   - Linux: `news-generator/start-linux.sh`
+4) Answer the questions (title, date, summary, author, tags). If you picked a photo, paste its path (or drag it into the terminal if supported)
+5) Done! The tool creates:
+   - One Markdown file in `content/news/`
+   - If you chose a photo, it copies it to `static/uploads/news/YYYY/MM/`
+6) The tool also creates a ZIP file in `news-generator/output/` that contains both files ready for upload. Upload that single ZIP to your server and unzip it into the website folder.
 
-3) Create a post (interactive):
+If the site uses an index, rebuild it (optional):
 ```bash
-python3 news-generator/generator.py
+node tools/news-cli.mjs rebuild-index
 ```
 
-Create a post (one-shot command):
+## Command line (optional)
+Interactive with ZIP and checks:
+```bash
+python3 news-generator/generator.py --interactive --bundle-zip --verify --auto-index
+```
+
+One-shot:
 ```bash
 python3 news-generator/generator.py \
   --title "Community Update" \
@@ -32,26 +46,14 @@ python3 news-generator/generator.py \
   --summary "Short summary here." \
   --author "Sonce Team" \
   --tags "news,update" \
-  --image /path/to/hero.jpg
+  --image /path/to/hero.jpg \
+  --bundle-zip --verify --auto-index
 ```
 
 Where files go:
 - Markdown: `content/news/2025-09-05-community-update.md`
 - Image: `static/uploads/news/2025/09/2025-09-05-community-update-hero.jpg`
-
-Rebuild the news index (optional if your site auto-builds it):
-```bash
-node tools/news-cli.mjs rebuild-index
-```
-
-## For your father (simple steps)
-- Download the repository ZIP and open it
-- Open the folder, keep only `news-generator/` if you want
-- Put your image file somewhere on your computer
-- Open Terminal in the repository folder
-- Run: `python3 news-generator/generator.py` and follow prompts
-- The tool creates one Markdown file in `content/news/`. Upload this file to the server
-- If you included an image, it is copied into `static/uploads/news/YYYY/MM/`; upload that folder too
+- Upload bundle: `news-generator/output/news-upload-*.zip`
 
 ## Troubleshooting (common issues)
 - Wrong folder: run the tool from the repo root so `content/` and `static/` exist

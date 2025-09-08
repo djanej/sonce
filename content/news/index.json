@@ -1,12 +1,30 @@
 [
   {
+    "id": "2025-09-18-compatibility-test",
+    "title": "Compatibility Test",
+    "date": "2025-09-18",
+    "author": "Automation",
+    "summary": "Test generation",
+    "image": "/static/uploads/news/2025/09/2025-09-18-compatibility-test-hero.jpg",
+    "imageAlt": "Compatibility Test",
+    "tags": [
+      "news",
+      "test"
+    ],
+    "slug": "compatibility-test",
+    "filename": "2025-09-18-compatibility-test.md",
+    "path": "/content/news/2025-09-18-compatibility-test.md",
+    "link": "/content/news/2025-09-18-compatibility-test.md",
+    "readingTimeMinutes": 1,
+    "readingTimeLabel": "1 min"
+  },
+  {
     "id": "2025-09-05-system-test-2",
     "title": "system test 2",
     "date": "2025-09-05",
     "author": "system test3",
     "summary": "system testing.",
-    "excerpt": "system testing.",
-    "description": "system testing.",
+    "image": "",
     "imageAlt": "system test 2",
     "tags": [
       "system test"
