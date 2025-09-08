@@ -269,6 +269,11 @@
                 <div id="content" class="news-article prose prose-lg max-w-none"></div>
                 <p id="post-empty" class="hidden text-gray-600 text-center py-12">Objava ni najdena.</p>
                 
+                <nav id="prev-next" aria-label="Navigacija med objavami" class="hidden mt-10 grid grid-cols-1 md:grid-cols-2 gap-4"></nav>
+                <section id="related" class="hidden mt-12">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Sorodne objave</h2>
+                    <div id="related-list" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+                </section>
                 <div id="share" class="hidden mt-8 flex flex-wrap items-center gap-3">
                     <button id="share-btn" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-600 text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500">
                         <span>Deli</span>
@@ -277,11 +282,6 @@
                         Kopiraj povezavo
                     </button>
                 </div>
-                <nav id="prev-next" class="hidden mt-10 grid grid-cols-1 md:grid-cols-2 gap-4"></nav>
-                <section id="related" class="hidden mt-12">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Sorodne objave</h2>
-                    <div id="related-list" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
-                </section>
             </div>
         </article>
     </main>
@@ -467,8 +467,10 @@
                         const prev = sorted[idx - 1];
                         const a = document.createElement('a');
                         a.href = (prev.path || prev.link) ? `/news/post.html?path=${encodeURIComponent(prev.path || prev.link)}` : `/news/post.html?slug=${encodeURIComponent(prev.slug)}`;
-                        a.className = 'block p-4 border border-gray-200 rounded-xl hover:border-orange-300 hover:shadow-sm';
-                        a.innerHTML = `<div class="text-sm text-gray-500 mb-1">← Prejšnja</div><div class="font-medium text-gray-900 line-clamp-2">${escapeHtml(prev.title||'')}</div>`;
+                        a.rel = 'prev';
+                        a.title = (prev.title || '').toString();
+                        a.className = 'group block p-4 border border-gray-200 rounded-xl bg-white hover:border-orange-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors transition-shadow';
+                        a.innerHTML = `<div class="text-xs font-medium tracking-wider text-gray-500 mb-1">← Prejšnja</div><div class="font-semibold text-gray-900 line-clamp-2 group-hover:text-orange-700">${escapeHtml(prev.title||'')}</div>`;
                         els.prevNext.appendChild(a);
                         hasAny = true;
                     }
@@ -476,8 +478,10 @@
                         const next = sorted[idx + 1];
                         const a = document.createElement('a');
                         a.href = (next.path || next.link) ? `/news/post.html?path=${encodeURIComponent(next.path || next.link)}` : `/news/post.html?slug=${encodeURIComponent(next.slug)}`;
-                        a.className = 'block p-4 border border-gray-200 rounded-xl hover:border-orange-300 hover:shadow-sm md:ml-auto';
-                        a.innerHTML = `<div class="text-sm text-gray-500 mb-1">Naslednja →</div><div class="font-medium text-gray-900 line-clamp-2">${escapeHtml(next.title||'')}</div>`;
+                        a.rel = 'next';
+                        a.title = (next.title || '').toString();
+                        a.className = 'group block p-4 border border-gray-200 rounded-xl bg-white hover:border-orange-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors transition-shadow md:ml-auto';
+                        a.innerHTML = `<div class="text-xs font-medium tracking-wider text-gray-500 mb-1">Naslednja →</div><div class="font-semibold text-gray-900 line-clamp-2 group-hover:text-orange-700">${escapeHtml(next.title||'')}</div>`;
                         els.prevNext.appendChild(a);
                         hasAny = true;
                     }
