@@ -1,5 +1,22 @@
 [
   {
+    "id": "2025-09-08-4535",
+    "title": "SIvisdjfisdfik",
+    "date": "2025-09-08",
+    "author": "Moj oce",
+    "summary": "Test1",
+    "excerpt": "Test1",
+    "description": "Test1",
+    "hero": "/static/uploads/news/ /static/uploads/news/2025/09/2025-09-08-4535-hero.jpeg",
+    "imageAlt": "smiling sigma",
+    "slug": "4535",
+    "filename": "2025-09-08-4535.md",
+    "path": "/content/news/2025-09-08-4535.md",
+    "link": "/content/news/2025-09-08-4535.md",
+    "readingTimeMinutes": 1,
+    "readingTimeLabel": "1 min"
+  },
+  {
     "id": "2025-09-05-system-test-2",
     "title": "system test 2",
     "date": "2025-09-05",
