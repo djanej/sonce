@@ -17,6 +17,10 @@ How to use (no command line):
    - Windows: `run_watch_incoming.bat` (keeps watching) or `run_import_once.bat`
    - Mac/Linux: `run_watch_incoming.sh` (keeps watching) or `run_import_once.sh`
 
+GitHub automation:
+- When a ZIP under `incoming/` is pushed to the `main` branch, GitHub Actions automatically runs the importer and commits the moved files.
+- You will see a commit with the message `ci: import incoming zips` after the automation finishes.
+
 Troubleshooting:
 - If nothing happens, ensure the script window stays open (watch mode) or run the one‑time import again
 - If the ZIP has no `content/news/*.md`, the importer will skip it
