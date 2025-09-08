@@ -1,0 +1,6 @@
+*.tmp/
+*.unpacked/
+*.partial/
+*.work/
+*.LOCK
+
