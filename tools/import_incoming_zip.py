@@ -24,20 +24,60 @@ def info(msg: str):
 
 
 def fix_paths_in_text(text: str) -> str:
-    # Normalize any site-relative paths under content->static conventions
-    # Front matter image lines: image: /static/uploads/news/YYYY/MM/...
-    # Convert inline image markdown if it mistakenly used relative paths like images/... to absolute under static
-    text = re.sub(r"(image:\s*)(['\"]?)(?!/static/uploads/news/)([^\n'\"]+)(['\"]?)",
-                  lambda m: f"{m.group(1)}\"/static/uploads/news/{m.group(3).lstrip('/')}\"",
-                  text)
-    # Inline markdown images ![alt](path) -> if path starts with static/uploads/news keep, if content/... or images/... -> rewrite to /static/uploads/news/... best-effort
+    """Normalize image paths in frontmatter and markdown.
+
+    - Frontmatter: image: "/static/uploads/news/YYYY/MM/....ext"
+      * Trim whitespace and quotes; ensure single /static/uploads/news/ prefix
+    - Markdown inline images: ![alt](path)
+      * Leave http(s):, blob:, data: untouched
+      * If already absolute under /static/uploads/news/, leave as-is
+      * If relative (e.g., images/foo.jpg or content/news/...), rewrite to /static/uploads/news/<relative>
+    """
+
+    def normalize_hero_path(raw: str) -> str:
+        val = (raw or '').strip().strip('"\'')
+        # Collapse accidental double prefixes and internal whitespace
+        val = re.sub(r"\s+", " ", val)
+        # If it already contains the uploads root, reduce duplicates and remove spaces
+        if '/static/uploads/news/' in val:
+            # Remove any accidental spaces around the slash and collapse duplicate segments
+            val = val.replace(' /static/uploads/news/', '/static/uploads/news/')
+            val = val.replace('/static/uploads/news/ ', '/static/uploads/news/')
+            # If duplicated twice, reduce to one occurrence
+            val = re.sub(r"(?:/static/uploads/news/)+", "/static/uploads/news/", val)
+            # Ensure it starts with a slash
+            if not val.startswith('/'):
+                val = '/' + val
+            return val
+        # Not absolute: prepend uploads root
+        val = val.lstrip('/')
+        return f"/static/uploads/news/{val}"
+
+    # Front matter image: lines starting with image:
+    def repl_frontmatter(m):
+        prefix = m.group(1)
+        value = m.group(2)
+        normalized = normalize_hero_path(value)
+        return f"{prefix}\"{normalized}\""
+
+    text = re.sub(r"^(image:\s*)([^\n]+)$", repl_frontmatter, text, flags=re.MULTILINE)
+
+    # Inline markdown images
     def repl_markdown(m):
         alt = m.group(1)
-        path = m.group(2)
-        if path.startswith('/static/uploads/news/'):
+        path = (m.group(2) or '').strip()
+        # Leave external or blob/data URLs as-is
+        if re.match(r"^(?:https?:|blob:|data:)", path):
             return m.group(0)
-        path = path.lstrip('/')
-        return f"![{alt}](/{'static/uploads/news/' + path})"
+        # Already absolute under uploads
+        if path.startswith('/static/uploads/news/'):
+            # Normalize duplicate segments just in case
+            fixed = re.sub(r"(?:/static/uploads/news/)+", "/static/uploads/news/", path)
+            return f"![{alt}]({fixed})"
+        # Rewrite relative to uploads root
+        fixed = f"/static/uploads/news/{path.lstrip('/')}"
+        return f"![{alt}]({fixed})"
+
     text = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", repl_markdown, text)
     return text
 

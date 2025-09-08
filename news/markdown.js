@@ -7,6 +7,9 @@ class MarkdownConverter {
             { pattern: /^## (.*$)/gim, replacement: '<h2 class="text-2xl font-semibold mt-8 mb-4 text-gray-900">$1</h2>' },
             { pattern: /^# (.*$)/gim, replacement: '<h1 class="text-3xl font-bold mt-8 mb-4 text-gray-900">$1</h1>' },
             
+            // Images (place before links so it doesn't get treated as a link)
+            { pattern: /!\[([^\]]*)\]\(([^)]+)\)/g, replacement: '<img src="$2" alt="$1" class="my-4 rounded-lg max-w-full h-auto">' },
+
             // Bold and italic
             { pattern: /\*\*(.*?)\*\*/g, replacement: '<strong class="font-semibold">$1</strong>' },
             { pattern: /\*(.*?)\*/g, replacement: '<em class="italic">$1</em>' },
@@ -18,6 +21,9 @@ class MarkdownConverter {
             // Links
             { pattern: /\[([^\]]+)\]\(([^)]+)\)/g, replacement: '<a href="$2" class="text-primary hover:underline">$1</a>' },
             
+            // Blockquotes
+            { pattern: /^>\s?(.*$)/gim, replacement: '<blockquote class="border-l-4 border-gray-200 pl-4 italic text-gray-700 my-4">$1</blockquote>' },
+
             // Lists
             { pattern: /^\* (.*$)/gim, replacement: '<li class="ml-4">$1</li>' },
             { pattern: /^- (.*$)/gim, replacement: '<li class="ml-4">$1</li>' },
