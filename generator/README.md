@@ -4,9 +4,18 @@ This folder contains a tiny offline app that creates draft news files compatible
 
 ## What you get
 - A simple app to type in a news title, date, summary, author, tags, and pick images
-- It generates one Markdown file and, if you added images, copies/renames them into the correct folder structure
-- It can also create a ZIP that an editor can drop into the website repository
+- Generates one Markdown file and, if you added images, copies/renames them into the correct folder structure
+- Can also create a ZIP that an editor can drop into the website repository
 - All drafts are clearly marked with `draft: true` in the front matter
+- Dark mode and large text options for accessibility (View menu)
+- Simple mode (Dad): big one‑click “Send to Website” that generates, zips, and copies
+- Live counters (title 0/100, summary 0/200) and reading-time estimate
+- Inline preview of the generated Markdown (Preview button)
+- Image preview for the hero image (if Pillow is installed)
+- Quick insert of image Markdown into the body (Insert hero / Insert selected)
+- Save/Load draft to JSON (File menu) and persistent preferences (author, theme)
+- Optional image optimization for smaller files (View → Optimize images)
+- Remembers last `incoming/` folder for quick send
 
 ## Quick start (no command line)
 1. Download the generator-only ZIP (or this `generator/` folder) and unzip it anywhere on your computer.
@@ -14,7 +23,7 @@ This folder contains a tiny offline app that creates draft news files compatible
 3. Double‑click one of these:
    - On Windows: `run_windows.bat`
    - On Mac or Linux: `run_mac_linux.sh` (you may need to right‑click > Open)
-4. Fill in the form and click “Generate Draft”. Tooltips explain each field.
+4. For the simplest flow: click “Send to Website (One Click)”. It will generate, zip, and ask where to copy (it remembers the folder next time). Tooltips explain each field. Use View → Dark mode / Large text as needed.
 5. The draft will be saved into `generator/output/` as:
    - `content/news/YYYY-MM-DD-slug.md` (your news file)
    - `static/uploads/news/YYYY/MM/...` (renamed images if you selected them)
@@ -67,6 +76,8 @@ See `generator/examples/` for two ready‑to‑drop drafts.
   - `content/news/` with your `YYYY-MM-DD-slug.md`
   - `static/uploads/news/YYYY/MM/` with your renamed images
 - Details are in `generator/ZIP_FORMAT.md`.
+
+The app also runs a quick preflight validation on the ZIP (checks filename format and folder structure). When copying to your repository’s `incoming/` folder, if `tools/validate_incoming_zip.py` is present, it is invoked for an extra validation note.
 
 ## For Dad: three simple steps
 1. Type the title, click Today, optionally pick an image, and click Generate Draft.

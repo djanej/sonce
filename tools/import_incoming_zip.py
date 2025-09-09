@@ -82,6 +82,39 @@ def fix_paths_in_text(text: str) -> str:
     return text
 
 
+def ensure_hero_in_frontmatter(md_text: str) -> str:
+    """If frontmatter has image under uploads but no hero field, add hero equal to image for site UI convenience."""
+    try:
+        fm_match = re.match(r"^---\n([\s\S]*?)\n---\n", md_text)
+        if not fm_match:
+            return md_text
+        fm = fm_match.group(1)
+        # Extract image: line
+        img_match = re.search(r"^image:\s*\"?([^\n\"]+)\"?\s*$", fm, flags=re.MULTILINE)
+        if not img_match:
+            return md_text
+        image_val = img_match.group(1).strip()
+        if '/static/uploads/news/' not in image_val:
+            return md_text
+        # If hero: exists, skip
+        if re.search(r"^hero:\s*", fm, flags=re.MULTILINE):
+            return md_text
+        # Insert hero: after image: line
+        start, end = fm_match.span(0)
+        lines = fm.split('\n')
+        new_lines = []
+        inserted = False
+        for line in lines:
+            new_lines.append(line)
+            if not inserted and line.strip().startswith('image:'):
+                new_lines.append(f"hero: \"{image_val}\"")
+                inserted = True
+        new_fm = '\n'.join(new_lines)
+        return md_text.replace(fm, new_fm, 1)
+    except Exception:
+        return md_text
+
+
 def rebuild_index() -> None:
     try:
         subprocess.run(['node', str(ROOT / 'tools' / 'validate-news.mjs')], check=False)
@@ -141,6 +174,7 @@ def import_zip(zip_path: Path) -> bool:
         dest_md.parent.mkdir(parents=True, exist_ok=True)
         text = md.read_text(encoding='utf-8')
         fixed = fix_paths_in_text(text)
+        fixed = ensure_hero_in_frontmatter(fixed)
         dest_md.write_text(fixed, encoding='utf-8')
         moved_files.append(dest_md)
 

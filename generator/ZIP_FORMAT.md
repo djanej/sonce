@@ -11,5 +11,10 @@ Notes:
 - Filenames are safe, lowercase, and include the date and slug.
 - If no images are selected, only the markdown file is included.
 
+Preflight checks performed by the app when creating the ZIP:
+- Verifies a markdown exists under `content/news/` and matches `YYYY-MM-DD-slug.md`
+- Spot-checks `static/uploads/news/YYYY/MM/…` image paths
+- Tests the archive for obvious corruption
+
 Related spec: see `NEWS_FORMAT_SPEC.md` at the repository root.
 
