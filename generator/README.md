@@ -8,11 +8,14 @@ This folder contains a tiny offline app that creates draft news files compatible
 - Can also create a ZIP that an editor can drop into the website repository
 - All drafts are clearly marked with `draft: true` in the front matter
 - Dark mode and large text options for accessibility (View menu)
+- Simple mode (Dad): big one‑click “Send to Website” that generates, zips, and copies
 - Live counters (title 0/100, summary 0/200) and reading-time estimate
 - Inline preview of the generated Markdown (Preview button)
 - Image preview for the hero image (if Pillow is installed)
 - Quick insert of image Markdown into the body (Insert hero / Insert selected)
 - Save/Load draft to JSON (File menu) and persistent preferences (author, theme)
+- Optional image optimization for smaller files (View → Optimize images)
+- Remembers last `incoming/` folder for quick send
 
 ## Quick start (no command line)
 1. Download the generator-only ZIP (or this `generator/` folder) and unzip it anywhere on your computer.
@@ -20,7 +23,7 @@ This folder contains a tiny offline app that creates draft news files compatible
 3. Double‑click one of these:
    - On Windows: `run_windows.bat`
    - On Mac or Linux: `run_mac_linux.sh` (you may need to right‑click > Open)
-4. Fill in the form and click “Generate Draft”. Tooltips explain each field. Use View → Dark mode / Large text as needed.
+4. For the simplest flow: click “Send to Website (One Click)”. It will generate, zip, and ask where to copy (it remembers the folder next time). Tooltips explain each field. Use View → Dark mode / Large text as needed.
 5. The draft will be saved into `generator/output/` as:
    - `content/news/YYYY-MM-DD-slug.md` (your news file)
    - `static/uploads/news/YYYY/MM/...` (renamed images if you selected them)

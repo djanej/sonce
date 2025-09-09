@@ -49,7 +49,7 @@ def ensure_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
 
 
-def copy_image_to_uploads(src_path: Path, dest_dir: Path, dest_filename: str) -> Path:
+def copy_image_to_uploads(src_path: Path, dest_dir: Path, dest_filename: str, optimize: bool = False) -> Path:
     ensure_dir(dest_dir)
     ext = src_path.suffix.lower()
     target = dest_dir / f"{dest_filename}{ext}"
@@ -58,7 +58,24 @@ def copy_image_to_uploads(src_path: Path, dest_dir: Path, dest_filename: str) ->
     while target.exists():
         target = dest_dir / f"{dest_filename}-{counter}{ext}"
         counter += 1
-    shutil.copy2(src_path, target)
+    if optimize:
+        try:
+            from PIL import Image  # type: ignore
+            with Image.open(src_path) as im:
+                save_kwargs = {}
+                if ext in (".jpg", ".jpeg"):
+                    # convert to RGB if needed
+                    if im.mode in ("RGBA", "P"):
+                        im = im.convert("RGB")
+                    save_kwargs = {"quality": 85, "optimize": True, "progressive": True}
+                elif ext == ".png":
+                    save_kwargs = {"optimize": True}
+                # Avoid very large metadata blocks
+                im.save(target, **save_kwargs)
+        except Exception:
+            shutil.copy2(src_path, target)
+    else:
+        shutil.copy2(src_path, target)
     return target
 
 
@@ -125,6 +142,10 @@ class NewsGeneratorApp:
         self.var_image_alt = tk.StringVar()
         self.var_dark_mode = tk.BooleanVar(value=False)
         self.var_large_text = tk.BooleanVar(value=False)
+        self.var_simple_mode = tk.BooleanVar(value=True)
+        self.var_optimize_images = tk.BooleanVar(value=True)
+        self.var_remember_incoming = tk.BooleanVar(value=True)
+        self._last_incoming_dir: Path | None = None
 
         # Load preferences
         self._load_preferences()
@@ -233,19 +254,24 @@ class NewsGeneratorApp:
         # Actions
         actions = ttk.Frame(container)
         actions.grid(row=row, column=0, columnspan=4, sticky="ew", pady=(8,0))
+        # Simple mode one-click
+        self.btn_one_click = ttk.Button(actions, text="Send to Website (One Click)", command=self.one_click_send)
+        self.btn_one_click.grid(row=0, column=0, padx=(0,8))
+        self._add_tooltip(self.btn_one_click, "Generate draft, create ZIP, and copy to incoming in one go.")
+
         btn_gen = ttk.Button(actions, text="Generate Draft", command=self.generate_draft)
-        btn_gen.grid(row=0, column=0, padx=(0,8))
+        btn_gen.grid(row=0, column=1, padx=(0,8))
         self._add_tooltip(btn_gen, "Create the files on your computer (no publishing).")
 
         btn_zip = ttk.Button(actions, text="Create ZIP", command=self.create_zip)
-        btn_zip.grid(row=0, column=1, padx=(0,8))
+        btn_zip.grid(row=0, column=2, padx=(0,8))
         self._add_tooltip(btn_zip, "Packs the draft and images into one ZIP.")
 
-        ttk.Button(actions, text="Preview", command=self.show_preview).grid(row=0, column=2, padx=(0,8))
-        ttk.Button(actions, text="Open Output Folder", command=self.open_output_folder).grid(row=0, column=3, padx=(0,8))
-        ttk.Button(actions, text="Copy ZIP to incoming…", command=self.copy_zip_to_incoming).grid(row=0, column=4, padx=(0,8))
-        ttk.Button(actions, text="Reset Form", command=self.reset_form).grid(row=0, column=5, padx=(0,8))
-        ttk.Button(actions, text="How it works", command=self.show_help).grid(row=0, column=6)
+        ttk.Button(actions, text="Preview", command=self.show_preview).grid(row=0, column=3, padx=(0,8))
+        ttk.Button(actions, text="Open Output Folder", command=self.open_output_folder).grid(row=0, column=4, padx=(0,8))
+        ttk.Button(actions, text="Copy ZIP to incoming…", command=self.copy_zip_to_incoming).grid(row=0, column=5, padx=(0,8))
+        ttk.Button(actions, text="Reset Form", command=self.reset_form).grid(row=0, column=6, padx=(0,8))
+        ttk.Button(actions, text="How it works", command=self.show_help).grid(row=0, column=7)
 
         # Status
         row += 1
@@ -356,7 +382,7 @@ class NewsGeneratorApp:
         written_paths: list[Path] = []
         if self.hero_image_path:
             hero_base = f"{date_str}-{slug}-hero"
-            copied = copy_image_to_uploads(self.hero_image_path, uploads_dir, hero_base)
+            copied = copy_image_to_uploads(self.hero_image_path, uploads_dir, hero_base, optimize=bool(self.var_optimize_images.get()))
             # Compute absolute web path
             image_url = "/" + "/".join(copied.relative_to(OUTPUT_ROOT).parts)
             image_url = image_url.replace("\\", "/")
@@ -369,7 +395,7 @@ class NewsGeneratorApp:
             if not desc or desc == "hero":
                 desc = "image"
             add_base = f"{date_str}-{slug}-{desc}"
-            copied = copy_image_to_uploads(add_path, uploads_dir, add_base)
+            copied = copy_image_to_uploads(add_path, uploads_dir, add_base, optimize=bool(self.var_optimize_images.get()))
             written_paths.append(copied)
 
         # Build frontmatter (compatible with site spec; date as YYYY-MM-DD)
@@ -508,7 +534,10 @@ class NewsGeneratorApp:
             "Choose website folder",
             "Select your website folder. If you click on the 'incoming' folder itself, that's okay too."
         )
-        selected = filedialog.askdirectory(title="Select your website folder (or incoming)")
+        initialdir = None
+        if self.var_remember_incoming.get() and self._last_incoming_dir and self._last_incoming_dir.exists():
+            initialdir = str(self._last_incoming_dir)
+        selected = filedialog.askdirectory(title="Select your website folder (or incoming)", initialdir=initialdir if initialdir else None)
         if not selected:
             return
         target = Path(selected)
@@ -518,6 +547,9 @@ class NewsGeneratorApp:
             dest = incoming_dir / self.last_zip_path.name
             shutil.copy2(self.last_zip_path, dest)
             self.var_status.set(f"Copied ZIP to: {dest}")
+            if self.var_remember_incoming.get():
+                self._last_incoming_dir = incoming_dir
+                self._save_preferences()
             # If validator exists, try to run it for extra confidence
             validator = (target if target.name.lower() != 'incoming' else target.parent) / 'tools' / 'validate_incoming_zip.py'
             if validator.exists():
@@ -583,8 +615,11 @@ class NewsGeneratorApp:
         menubar.add_cascade(label="File", menu=filemenu)
 
         viewmenu = tk.Menu(menubar, tearoff=0)
+        viewmenu.add_checkbutton(label="Simple mode (Dad)", onvalue=True, offvalue=False, variable=self.var_simple_mode, command=self.apply_simple_mode)
         viewmenu.add_checkbutton(label="Dark mode", onvalue=True, offvalue=False, variable=self.var_dark_mode, command=self.apply_theme)
         viewmenu.add_checkbutton(label="Large text", onvalue=True, offvalue=False, variable=self.var_large_text, command=self.apply_theme)
+        viewmenu.add_checkbutton(label="Optimize images (smaller files)", onvalue=True, offvalue=False, variable=self.var_optimize_images)
+        viewmenu.add_checkbutton(label="Remember incoming folder", onvalue=True, offvalue=False, variable=self.var_remember_incoming)
         menubar.add_cascade(label="View", menu=viewmenu)
 
         helpmenu = tk.Menu(menubar, tearoff=0)
@@ -754,6 +789,17 @@ class NewsGeneratorApp:
         except Exception:
             pass
 
+    def apply_simple_mode(self):
+        # In simple mode, highlight one-click action
+        try:
+            if self.var_simple_mode.get():
+                self.btn_one_click.configure(style='Accent.TButton')
+            else:
+                self.btn_one_click.configure(style='TButton')
+            self._save_preferences()
+        except Exception:
+            pass
+
     def _load_preferences(self):
         try:
             ensure_dir(OUTPUT_ROOT)
@@ -762,6 +808,11 @@ class NewsGeneratorApp:
                 self.var_author.set(str(data.get('defaultAuthor', '')))
                 self.var_dark_mode.set(bool(data.get('darkMode', False)))
                 self.var_large_text.set(bool(data.get('largeText', False)))
+                self.var_simple_mode.set(bool(data.get('simpleMode', True)))
+                self.var_optimize_images.set(bool(data.get('optimizeImages', True)))
+                self.var_remember_incoming.set(bool(data.get('rememberIncoming', True)))
+                last_incoming = data.get('lastIncomingDir', '')
+                self._last_incoming_dir = Path(last_incoming) if last_incoming else None
         except Exception:
             pass
 
@@ -772,10 +823,37 @@ class NewsGeneratorApp:
                 'defaultAuthor': self.var_author.get().strip(),
                 'darkMode': bool(self.var_dark_mode.get()),
                 'largeText': bool(self.var_large_text.get()),
+                'simpleMode': bool(self.var_simple_mode.get()),
+                'optimizeImages': bool(self.var_optimize_images.get()),
+                'rememberIncoming': bool(self.var_remember_incoming.get()),
+                'lastIncomingDir': str(self._last_incoming_dir) if self._last_incoming_dir else '',
             }
             PREFS_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8')
         except Exception:
             pass
+
+    def one_click_send(self):
+        # One step: validate inputs, generate draft, zip, ask folder (or reuse), copy
+        ok, msg = self._validate_inputs()
+        if not ok:
+            messagebox.showerror("Invalid input", msg)
+            return
+        self.generate_draft()
+        self.create_zip()
+        # Reuse last incoming if remembered
+        if self.var_remember_incoming.get() and self._last_incoming_dir and self._last_incoming_dir.exists():
+            try:
+                dest = self._last_incoming_dir / (self.last_zip_path.name if self.last_zip_path else "")
+                if self.last_zip_path and self.last_zip_path.exists():
+                    shutil.copy2(self.last_zip_path, dest)
+                    self.var_status.set(f"Copied ZIP to: {dest}")
+                    messagebox.showinfo("Copied", f"ZIP copied to:\n{dest}\n\nCommit and push this to GitHub (main). The site will import it automatically.")
+                    return
+            except Exception:
+                # Fall back to normal flow
+                pass
+        # Otherwise, ask
+        self.copy_zip_to_incoming()
 
     def save_draft(self):
         ensure_dir(OUTPUT_ROOT)
