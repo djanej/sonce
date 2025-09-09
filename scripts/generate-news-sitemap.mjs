@@ -34,10 +34,11 @@ async function main(){
   }
 
   const latest = new Date().toISOString().slice(0,10);
-  const urls = data.slice(0, 100).map(p => {
+  const urls = data.filter(p => !p.draft).slice(0, 100).map(p => {
     const title = p.title || '';
     const date = (p.date || '').slice(0,10) || latest;
-    return `  <url>\n    <loc>${esc(postUrl(p))}</loc>\n    <news:news>\n      <news:publication>\n        <news:name>Sonce Slovenije</news:name>\n        <news:language>sl</news:language>\n      </news:publication>\n      <news:publication_date>${esc(date)}</news:publication_date>\n      <news:title>${esc(title)}</news:title>\n    </news:news>\n  </url>`;
+    const keywords = Array.isArray(p.tags) ? p.tags.join(', ') : '';
+    return `  <url>\n    <loc>${esc(postUrl(p))}</loc>\n    <news:news>\n      <news:publication>\n        <news:name>Sonce Slovenije</news:name>\n        <news:language>sl</news:language>\n      </news:publication>\n      <news:publication_date>${esc(date)}</news:publication_date>\n      <news:title>${esc(title)}</news:title>\n      ${keywords ? `<news:keywords>${esc(keywords)}</news:keywords>` : ''}\n    </news:news>\n  </url>`;
   }).join('\n');
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">\n${urls}\n</urlset>\n`;
