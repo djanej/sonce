@@ -312,7 +312,7 @@
                 sortBy: 'date_desc'
             };
 
-            const BASE_URL = location.origin || 'https://sonce.org';
+            const BASE_URL = 'https://sonce.org';
 
             function escapeHtml(str){
                 const p = document.createElement('p');
@@ -379,8 +379,7 @@
                 const slug = p.slug || (p.title ? String(p.title).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') : '');
                 const hero = p.hero || p.image || p.cover || '';
                 const tags = normalizeTags(p.tags || p.tag || p.categories || p.category);
-                const draft = Boolean(p.draft === true || String(p.draft).toLowerCase() === 'true');
-                return { ...p, slug, hero, tags, draft };
+                return { ...p, slug, hero, tags };
             }
 
             function getUniqueTags(posts){
@@ -479,18 +478,6 @@
                             </div>
                         </div>`;
                     
-                    // Prefetch the markdown for faster post open
-                    const href = a.href;
-                    a.addEventListener('mouseenter', () => {
-                        try {
-                            const url = new URL(href);
-                            const params = new URLSearchParams(url.search);
-                            const pathParam = params.get('path');
-                            const slugParam = params.get('slug');
-                            const target = pathParam || (slugParam ? `/content/news/${slugParam}.md` : '');
-                            if (target) fetch(target, { cache: 'force-cache' }).catch(()=>{});
-                        } catch(e) {}
-                    }, { once: true });
                     frag.appendChild(a);
                 });
                 
@@ -640,11 +627,9 @@
             }
 
             function applyFilters(){
-                // Hide drafts by default
-                const visible = state.allPosts.filter(p => !p.draft);
                 state.filteredPosts = state.activeTag ? 
-                    visible.filter(p => (p.tags || []).includes(state.activeTag)) : 
-                    visible.slice();
+                    state.allPosts.filter(p => (p.tags || []).includes(state.activeTag)) : 
+                    state.allPosts.slice();
                 
                 if (state.query){
                     const q = normalizeText(state.query);
@@ -699,7 +684,7 @@
                     const res = await fetch('/content/news/index.json', { cache: 'no-cache' });
                     if (!res.ok) throw new Error('Failed to load index.json');
                     
-                    const data = await res.json().catch(()=>[]);
+                    const data = await res.json();
                     const raw = Array.isArray(data) ? data : Array.isArray(data.posts) ? data.posts : [];
                     state.allPosts = raw.map(normalizePost);
                     
