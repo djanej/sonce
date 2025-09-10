@@ -1,80 +1,212 @@
-### Sonce News Maker (Simple, Offline)
+### Sonce News Maker (Multiple Options)
 
-This folder contains a tiny offline app that creates draft news files compatible with the website. It does not publish or push anything. It simply produces files you can send or copy into the website.
+This folder contains multiple tools for creating draft news files compatible with the website. Choose the option that works best for you:
 
-## What you get
-- A simple app to type in a news title, date, summary, author, tags, and pick images
-- It generates one Markdown file and, if you added images, copies/renames them into the correct folder structure
-- It can also create a ZIP that an editor can drop into the website repository
+## 🐍 Python GUI Generator (Advanced)
+
+**File**: `news_generator.py`  
+**Best for**: Users who prefer desktop applications with advanced features
+
+### Features:
+- Desktop GUI application with Tkinter
+- Advanced image management and validation
+- ZIP file creation and distribution
+- Form validation and error handling
+- Settings persistence
+- Tooltips and help system
+
+### Quick Start:
+1. Double-click `run_mac_linux.sh` (Mac/Linux) or `run_windows.bat` (Windows)
+2. Fill in the form and click "Generate Draft"
+3. Click "Create ZIP" to package everything
+4. Use "Copy ZIP to incoming…" to place it in your website folder
+
+## 🌐 HTML Web Editor (Modern)
+
+**File**: `html-editor/index.html`  
+**Best for**: Users who prefer web-based tools with modern features
+
+### Features:
+- Beautiful web-based interface with sun-inspired design
+- Live Markdown preview
+- Drag & drop image handling
+- Templates and version history
+- Direct repository integration
+- Auto-save and draft management
+- Advanced export options
+
+### Quick Start:
+1. Open `html-editor/index.html` in your web browser
+2. Fill in the form and use the Markdown toolbar
+3. Click "Connect Repo Folder" to connect directly to your website
+4. Click "Save to Repo" to save directly to your content folder
+
+## 📋 What You Get
+
+Both generators produce:
+- A Markdown file with YAML frontmatter in `content/news/YYYY-MM-DD-slug.md` format
+- Properly organized images in `static/uploads/news/YYYY/MM/` folders
+- Compatible with the website's news system
 - All drafts are clearly marked with `draft: true` in the front matter
 
-## Quick start (no command line)
-1. Download the generator-only ZIP (or this `generator/` folder) and unzip it anywhere on your computer.
-2. Open the folder named `generator`.
-3. Double‑click one of these:
-   - On Windows: `run_windows.bat`
-   - On Mac or Linux: `run_mac_linux.sh` (you may need to right‑click > Open)
-4. Fill in the form and click “Generate Draft”. Tooltips explain each field.
-5. The draft will be saved into `generator/output/` as:
-   - `content/news/YYYY-MM-DD-slug.md` (your news file)
-   - `static/uploads/news/YYYY/MM/...` (renamed images if you selected them)
-6. Click “Create ZIP” to produce one ZIP containing both the Markdown and image files in the exact structure the website expects.
-7. Click “Copy ZIP to incoming…” and choose your website folder (or its `incoming/` folder). The file will be copied there.
+## 🎯 Main Website Compatibility
 
-Note: The tool works fully offline. If your computer does not have Python installed, install it once from `python.org` and then double‑click the run file again.
+Both tools generate content that works 100% with the main website:
 
-## What to send to the editor
-- If you used “Create ZIP”: use the “Copy ZIP to incoming…” button, or send the ZIP file found in `generator/output/` (e.g. `news-draft-2025-01-15-welcome-post.zip`). The editor can copy it into the website repo under `incoming/`.
-- If you did not create a ZIP: send both of these from `generator/output/`:
-  - `content/news/YYYY-MM-DD-slug.md`
-  - the entire folder `static/uploads/news/YYYY/MM/` that contains your images
+### Required File Structure:
+```
+your-website/
+├── content/
+│   └── news/                    # News posts directory
+│       ├── index.json           # Auto-generated index file
+│       └── YYYY-MM-DD-slug.md   # Individual post files
+├── static/
+│   └── uploads/
+│       └── news/                # News images directory
+│           ├── YYYY/            # Year folders
+│           │   └── MM/          # Month folders
+│           │       └── YYYY-MM-DD-slug-hero.ext
+```
 
-## What happens next (automatic)
-- If you push the ZIP to GitHub on the `main` branch under `incoming/`, an automation imports it and moves files into the correct places.
-- Locally, you can also run `run_watch_incoming.*` from the repository root to import ZIPs you drop into `incoming/`.
-- Drafts are not published automatically; they remain drafts until reviewed.
+### Frontmatter Fields (YAML):
+```yaml
+---
+title: "Your Post Title"
+date: 2024-01-15
+author: "Author Name"
+slug: "optional-custom-slug"
+image: "/static/uploads/news/2024/01/2024-01-15-slug-hero.jpg"
+imageAlt: "Alt text for accessibility"
+summary: "Short excerpt shown on listing pages"
+tags: [news, community, events]
+draft: true
+---
+```
 
-## Format (simple schema)
-All fields are entered in the app. The generated Markdown file has a YAML front matter block:
+## 🚀 Upload Steps for Main Website
 
-Required fields:
-- title: text
-- date: calendar date in `YYYY-MM-DD`
+### Option 1: Direct Integration (HTML Editor)
+1. Use the HTML editor's "Connect Repo Folder" feature
+2. Select your website folder
+3. Create and save your post directly
+4. The editor handles everything automatically
 
-Recommended fields:
-- slug: lowercase, web‑friendly, dashes between words (auto‑generated from title)
-- summary: short preview text (up to ~200 chars)
-- author: text
-- tags: list of words (you can type comma‑separated; the generator writes a proper list)
-- image: an absolute path like `/static/uploads/news/YYYY/MM/YYYY-MM-DD-slug-hero.jpg` if you chose an image
-- draft: true (always set for safety)
-- datetime: full ISO 8601 timestamp with timezone (extra info retained for humans)
+### Option 2: ZIP Upload (Python Generator)
+1. Generate your post using the Python GUI
+2. Click "Create ZIP" to package everything
+3. Use "Copy ZIP to incoming…" to place it in your website folder
+4. Commit and push to GitHub - the site will import it automatically
 
-Notes:
-- The website expects `date` as `YYYY-MM-DD`. The generator also records `datetime` (full ISO) for your reference.
-- Images are renamed so the first image becomes `YYYY-MM-DD-slug-hero.ext` and any additional images become `YYYY-MM-DD-slug-{description}.ext`.
+### Option 3: Manual Upload
+1. Generate your post using either tool
+2. Download the Markdown file
+3. Place it in `content/news/` with correct naming
+4. Copy images to `static/uploads/news/YYYY/MM/` folders
+5. Run the news build script to update the index
 
-## Examples
-See `generator/examples/` for two ready‑to‑drop drafts.
+## 🔧 CLI Tool Usage
 
-## Packaging a download ZIP (for maintainers)
-- From the repository root or from this folder, run the packaging script:
-  - Linux/Mac: `generator/scripts/package-generator-zip.sh`
-- This creates `generator/dist/news-generator.zip` containing only the generator and documentation.
+The HTML editor includes a CLI tool (`html-editor/tools/news-cli.mjs`) for automation:
 
-## ZIP file format (what the app creates)
-- The ZIP contains two top-level folders when applicable:
-  - `content/news/` with your `YYYY-MM-DD-slug.md`
-  - `static/uploads/news/YYYY/MM/` with your renamed images
-- Details are in `generator/ZIP_FORMAT.md`.
+### Create a new post:
+```bash
+node html-editor/tools/news-cli.mjs create \
+  --title "Your Post Title" \
+  --date 2024-01-15 \
+  --author "Author Name" \
+  --slug "optional-slug" \
+  --image "/path/to/image.jpg" \
+  --copy-image \
+  --tags "news,community" \
+  --summary "Short excerpt" \
+  --body "Post content here"
+```
 
-## For Dad: three simple steps
-1. Type the title, click Today, optionally pick an image, and click Generate Draft.
-2. Click Create ZIP.
-3. Click Copy ZIP to incoming… and pick the website folder. Done.
+### Rebuild the index:
+```bash
+node html-editor/tools/news-cli.mjs rebuild-index
+```
 
-## Safety and privacy
-- No sign‑in or internet is required.
-- The generator never commits, pushes, or publishes anything.
-- No deploy keys or credentials are included.
+## 📊 Auto-Generated Index
 
+Both tools work with the system that automatically creates `content/news/index.json` with this structure:
+
+```json
+[
+  {
+    "id": "2024-01-15-slug",
+    "title": "Post Title",
+    "date": "2024-01-15",
+    "author": "Author Name",
+    "summary": "Post summary",
+    "image": "/static/uploads/news/2024/01/image.jpg",
+    "imageAlt": "Alt text",
+    "tags": ["news", "community"],
+    "slug": "slug",
+    "filename": "2024-01-15-slug.md",
+    "path": "/content/news/2024-01-15-slug.md",
+    "link": "/content/news/2024-01-15-slug.md",
+    "readingTimeMinutes": 3,
+    "readingTimeLabel": "3 min"
+  }
+]
+```
+
+## 🎨 Design Features
+
+### Python GUI:
+- Clean, functional desktop interface
+- Form-based input with validation
+- Progress indicators and status messages
+- Cross-platform compatibility
+
+### HTML Editor:
+- Warm color palette inspired by the sun
+- Smooth animations and transitions
+- Modern typography with proper hierarchy
+- Accessibility features and keyboard navigation
+- Responsive layout for all screen sizes
+
+## 🔍 Troubleshooting
+
+### Common Issues:
+
+1. **Post not appearing**: Check filename format and run the index rebuild
+2. **Images not loading**: Verify image paths and file permissions
+3. **Frontmatter errors**: Ensure YAML syntax is correct
+4. **Slug conflicts**: Use unique slugs or let auto-generation handle it
+
+### Validation:
+- Use the HTML editor's preview function to check rendering
+- Validate YAML syntax in the frontmatter
+- Check that all required fields are present
+- Verify image paths are accessible
+
+## 🛡️ Safety and Privacy
+
+- **No sign-in or internet required** for either tool
+- **The generators never commit, push, or publish anything** automatically
+- **No deploy keys or credentials are included**
+- **All data stays local** until you manually upload it
+
+## 📱 Mobile Support
+
+- **Python GUI**: Desktop application, not mobile-compatible
+- **HTML Editor**: Fully responsive and works great on mobile devices
+
+## 🤝 Contributing
+
+Feel free to contribute improvements to either generator:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📄 License
+
+Both generators are open source and available under the MIT License.
+
+---
+
+**Made for Sonce** — Choose the news generator that works best for your workflow! ☀️
