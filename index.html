@@ -1054,11 +1054,12 @@
             
             /* Mobile star rating improvements */
             .flex.items-center.space-x-6 {
-                flex-direction: column;
+                flex-direction: row;
                 align-items: center;
-                text-align: center;
-                gap: 1.5rem;
+                text-align: left;
+                gap: 1rem;
                 margin-top: 2rem;
+                flex-wrap: wrap;
             }
             
             .flex.items-center.space-x-6 .flex.-space-x-2 {
@@ -1142,12 +1143,12 @@
             
             /* Mobile stats section improvements */
             .grid.grid-cols-2.md\\:grid-cols-3 {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
             }
             
             .grid.grid-cols-2.md\\:grid-cols-3 > div {
-                padding: 1.5rem;
+                padding: 1rem;
             }
             
             .grid.grid-cols-2.md\\:grid-cols-3 .w-16.h-16 {
@@ -1201,6 +1202,9 @@
             .bg-white\\/10.backdrop-blur-sm.rounded-xl.p-4.border.border-white\\/10.shadow-2xl.floating {
                 max-width: 100% !important;
                 margin: 2rem auto 0 !important;
+                background: rgba(255, 255, 255, 0.95) !important;
+                border: 2px solid rgba(255, 255, 255, 0.8) !important;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
             }
             
             /* Mobile text improvements */
@@ -1248,13 +1252,27 @@
             
             /* Mobile testimonial grid improvements */
             .grid.md\\:grid-cols-3 {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
             }
             
             /* Mobile section padding adjustments */
             section {
-                padding: 2rem 1rem;
+                padding: 1.5rem 1rem;
+            }
+            
+            /* Better mobile container spacing */
+            .container {
+                padding: 0 1rem;
+            }
+            
+            /* Improved mobile margins */
+            .mb-8, .mb-12, .mb-16 {
+                margin-bottom: 1.5rem !important;
+            }
+            
+            .mt-8, .mt-12, .mt-16 {
+                margin-top: 1.5rem !important;
             }
             
             section.py-20 {
@@ -1816,8 +1834,8 @@
 
             /* Hero section mobile optimizations */
             .hero-gradient {
-                padding: 5rem 1rem 3rem;
-                min-height: 100vh;
+                padding: 3rem 1rem 2rem;
+                min-height: auto;
                 display: flex;
                 align-items: center;
             }
@@ -1844,19 +1862,23 @@
 
             /* Mobile button containers */
             .hero-gradient .flex.flex-col.sm\:flex-row {
-                flex-direction: column;
+                flex-direction: row;
                 gap: 1rem;
                 width: 100%;
                 align-items: center;
+                justify-content: center;
+                flex-wrap: wrap;
             }
 
             .hero-gradient .flex.flex-col.sm\:flex-row a {
-                width: 100%;
-                max-width: 300px;
+                width: auto;
+                max-width: 200px;
                 text-align: center;
                 justify-content: center;
                 display: flex;
                 align-items: center;
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
             }
 
             /* Mobile stats section */
