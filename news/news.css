@@ -300,3 +300,64 @@
 * {
     transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
+
+/* Sticky filter bar */
+#news-controls {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: #ffffff;
+}
+
+/* Mobile tag filter horizontal scroll */
+@media (max-width: 768px) {
+    #tag-filter {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap;
+        padding-bottom: 0.25rem;
+    }
+    #tag-filter .tag-pill {
+        white-space: nowrap;
+    }
+}
+
+/* Skeleton loading styles */
+@keyframes skeleton-pulse {
+    0% { background-color: #f3f4f6; }
+    50% { background-color: #e5e7eb; }
+    100% { background-color: #f3f4f6; }
+}
+
+.skeleton {
+    border-radius: 0.5rem;
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton.rounded-full {
+    border-radius: 9999px;
+}
+
+/* Improve media hover with subtle overlay */
+.news-card .media {
+    position: relative;
+}
+
+.news-card .media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(17, 24, 39, 0.08), rgba(17, 24, 39, 0));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.news-card:hover .media::after {
+    opacity: 1;
+}
+
+/* Anchor offset for in-page heading links */
+.news-article h2,
+.news-article h3 {
+    scroll-margin-top: 100px;
+}
