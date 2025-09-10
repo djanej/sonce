@@ -521,9 +521,10 @@
 	}
 
 	function getEffectiveSlug() {
-		const explicit = slugInput.value.trim();
+		const explicit = slugInput && slugInput.value ? slugInput.value.trim() : '';
 		if (explicit) return smartSlug(explicit);
-		return smartSlug(titleInput.value.trim());
+		const title = titleInput && titleInput.value ? titleInput.value.trim() : 'post';
+		return smartSlug(title);
 	}
 
 	function isValidUrl(value) {
@@ -539,18 +540,18 @@
 	function validateForm() {
 		const errors = [];
 		
-		if (!titleInput.value.trim()) {
+		if (!titleInput || !titleInput.value.trim()) {
 			errors.push('Title is required');
 		}
-		const titleTrimmed = titleInput.value.trim();
+		const titleTrimmed = titleInput ? titleInput.value.trim() : '';
 		if (titleTrimmed && titleTrimmed.length > 100) {
 			errors.push('Title must be 100 characters or less');
 		}
 		
-		if (!dateInput.value) {
+		if (!dateInput || !dateInput.value) {
 			errors.push('Date is required');
 		}
-		const dateVal = dateInput.value;
+		const dateVal = dateInput ? dateInput.value : '';
 		if (dateVal) {
 			if (!/^\d{4}-\d{2}-\d{2}$/.test(dateVal)) {
 				errors.push('Date must be in YYYY-MM-DD format');
@@ -562,22 +563,22 @@
 			}
 		}
 		
-		if (!bodyInput.value.trim()) {
+		if (!bodyInput || !bodyInput.value.trim()) {
 			errors.push('Body content is required');
 		}
 		
-		const imageVal = imageInput.value.trim();
+		const imageVal = imageInput && imageInput.value ? imageInput.value.trim() : '';
 		if (imageVal) {
 			const ok = /^\/static\/uploads\/news\/\d{4}\/\d{2}\/[A-Za-z0-9._-]+\.(?:jpg|jpeg|png|gif|webp|svg)$/i.test(imageVal);
 			if (!ok) {
 				errors.push('Hero image path must be /static/uploads/news/YYYY/MM/YYYY-MM-DD-slug-hero.ext');
 			}
-			if (!imageAltInput.value.trim()) {
+			if (!imageAltInput || !imageAltInput.value.trim()) {
 				errors.push('Image Alt Text is required when a hero image is set');
 			}
 		}
 
-		const summaryVal = (summaryInput.value || '').trim();
+		const summaryVal = ((summaryInput && summaryInput.value) || '').trim();
 		if (summaryVal && summaryVal.length > 200) {
 			errors.push('Summary must be 200 characters or less');
 		}
@@ -608,14 +609,14 @@
 	}
 
 	function buildMarkdown() {
-		const title = titleInput.value.trim();
-		const date = dateInput.value;
-		const author = authorInput.value.trim();
-		const image = imageInput.value.trim();
-		const imageAlt = imageAltInput.value.trim();
-		const tags = parseTags(tagsInput.value);
-		const body = bodyInput.value.trim();
-		const summary = (summaryInput.value || '').trim() || generateSummaryFromBody(body);
+		const title = titleInput ? titleInput.value.trim() : '';
+		const date = dateInput ? dateInput.value : '';
+		const author = authorInput ? authorInput.value.trim() : '';
+		const image = imageInput ? imageInput.value.trim() : '';
+		const imageAlt = imageAltInput ? imageAltInput.value.trim() : '';
+		const tags = parseTags(tagsInput ? tagsInput.value : '');
+		const body = bodyInput ? bodyInput.value.trim() : '';
+		const summary = (summaryInput && summaryInput.value ? summaryInput.value.trim() : '') || generateSummaryFromBody(body);
 
 		const slug = getEffectiveSlug() || 'post';
 		const frontmatter = buildFrontmatter({ title, date, author, image, imageAlt, tags, summary, slug });
@@ -625,22 +626,23 @@
 
 	function buildIndexEntry(filename) {
 		const slug = getEffectiveSlug();
-		slugInput.value = slug;
-		const date = dateInput.value;
-		const tags = parseTags(tagsInput.value);
-		const body = bodyInput.value.trim();
+		if (slugInput) slugInput.value = slug;
+		const date = dateInput ? dateInput.value : '';
+		const tags = parseTags(tagsInput ? tagsInput.value : '');
+		const body = bodyInput ? bodyInput.value.trim() : '';
 		const reading = estimateReadingTime(body);
-		const title = titleInput.value.trim();
-		const summary = (summaryInput.value || '').trim() || generateSummaryFromBody(body);
+		const title = titleInput ? titleInput.value.trim() : '';
+		const summary = (summaryInput && summaryInput.value ? summaryInput.value.trim() : '') || generateSummaryFromBody(body);
+		const imgVal = imageInput && imageInput.value ? imageInput.value.trim() : '';
 		const entry = {
 			id: `${date}-${slug || 'post'}`,
 			title,
 			date,
-			author: (authorInput.value || '').trim(),
+			author: (authorInput && authorInput.value ? authorInput.value.trim() : ''),
 			summary,
-			hero: (imageInput.value || '').trim(),
-			image: (imageInput.value || '').trim(),
-			imageAlt: (imageAltInput.value || '').trim(),
+			hero: imgVal,
+			image: imgVal,
+			imageAlt: (imageAltInput && imageAltInput.value ? imageAltInput.value.trim() : ''),
 			tags,
 			slug: slug || 'post',
 			filename: filename || `${date}-${slug || 'post'}.md`,
