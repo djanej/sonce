@@ -3000,6 +3000,7 @@
             elements: {
                 mobileMenu: null,
                 menuToggle: null,
+                fabToggle: null,
                 mobileNavItems: null,
                 sections: null,
                 contactForm: null,
@@ -3026,6 +3027,7 @@
             cacheElements: function() {
                 this.elements.mobileMenu = document.getElementById('mobileMenu');
                 this.elements.menuToggle = document.getElementById('menuToggle');
+                this.elements.fabToggle = document.getElementById('fabMenuToggle');
                 this.elements.mobileNavItems = document.querySelectorAll('.mobile-nav-item');
                 this.elements.sections = document.querySelectorAll('section');
                 this.elements.contactForm = document.querySelector('.contact-form');
@@ -3038,6 +3040,11 @@
                 // Menu toggle
                 if (this.elements.menuToggle) {
                     this.elements.menuToggle.addEventListener('click', () => this.toggleMenu());
+                }
+
+                // Floating action button toggle
+                if (this.elements.fabToggle) {
+                    this.elements.fabToggle.addEventListener('click', () => this.toggleMenu());
                 }
 
                 // Mobile navigation
@@ -3099,6 +3106,17 @@
                             if (icon) {
                                 icon.className = 'fas fa-times text-2xl';
                             }
+                            menuToggle.setAttribute('aria-expanded', 'true');
+                        }
+
+                        // Update FAB icon
+                        const fabToggle = this.elements.fabToggle;
+                        if (fabToggle) {
+                            const fabIcon = fabToggle.querySelector('i');
+                            if (fabIcon) {
+                                fabIcon.className = 'fas fa-times text-xl';
+                            }
+                            fabToggle.setAttribute('aria-expanded', 'true');
                         }
                     } else {
                         this.closeMenu();
@@ -3120,6 +3138,17 @@
                         if (icon) {
                             icon.className = 'fas fa-bars text-2xl';
                         }
+                        menuToggle.setAttribute('aria-expanded', 'false');
+                    }
+
+                    // Reset FAB icon
+                    const fabToggle = this.elements.fabToggle;
+                    if (fabToggle) {
+                        const fabIcon = fabToggle.querySelector('i');
+                        if (fabIcon) {
+                            fabIcon.className = 'fas fa-bars text-xl';
+                        }
+                        fabToggle.setAttribute('aria-expanded', 'false');
                     }
                 }
             },
@@ -3603,6 +3632,14 @@
             </nav>
         </div>
     </div>
+
+    <!-- Mobile FAB Menu Toggle -->
+    <button id="fabMenuToggle" aria-label="Odpri meni" aria-controls="mobileMenu" aria-expanded="false"
+            class="fixed lg:hidden rounded-full w-14 h-14 flex items-center justify-center text-white shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 focus:outline-none focus:ring-4 focus:ring-orange-300 transition-transform duration-200 ease-out active:scale-95 z-40"
+            style="right: calc(1rem + var(--safe-area-inset-right)); bottom: calc(1rem + var(--safe-area-inset-bottom)); background: linear-gradient(135deg, #FF5F15 0%, #FF1E00 100%);">
+        <i class="fas fa-bars text-xl"></i>
+        <span class="sr-only">Meni</span>
+    </button>
 
     <!-- Hero Section -->
     <div id="error-message" style="display:none;color:#dc2626;text-align:center;padding:16px;">⚠️ Some content couldn't load. It may be blocked by Cloudflare or a connection issue.</div>
