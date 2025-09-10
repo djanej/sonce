@@ -1,18 +1,18 @@
 /* Sonce News Editor Styles - Sun Inspired Theme */
 :root {
-	--bg: #fffbf0;
+	--bg: #f8fafc;
 	--panel: #ffffff;
-	--muted: #8b7355;
-	--text: #2d1810;
-	--primary: #ff6b35;
-	--border: #f4e4c1;
-	--accent: #ffa726;
-	--sun-yellow: #ffd54f;
-	--sun-orange: #ff8a65;
-	--warm-white: #fff8e1;
-	--shadow: rgba(255, 107, 53, 0.1);
-	--shadow-hover: rgba(255, 107, 53, 0.2);
-	--focus-ring: rgba(255, 107, 53, 0.3);
+	--muted: #6b7280;
+	--text: #0f172a;
+	--primary: #2563eb;
+	--border: #e2e8f0;
+	--accent: #3b82f6;
+	--sun-yellow: #bfdbfe;
+	--sun-orange: #1d4ed8;
+	--warm-white: #f9fafb;
+	--shadow: rgba(37, 99, 235, 0.08);
+	--shadow-hover: rgba(37, 99, 235, 0.18);
+	--focus-ring: rgba(37, 99, 235, 0.25);
 }
 
 * { 
@@ -36,7 +36,7 @@ body {
 
 .app-header, .app-footer {
 	padding: 20px 24px;
-	border-bottom: 2px solid var(--border);
+	border-bottom: 1px solid var(--border);
 	background: linear-gradient(135deg, var(--panel) 0%, var(--warm-white) 100%);
 	box-shadow: 0 2px 20px var(--shadow);
 }
@@ -77,7 +77,7 @@ h1 {
 	margin: 0; 
 	font-size: 28px; 
 	font-weight: 700;
-	color: var(--primary);
+	color: var(--text);
 	text-shadow: 0 2px 4px var(--shadow);
 }
 
@@ -268,7 +268,7 @@ button.primary::before {
 }
 
 .preview-header h2 {
-	color: var(--primary);
+	color: var(--text);
 	font-size: 20px;
 	font-weight: 700;
 }
@@ -516,7 +516,7 @@ button.primary::before {
 .modal-overlay {
 	position: fixed;
 	top: 0; left: 0; right: 0; bottom: 0;
-	background: rgba(45, 24, 16, 0.8);
+	background: rgba(15, 23, 42, 0.7);
 	display: none !important;
 	place-items: center;
 	z-index: 50;
@@ -646,13 +646,13 @@ button.primary::before {
 	top: 0; left: 0; right: 0; bottom: 0;
 	display: grid;
 	place-items: center;
-	background: rgba(255, 167, 38, 0.15);
+	background: rgba(59, 130, 246, 0.12);
 	backdrop-filter: blur(4px);
-	color: var(--primary);
+	color: var(--text);
 	font-weight: 700;
 	font-size: 24px;
 	z-index: 40;
-	border: 4px dashed var(--primary);
+	border: 4px dashed var(--border);
 	animation: pulse 2s infinite;
 }
 
