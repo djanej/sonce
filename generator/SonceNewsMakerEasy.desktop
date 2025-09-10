@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Sonce News Maker (Easy)
+Comment=Create a news ZIP in one click
+Exec=sh -c 'cd "$(dirname "\"%k\"")" && ./run_simple_linux.sh'
+Terminal=false
+Categories=Utility;
+StartupNotify=true
+# Optional icon; desktop environments may ignore relative paths. Adjust if needed.
+Icon=utilities-terminal
