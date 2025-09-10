@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-echo Starting Easy News Maker...
+echo Starting Simple News Maker...
 echo.
 
 set SCRIPT=%~dp0news_generator_simple.py

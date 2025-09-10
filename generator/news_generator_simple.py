@@ -23,7 +23,7 @@ except Exception as e:
     raise
 
 
-APP_TITLE = "Sonce News Maker - Easy Mode"
+APP_TITLE = "Sonce News Maker (Simple)"
 OUTPUT_ROOT = Path(__file__).parent / "output"
 SETTINGS_FILE = Path(__file__).parent / "settings.json"
 MAX_IMAGE_SIZE_MB = 10  # Maximum image size in MB
@@ -417,6 +417,8 @@ class SimpleNewsApp:
         
         ttk.Button(secondary_frame, text="📁 Open Output Folder", 
                   command=self.open_output_folder).pack(side='left', padx=5)
+        ttk.Button(secondary_frame, text="📤 Copy ZIP to incoming…", 
+                  command=self.copy_zip_to_incoming).pack(side='left', padx=5)
         
         ttk.Button(secondary_frame, text="🔄 Clear Form", 
                   command=self.reset_form).pack(side='left', padx=5)
@@ -602,8 +604,7 @@ class SimpleNewsApp:
             self.progress_label.config(text="Creating ZIP file...")
             self.master.update()
             
-            zip_name = f"news-{date_str}-{slug}.zip"
-            zip_name = sanitize_filename(zip_name)
+            zip_name = sanitize_filename(f"news-draft-{date_str}-{slug}.zip")
             zip_path = OUTPUT_ROOT / zip_name
             
             with zipfile.ZipFile(zip_path, 'w', compression=zipfile.ZIP_DEFLATED) as zf:
@@ -661,6 +662,34 @@ class SimpleNewsApp:
                 subprocess.run(['xdg-open', str(OUTPUT_ROOT)], check=False)
         except Exception as e:
             messagebox.showinfo("Output Folder", f"Your files are in:\n{OUTPUT_ROOT}")
+            
+    def copy_zip_to_incoming(self):
+        """Copy the last created ZIP into a chosen website incoming/ folder"""
+        if not self.last_zip_path or not self.last_zip_path.exists():
+            candidates = sorted(OUTPUT_ROOT.glob('news-draft-*.zip'), key=lambda p: p.stat().st_mtime, reverse=True)
+            if candidates:
+                self.last_zip_path = candidates[0]
+            else:
+                messagebox.showwarning("No ZIP found", "Please click 'Create News ZIP' first.")
+                return
+        
+        messagebox.showinfo(
+            "Choose website folder",
+            "Select your website folder. If you click on the 'incoming' folder itself, that's okay too."
+        )
+        selected = filedialog.askdirectory(title="Select your website folder (or incoming)")
+        if not selected:
+            return
+        target = Path(selected)
+        incoming_dir = target if target.name.lower() == 'incoming' else (target / 'incoming')
+        try:
+            incoming_dir.mkdir(parents=True, exist_ok=True)
+            dest = incoming_dir / self.last_zip_path.name
+            shutil.copy2(self.last_zip_path, dest)
+            self.update_status(f"Copied ZIP to: {dest.name}")
+            messagebox.showinfo("Copied", f"ZIP copied to:\n{dest.name}\n\nCommit and push this to GitHub (main). The site will import it automatically.")
+        except Exception as e:
+            messagebox.showerror("Copy failed", f"Could not copy to incoming/:\n{e}")
             
     def reset_form(self):
         """Clear all form fields"""

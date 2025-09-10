@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Starting Easy News Maker..."
+echo "Starting Simple News Maker..."
 echo ""
 
 SCRIPT="$(dirname "$0")/news_generator_simple.py"
