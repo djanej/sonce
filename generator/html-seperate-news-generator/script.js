@@ -42,6 +42,7 @@
 	let toolbar;
 	let exportBundleBtn, saveVersionBtn, historyBtn, cheatSheetBtn, dropZone, dropOverlay;
 	let restoreBanner, restoreBtn, dismissRestoreBtn, lintPanel, tagSuggestionsEl, notesInput, toastContainer;
+	let insertEmbedBtn, embedUrlInput;
 
 	// State for FS Access API
 	let repoDirHandle = null;
@@ -127,6 +128,8 @@
 		tagSuggestionsEl = document.getElementById('tag-suggestions');
 		notesInput = document.getElementById('notes');
 		toastContainer = document.getElementById('toast-container');
+		insertEmbedBtn = document.getElementById('insert-embed-btn');
+		embedUrlInput = document.getElementById('embedUrl');
 		
 		// EMERGENCY: Kill any existing modal immediately
 		const modalOverlay = document.getElementById('modal-overlay');
@@ -910,6 +913,12 @@
 		if (livePreviewCheckbox.checked) showPreview();
 	}
 
+	function targetScroll(textarea) {
+		try {
+			textarea.scrollTop = textarea.scrollHeight;
+		} catch {}
+	}
+
 	// Toolbar actions - moved to setupEventHandlers
 
 	function downloadsZip(files, suggestedName) {
@@ -1565,71 +1574,10 @@
 			console.log('Setting up event handlers...');
 			
 			// Main action buttons
-			if (previewBtn) previewBtn.addEventListener('click', showPreview);
-			if (downloadBtn) downloadBtn.addEventListener('click', downloadMarkdown);
+			// Simplified actions (preview/download removed)
 			const createZipBtn = document.getElementById('create-zip-btn');
 			if (createZipBtn) createZipBtn.addEventListener('click', createIncomingZip);
-			if (copyMdBtn) copyMdBtn.addEventListener('click', copyMarkdown);
-			if (copyJsonBtn) copyJsonBtn.addEventListener('click', copyJsonEntry);
-			if (downloadJsonBtn) downloadJsonBtn.addEventListener('click', downloadJsonEntry);
-			if (exportBundleBtn) exportBundleBtn.addEventListener('click', exportBundle);
-			if (saveVersionBtn) saveVersionBtn.addEventListener('click', async () => {
-				await saveSnapshot('Manual snapshot');
-				toast('Version saved', 'success');
-			});
-			if (historyBtn) historyBtn.addEventListener('click', async () => {
-				const list = await listSnapshots();
-				const wrap = document.createElement('div');
-				if (!list.length) { 
-					wrap.textContent = 'No versions yet.'; 
-					openModal('Version History', wrap); 
-					return; 
-				}
-				wrap.innerHTML = list.map((s, i) => `
-					<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; border-bottom:1px solid #334155; padding:8px 0;">
-						<div>
-							<div><strong>${new Date(s.createdAt).toLocaleString()}</strong></div>
-							<div class="hint">${s.note || ''}</div>
-						</div>
-						<div style="display:flex; gap:8px;">
-							<button data-idx="${i}" data-act="preview">Preview</button>
-							<button data-idx="${i}" data-act="restore" class="primary">Restore</button>
-						</div>
-					</div>
-				`).join('');
-				wrap.addEventListener('click', (e) => {
-					const btn = e.target.closest('button'); 
-					if (!btn) return;
-					const idx = Number(btn.dataset.idx); 
-					const act = btn.dataset.act; 
-					const snap = list[idx];
-					if (act === 'restore') { 
-						deserializeForm(snap.data); 
-						toast('Version restored', 'success'); 
-						closeModal();
-					}
-					if (act === 'preview') { 
-						const pre = document.createElement('pre'); 
-						pre.textContent = JSON.stringify(snap.data, null, 2); 
-						openModal('Snapshot Preview', pre); 
-					}
-				});
-				openModal('Version History', wrap);
-			});
-			if (cheatSheetBtn) cheatSheetBtn.addEventListener('click', () => {
-				const el = document.createElement('div');
-				el.innerHTML = `
-					<h4>Markdown Basics</h4>
-					<ul>
-						<li><code>## Heading</code></li>
-						<li><code>**bold**</code>, <code>*italic*</code>, <code>\`code\`</code></li>
-						<li><code>- list</code> or <code>1. list</code></li>
-						<li><code>[text](https://example.com)</code></li>
-						<li><code>![alt](./assets/image.webp "caption")</code></li>
-					</ul>
-				`;
-				openModal('Cheat Sheet', el);
-			});
+			// Remove version/history/cheatsheet/export features from simplified build
 
 			// Form input handlers
 			if (slugInput) slugInput.addEventListener('input', () => { userEditedSlug = true; });
@@ -1890,6 +1838,36 @@
 					case 'link': insertAtCursor(bodyInput, '[', '](https://)', 'text'); break;
 					default: break;
 				}
+			});
+
+			// Insert video/embed
+			if (insertEmbedBtn) insertEmbedBtn.addEventListener('click', () => {
+				const raw = (embedUrlInput && embedUrlInput.value ? embedUrlInput.value.trim() : '');
+				if (!raw) { toast('Paste a video URL or embed code', 'error'); return; }
+				let snippet = '';
+				// If it's an iframe snippet, trust minimally and insert
+				if (/^<iframe[\s\S]*<\/iframe>$/i.test(raw)) {
+					snippet = raw;
+				} else if (/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\//i.test(raw)) {
+					// Build a responsive YouTube embed
+					try {
+						let url = new URL(raw, window.location.origin);
+						let vid = url.searchParams.get('v');
+						if (!vid && /youtu\.be\/(.+)/.test(url.href)) vid = RegExp.$1.split('?')[0];
+						if (vid) {
+							snippet = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${vid}" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+						}
+					} catch {}
+				} else if (/^(https?:\/\/)?(www\.)?vimeo\.com\//i.test(raw)) {
+					// Basic Vimeo embed
+					const m = raw.match(/vimeo\.com\/(\d+)/);
+					if (m) {
+						snippet = `<iframe src="https://player.vimeo.com/video/${m[1]}" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+					}
+				}
+				if (!snippet) { toast('Unsupported embed. Paste full <iframe> code.', 'error'); return; }
+				insertAtCursor(bodyInput, `\n${snippet}\n\n`, '');
+				targetScroll(bodyInput);
 			});
 
 			if (insertHeroBtn) insertHeroBtn.addEventListener('click', () => {

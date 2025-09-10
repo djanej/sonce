@@ -103,6 +103,18 @@
 					</div>
 				</div>
 
+				<div class="field-group">
+					<div class="field">
+						<label for="embedUrl">Video or Embed URL</label>
+						<input type="text" id="embedUrl" placeholder="YouTube/Vimeo URL or iframe HTML" />
+						<p class="hint">Paste a video URL (YouTube, Vimeo) or iframe embed code.</p>
+					</div>
+					<div class="field">
+						<label>&nbsp;</label>
+						<button type="button" id="insert-embed-btn" title="Insert Video Embed">Insert Video</button>
+					</div>
+				</div>
+
 				<div class="toolbar">
 					<div class="toolbar-left">
 						<button type="button" data-md="h1" title="Heading 1">H1</button>
@@ -131,71 +143,17 @@
 					<p id="body-hint" class="hint">Use the toolbar above for quick formatting or type Markdown directly.</p>
 				</div>
 
-				<div class="templates">
-					<div class="templates-row">
-						<select id="template-select">
-							<option value="">Select template…</option>
-						</select>
-						<button type="button" id="apply-template-btn">Apply</button>
-						<button type="button" id="delete-template-btn">Delete</button>
-					</div>
-					<div class="templates-row">
-						<input type="text" id="template-name" placeholder="Template name" />
-						<button type="button" id="save-template-btn">Save as New</button>
-					</div>
-				</div>
+				<!-- Templates removed -->
 
 				<div class="actions">
-					<button type="button" id="preview-btn">Preview</button>
-					<button type="button" id="download-btn" class="primary">Download Markdown</button>
 					<button type="button" id="create-zip-btn" class="primary">Create ZIP</button>
-					<button type="button" id="copy-md-btn">Copy Markdown</button>
-					<button type="button" id="export-bundle-btn">Export Bundle</button>
-					<button type="button" id="save-version-btn">Save Version</button>
-					<button type="button" id="copy-json-btn">Copy JSON Entry</button>
-					<button type="button" id="download-json-btn">Download JSON Entry</button>
 				</div>
 
-				<div id="lint-panel" class="lint-panel" aria-live="polite"></div>
-
-				<div class="field">
-					<label for="notes">Internal Notes (not exported)</label>
-					<textarea id="notes" rows="3" placeholder="Add private notes…"></textarea>
-				</div>
-
-				<div class="drafts-actions">
-					<button type="button" id="add-draft-btn">Add to Drafts</button>
-					<button type="button" id="clear-drafts-btn">Clear Drafts</button>
-					<button type="button" id="download-zip-btn">Download Drafts ZIP</button>
-					<span id="drafts-count" class="hint">0 drafts</span>
-				</div>
-
-				<div class="repo-actions">
-					<div class="repo-row">
-						<button type="button" id="connect-repo-btn">Connect Repo Folder</button>
-						<span id="repo-status" class="hint">Not connected</span>
-					</div>
-					<div class="repo-row">
-						<button type="button" id="save-repo-btn" class="primary" disabled>Save to Repo</button>
-						<button type="button" id="rebuild-index-btn" disabled>Rebuild Index</button>
-						<span class="hint">Saves Markdown to content/news and updates content/news/index.json</span>
-					</div>
-				</div>
+				<!-- Advanced panels removed: lint, notes, drafts, repo actions -->
 			</form>
 		</section>
 
-		<aside class="preview">
-			<div class="preview-header">
-				<h2>Preview</h2>
-				<p class="hint">Renders Markdown below. Frontmatter not shown.</p>
-			</div>
-			<div id="preview-content" class="preview-content">
-				<div class="placeholder">
-					<span class="placeholder-icon">📝</span>
-					<p>Click Preview to see a live rendering here.</p>
-				</div>
-			</div>
-		</aside>
+		<!-- Preview removed -->
 	</main>
 
 	<footer class="app-footer">
