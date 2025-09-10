@@ -42,6 +42,7 @@
 	let toolbar;
 	let exportBundleBtn, saveVersionBtn, historyBtn, cheatSheetBtn, dropZone, dropOverlay;
 	let restoreBanner, restoreBtn, dismissRestoreBtn, lintPanel, tagSuggestionsEl, notesInput, toastContainer;
+	let insertEmbedBtn, embedUrlInput;
 
 	// State for FS Access API
 	let repoDirHandle = null;
@@ -127,6 +128,8 @@
 		tagSuggestionsEl = document.getElementById('tag-suggestions');
 		notesInput = document.getElementById('notes');
 		toastContainer = document.getElementById('toast-container');
+		insertEmbedBtn = document.getElementById('insert-embed-btn');
+		embedUrlInput = document.getElementById('embedUrl');
 		
 		// EMERGENCY: Kill any existing modal immediately
 		const modalOverlay = document.getElementById('modal-overlay');
@@ -521,9 +524,10 @@
 	}
 
 	function getEffectiveSlug() {
-		const explicit = slugInput.value.trim();
+		const explicit = slugInput && slugInput.value ? slugInput.value.trim() : '';
 		if (explicit) return smartSlug(explicit);
-		return smartSlug(titleInput.value.trim());
+		const title = titleInput && titleInput.value ? titleInput.value.trim() : 'post';
+		return smartSlug(title);
 	}
 
 	function isValidUrl(value) {
@@ -539,18 +543,18 @@
 	function validateForm() {
 		const errors = [];
 		
-		if (!titleInput.value.trim()) {
+		if (!titleInput || !titleInput.value.trim()) {
 			errors.push('Title is required');
 		}
-		const titleTrimmed = titleInput.value.trim();
+		const titleTrimmed = titleInput ? titleInput.value.trim() : '';
 		if (titleTrimmed && titleTrimmed.length > 100) {
 			errors.push('Title must be 100 characters or less');
 		}
 		
-		if (!dateInput.value) {
+		if (!dateInput || !dateInput.value) {
 			errors.push('Date is required');
 		}
-		const dateVal = dateInput.value;
+		const dateVal = dateInput ? dateInput.value : '';
 		if (dateVal) {
 			if (!/^\d{4}-\d{2}-\d{2}$/.test(dateVal)) {
 				errors.push('Date must be in YYYY-MM-DD format');
@@ -562,22 +566,22 @@
 			}
 		}
 		
-		if (!bodyInput.value.trim()) {
+		if (!bodyInput || !bodyInput.value.trim()) {
 			errors.push('Body content is required');
 		}
 		
-		const imageVal = imageInput.value.trim();
+		const imageVal = imageInput && imageInput.value ? imageInput.value.trim() : '';
 		if (imageVal) {
 			const ok = /^\/static\/uploads\/news\/\d{4}\/\d{2}\/[A-Za-z0-9._-]+\.(?:jpg|jpeg|png|gif|webp|svg)$/i.test(imageVal);
 			if (!ok) {
 				errors.push('Hero image path must be /static/uploads/news/YYYY/MM/YYYY-MM-DD-slug-hero.ext');
 			}
-			if (!imageAltInput.value.trim()) {
+			if (!imageAltInput || !imageAltInput.value.trim()) {
 				errors.push('Image Alt Text is required when a hero image is set');
 			}
 		}
 
-		const summaryVal = (summaryInput.value || '').trim();
+		const summaryVal = ((summaryInput && summaryInput.value) || '').trim();
 		if (summaryVal && summaryVal.length > 200) {
 			errors.push('Summary must be 200 characters or less');
 		}
@@ -608,14 +612,14 @@
 	}
 
 	function buildMarkdown() {
-		const title = titleInput.value.trim();
-		const date = dateInput.value;
-		const author = authorInput.value.trim();
-		const image = imageInput.value.trim();
-		const imageAlt = imageAltInput.value.trim();
-		const tags = parseTags(tagsInput.value);
-		const body = bodyInput.value.trim();
-		const summary = (summaryInput.value || '').trim() || generateSummaryFromBody(body);
+		const title = titleInput ? titleInput.value.trim() : '';
+		const date = dateInput ? dateInput.value : '';
+		const author = authorInput ? authorInput.value.trim() : '';
+		const image = imageInput ? imageInput.value.trim() : '';
+		const imageAlt = imageAltInput ? imageAltInput.value.trim() : '';
+		const tags = parseTags(tagsInput ? tagsInput.value : '');
+		const body = bodyInput ? bodyInput.value.trim() : '';
+		const summary = (summaryInput && summaryInput.value ? summaryInput.value.trim() : '') || generateSummaryFromBody(body);
 
 		const slug = getEffectiveSlug() || 'post';
 		const frontmatter = buildFrontmatter({ title, date, author, image, imageAlt, tags, summary, slug });
@@ -625,22 +629,23 @@
 
 	function buildIndexEntry(filename) {
 		const slug = getEffectiveSlug();
-		slugInput.value = slug;
-		const date = dateInput.value;
-		const tags = parseTags(tagsInput.value);
-		const body = bodyInput.value.trim();
+		if (slugInput) slugInput.value = slug;
+		const date = dateInput ? dateInput.value : '';
+		const tags = parseTags(tagsInput ? tagsInput.value : '');
+		const body = bodyInput ? bodyInput.value.trim() : '';
 		const reading = estimateReadingTime(body);
-		const title = titleInput.value.trim();
-		const summary = (summaryInput.value || '').trim() || generateSummaryFromBody(body);
+		const title = titleInput ? titleInput.value.trim() : '';
+		const summary = (summaryInput && summaryInput.value ? summaryInput.value.trim() : '') || generateSummaryFromBody(body);
+		const imgVal = imageInput && imageInput.value ? imageInput.value.trim() : '';
 		const entry = {
 			id: `${date}-${slug || 'post'}`,
 			title,
 			date,
-			author: (authorInput.value || '').trim(),
+			author: (authorInput && authorInput.value ? authorInput.value.trim() : ''),
 			summary,
-			hero: (imageInput.value || '').trim(),
-			image: (imageInput.value || '').trim(),
-			imageAlt: (imageAltInput.value || '').trim(),
+			hero: imgVal,
+			image: imgVal,
+			imageAlt: (imageAltInput && imageAltInput.value ? imageAltInput.value.trim() : ''),
 			tags,
 			slug: slug || 'post',
 			filename: filename || `${date}-${slug || 'post'}.md`,
@@ -908,9 +913,15 @@
 		if (livePreviewCheckbox.checked) showPreview();
 	}
 
+	function targetScroll(textarea) {
+		try {
+			textarea.scrollTop = textarea.scrollHeight;
+		} catch {}
+	}
+
 	// Toolbar actions - moved to setupEventHandlers
 
-	function downloadsZip(files) {
+	function downloadsZip(files, suggestedName) {
 		// Minimal uncompressed ZIP (store) writer
 		function crc32(buf) {
 			// Polynomial 0xEDB88320
@@ -992,11 +1003,101 @@
 		const url = URL.createObjectURL(blob);
 		const a = document.createElement('a');
 		a.href = url;
-		a.download = 'sonce-news-drafts.zip';
+		a.download = suggestedName || 'sonce-news-drafts.zip';
 		document.body.appendChild(a);
 		a.click();
 		document.body.removeChild(a);
 		URL.revokeObjectURL(url);
+	}
+
+	function isValidImageExtension(name) {
+		return /\.(?:jpg|jpeg|png|gif|webp|svg)$/i.test(name);
+	}
+
+	async function buildIncomingZipFiles() {
+		const date = dateInput.value;
+		const slug = getEffectiveSlug() || 'post';
+		const yyyy = date.slice(0, 4);
+		const mm = date.slice(5, 7);
+
+		const encoder = new TextEncoder();
+		const files = [];
+
+		// If a hero file is present and no image path set yet, set it to the final uploads path
+		if (imageFileInput && imageFileInput.files && imageFileInput.files[0]) {
+			const f = imageFileInput.files[0];
+			const ext = (f.name.split('.').pop() || 'png').toLowerCase();
+			const safeExt = isValidImageExtension('.' + ext) ? ext : 'png';
+			const heroWebPath = `/static/uploads/news/${yyyy}/${mm}/${date}-${slug}-hero.${safeExt}`;
+			if (!imageInput.value || !/^\s*\S+/.test(imageInput.value)) {
+				imageInput.value = heroWebPath;
+			}
+			if (!imageAltInput.value || !/^\s*\S+/.test(imageAltInput.value)) {
+				imageAltInput.value = titleInput.value.trim();
+			}
+		}
+
+		// Markdown file under content/news
+		let mdContent = buildMarkdown();
+		// Replace any in-body blob/data URLs for tracked assets with their final static paths
+		try {
+			if (Array.isArray(trackedAssets) && trackedAssets.length) {
+				for (const asset of trackedAssets) {
+					if (!asset || !asset.file) continue;
+					const ext = (asset.file.name.split('.').pop() || 'png').toLowerCase();
+					const safeExt = isValidImageExtension('.' + ext) ? ext : 'png';
+					const stem = (asset.file.name || '').replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'img';
+					const dest = `/static/uploads/news/${yyyy}/${mm}/${date}-${slug}-${stem}.${safeExt}`;
+					if (asset.url && typeof asset.url === 'string') {
+						mdContent = mdContent.split(asset.url).join(dest);
+					}
+				}
+			}
+		} catch (e) { /* non-fatal */ }
+		const mdName = `${date}-${slug}.md`;
+		files.push({ name: `content/news/${mdName}`, data: encoder.encode(mdContent) });
+
+		// Hero image file content
+		if (imageFileInput && imageFileInput.files && imageFileInput.files[0]) {
+			const f = imageFileInput.files[0];
+			const ext = (f.name.split('.').pop() || 'png').toLowerCase();
+			const safeExt = isValidImageExtension('.' + ext) ? ext : 'png';
+			const arc = `static/uploads/news/${yyyy}/${mm}/${date}-${slug}-hero.${safeExt}`;
+			const buf = new Uint8Array(await f.arrayBuffer());
+			files.push({ name: arc, data: buf });
+		}
+
+		// Additional attachments
+		if (attachmentsInput && attachmentsInput.files && attachmentsInput.files.length) {
+			for (let i = 0; i < attachmentsInput.files.length; i++) {
+				const f = attachmentsInput.files[i];
+				const ext = (f.name.split('.').pop() || 'png').toLowerCase();
+				const safeExt = isValidImageExtension('.' + ext) ? ext : 'png';
+				const stem = f.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `att-${i+1}`;
+				const base = `${date}-${slug}-${stem}`;
+				const arc = `static/uploads/news/${yyyy}/${mm}/${base}.${safeExt}`;
+				const buf = new Uint8Array(await f.arrayBuffer());
+				files.push({ name: arc, data: buf });
+			}
+		}
+
+		return { files, mdName };
+	}
+
+	async function createIncomingZip() {
+		const errs = validateForm();
+		if (errs.length) { showFormErrors(errs); return; }
+		try {
+			const { files } = await buildIncomingZipFiles();
+			const slug = getEffectiveSlug() || 'post';
+			const date = dateInput.value;
+			const zipName = `news-draft-${date}-${slug}.zip`;
+			downloadsZip(files, zipName);
+			toast(`ZIP created: ${zipName}`, 'success');
+		} catch (e) {
+			console.error(e);
+			toast('Failed to create ZIP', 'error');
+		}
 	}
 
 	// Draft handlers - moved to setupEventHandlers
@@ -1315,7 +1416,7 @@
 		} else {
 			url = URL.createObjectURL(file);
 		}
-		trackedAssets.push({ file, name: file.name, alt });
+		trackedAssets.push({ file, name: file.name, alt, url });
 		insertAtCursor(bodyInput, `![${alt}](${url})\n\n`, '');
 	}
 
@@ -1473,69 +1574,10 @@
 			console.log('Setting up event handlers...');
 			
 			// Main action buttons
-			if (previewBtn) previewBtn.addEventListener('click', showPreview);
-			if (downloadBtn) downloadBtn.addEventListener('click', downloadMarkdown);
-			if (copyMdBtn) copyMdBtn.addEventListener('click', copyMarkdown);
-			if (copyJsonBtn) copyJsonBtn.addEventListener('click', copyJsonEntry);
-			if (downloadJsonBtn) downloadJsonBtn.addEventListener('click', downloadJsonEntry);
-			if (exportBundleBtn) exportBundleBtn.addEventListener('click', exportBundle);
-			if (saveVersionBtn) saveVersionBtn.addEventListener('click', async () => {
-				await saveSnapshot('Manual snapshot');
-				toast('Version saved', 'success');
-			});
-			if (historyBtn) historyBtn.addEventListener('click', async () => {
-				const list = await listSnapshots();
-				const wrap = document.createElement('div');
-				if (!list.length) { 
-					wrap.textContent = 'No versions yet.'; 
-					openModal('Version History', wrap); 
-					return; 
-				}
-				wrap.innerHTML = list.map((s, i) => `
-					<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; border-bottom:1px solid #334155; padding:8px 0;">
-						<div>
-							<div><strong>${new Date(s.createdAt).toLocaleString()}</strong></div>
-							<div class="hint">${s.note || ''}</div>
-						</div>
-						<div style="display:flex; gap:8px;">
-							<button data-idx="${i}" data-act="preview">Preview</button>
-							<button data-idx="${i}" data-act="restore" class="primary">Restore</button>
-						</div>
-					</div>
-				`).join('');
-				wrap.addEventListener('click', (e) => {
-					const btn = e.target.closest('button'); 
-					if (!btn) return;
-					const idx = Number(btn.dataset.idx); 
-					const act = btn.dataset.act; 
-					const snap = list[idx];
-					if (act === 'restore') { 
-						deserializeForm(snap.data); 
-						toast('Version restored', 'success'); 
-						closeModal();
-					}
-					if (act === 'preview') { 
-						const pre = document.createElement('pre'); 
-						pre.textContent = JSON.stringify(snap.data, null, 2); 
-						openModal('Snapshot Preview', pre); 
-					}
-				});
-				openModal('Version History', wrap);
-			});
-			if (cheatSheetBtn) cheatSheetBtn.addEventListener('click', () => {
-				const el = document.createElement('div');
-				el.innerHTML = `
-					<h4>Markdown Basics</h4>
-					<ul>
-						<li><code>## Heading</code></li>
-						<li><code>**bold**</code>, <code>*italic*</code>, <code>\`code\`</code></li>
-						<li><code>- list</code> or <code>1. list</code></li>
-						<li><code>[text](https://example.com)</code></li>
-						<li><code>![alt](./assets/image.webp "caption")</code></li>
-					</ul>
-				`;
-				openModal('Cheat Sheet', el);
-			});
+			// Simplified actions (preview/download removed)
+			const createZipBtn = document.getElementById('create-zip-btn');
+			if (createZipBtn) createZipBtn.addEventListener('click', createIncomingZip);
+			// Remove version/history/cheatsheet/export features from simplified build
 
 			// Form input handlers
 			if (slugInput) slugInput.addEventListener('input', () => { userEditedSlug = true; });
@@ -1796,6 +1838,36 @@
 					case 'link': insertAtCursor(bodyInput, '[', '](https://)', 'text'); break;
 					default: break;
 				}
+			});
+
+			// Insert video/embed
+			if (insertEmbedBtn) insertEmbedBtn.addEventListener('click', () => {
+				const raw = (embedUrlInput && embedUrlInput.value ? embedUrlInput.value.trim() : '');
+				if (!raw) { toast('Paste a video URL or embed code', 'error'); return; }
+				let snippet = '';
+				// If it's an iframe snippet, trust minimally and insert
+				if (/^<iframe[\s\S]*<\/iframe>$/i.test(raw)) {
+					snippet = raw;
+				} else if (/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\//i.test(raw)) {
+					// Build a responsive YouTube embed
+					try {
+						let url = new URL(raw, window.location.origin);
+						let vid = url.searchParams.get('v');
+						if (!vid && /youtu\.be\/(.+)/.test(url.href)) vid = RegExp.$1.split('?')[0];
+						if (vid) {
+							snippet = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${vid}" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+						}
+					} catch {}
+				} else if (/^(https?:\/\/)?(www\.)?vimeo\.com\//i.test(raw)) {
+					// Basic Vimeo embed
+					const m = raw.match(/vimeo\.com\/(\d+)/);
+					if (m) {
+						snippet = `<iframe src="https://player.vimeo.com/video/${m[1]}" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+					}
+				}
+				if (!snippet) { toast('Unsupported embed. Paste full <iframe> code.', 'error'); return; }
+				insertAtCursor(bodyInput, `\n${snippet}\n\n`, '');
+				targetScroll(bodyInput);
 			});
 
 			if (insertHeroBtn) insertHeroBtn.addEventListener('click', () => {
