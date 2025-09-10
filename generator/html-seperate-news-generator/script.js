@@ -910,7 +910,7 @@
 
 	// Toolbar actions - moved to setupEventHandlers
 
-	function downloadsZip(files) {
+	function downloadsZip(files, suggestedName) {
 		// Minimal uncompressed ZIP (store) writer
 		function crc32(buf) {
 			// Polynomial 0xEDB88320
@@ -992,11 +992,101 @@
 		const url = URL.createObjectURL(blob);
 		const a = document.createElement('a');
 		a.href = url;
-		a.download = 'sonce-news-drafts.zip';
+		a.download = suggestedName || 'sonce-news-drafts.zip';
 		document.body.appendChild(a);
 		a.click();
 		document.body.removeChild(a);
 		URL.revokeObjectURL(url);
+	}
+
+	function isValidImageExtension(name) {
+		return /\.(?:jpg|jpeg|png|gif|webp|svg)$/i.test(name);
+	}
+
+	async function buildIncomingZipFiles() {
+		const date = dateInput.value;
+		const slug = getEffectiveSlug() || 'post';
+		const yyyy = date.slice(0, 4);
+		const mm = date.slice(5, 7);
+
+		const encoder = new TextEncoder();
+		const files = [];
+
+		// If a hero file is present and no image path set yet, set it to the final uploads path
+		if (imageFileInput && imageFileInput.files && imageFileInput.files[0]) {
+			const f = imageFileInput.files[0];
+			const ext = (f.name.split('.').pop() || 'png').toLowerCase();
+			const safeExt = isValidImageExtension('.' + ext) ? ext : 'png';
+			const heroWebPath = `/static/uploads/news/${yyyy}/${mm}/${date}-${slug}-hero.${safeExt}`;
+			if (!imageInput.value || !/^\s*\S+/.test(imageInput.value)) {
+				imageInput.value = heroWebPath;
+			}
+			if (!imageAltInput.value || !/^\s*\S+/.test(imageAltInput.value)) {
+				imageAltInput.value = titleInput.value.trim();
+			}
+		}
+
+		// Markdown file under content/news
+		let mdContent = buildMarkdown();
+		// Replace any in-body blob/data URLs for tracked assets with their final static paths
+		try {
+			if (Array.isArray(trackedAssets) && trackedAssets.length) {
+				for (const asset of trackedAssets) {
+					if (!asset || !asset.file) continue;
+					const ext = (asset.file.name.split('.').pop() || 'png').toLowerCase();
+					const safeExt = isValidImageExtension('.' + ext) ? ext : 'png';
+					const stem = (asset.file.name || '').replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'img';
+					const dest = `/static/uploads/news/${yyyy}/${mm}/${date}-${slug}-${stem}.${safeExt}`;
+					if (asset.url && typeof asset.url === 'string') {
+						mdContent = mdContent.split(asset.url).join(dest);
+					}
+				}
+			}
+		} catch (e) { /* non-fatal */ }
+		const mdName = `${date}-${slug}.md`;
+		files.push({ name: `content/news/${mdName}`, data: encoder.encode(mdContent) });
+
+		// Hero image file content
+		if (imageFileInput && imageFileInput.files && imageFileInput.files[0]) {
+			const f = imageFileInput.files[0];
+			const ext = (f.name.split('.').pop() || 'png').toLowerCase();
+			const safeExt = isValidImageExtension('.' + ext) ? ext : 'png';
+			const arc = `static/uploads/news/${yyyy}/${mm}/${date}-${slug}-hero.${safeExt}`;
+			const buf = new Uint8Array(await f.arrayBuffer());
+			files.push({ name: arc, data: buf });
+		}
+
+		// Additional attachments
+		if (attachmentsInput && attachmentsInput.files && attachmentsInput.files.length) {
+			for (let i = 0; i < attachmentsInput.files.length; i++) {
+				const f = attachmentsInput.files[i];
+				const ext = (f.name.split('.').pop() || 'png').toLowerCase();
+				const safeExt = isValidImageExtension('.' + ext) ? ext : 'png';
+				const stem = f.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `att-${i+1}`;
+				const base = `${date}-${slug}-${stem}`;
+				const arc = `static/uploads/news/${yyyy}/${mm}/${base}.${safeExt}`;
+				const buf = new Uint8Array(await f.arrayBuffer());
+				files.push({ name: arc, data: buf });
+			}
+		}
+
+		return { files, mdName };
+	}
+
+	async function createIncomingZip() {
+		const errs = validateForm();
+		if (errs.length) { showFormErrors(errs); return; }
+		try {
+			const { files } = await buildIncomingZipFiles();
+			const slug = getEffectiveSlug() || 'post';
+			const date = dateInput.value;
+			const zipName = `news-draft-${date}-${slug}.zip`;
+			downloadsZip(files, zipName);
+			toast(`ZIP created: ${zipName}`, 'success');
+		} catch (e) {
+			console.error(e);
+			toast('Failed to create ZIP', 'error');
+		}
 	}
 
 	// Draft handlers - moved to setupEventHandlers
@@ -1315,7 +1405,7 @@
 		} else {
 			url = URL.createObjectURL(file);
 		}
-		trackedAssets.push({ file, name: file.name, alt });
+		trackedAssets.push({ file, name: file.name, alt, url });
 		insertAtCursor(bodyInput, `![${alt}](${url})\n\n`, '');
 	}
 
@@ -1475,6 +1565,8 @@
 			// Main action buttons
 			if (previewBtn) previewBtn.addEventListener('click', showPreview);
 			if (downloadBtn) downloadBtn.addEventListener('click', downloadMarkdown);
+			const createZipBtn = document.getElementById('create-zip-btn');
+			if (createZipBtn) createZipBtn.addEventListener('click', createIncomingZip);
 			if (copyMdBtn) copyMdBtn.addEventListener('click', copyMarkdown);
 			if (copyJsonBtn) copyJsonBtn.addEventListener('click', copyJsonEntry);
 			if (downloadJsonBtn) downloadJsonBtn.addEventListener('click', downloadJsonEntry);
