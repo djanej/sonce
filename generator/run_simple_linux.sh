@@ -1,23 +1,45 @@
 #!/bin/bash
 
-echo "Starting Easy News Maker..."
-echo ""
+cd "$(dirname "$0")"
 
-SCRIPT="$(dirname "$0")/news_generator_simple.py"
+show_gui_error() {
+  local message="$1"
+  if command -v zenity >/dev/null 2>&1; then
+    zenity --error --title="Sonce News Maker - Easy Mode" --width=480 --text="$message" || true
+  elif command -v kdialog >/dev/null 2>&1; then
+    kdialog --error "$message" || true
+  elif command -v xmessage >/dev/null 2>&1; then
+    xmessage -center "$message" || true
+  else
+    printf "%s\n" "$message" >&2
+  fi
+}
 
-# Try python3 first
-if command -v python3 &> /dev/null; then
-    python3 "$SCRIPT"
-# Try python
-elif command -v python &> /dev/null; then
-    python "$SCRIPT"
+SCRIPT="news_generator_simple.py"
+
+# Pick Python interpreter
+PYTHON_BIN=""
+if command -v python3 >/dev/null 2>&1; then
+  PYTHON_BIN="python3"
+elif command -v python >/dev/null 2>&1; then
+  PYTHON_BIN="python"
 else
-    echo "Error: Python 3 is not installed."
-    echo "Please install Python 3 and try again."
-    echo ""
-    echo "On macOS: Download from https://www.python.org/downloads/"
-    echo "On Ubuntu/Debian: sudo apt-get install python3 python3-tk"
-    echo "On Fedora: sudo dnf install python3 python3-tkinter"
-    echo "On Arch: sudo pacman -S python tk"
-    exit 1
+  show_gui_error "Python 3 is required.\n\nInstall it and try again.\n\nExamples:\n• Ubuntu/Debian: sudo apt-get install python3 python3-tk\n• Fedora: sudo dnf install python3 python3-tkinter\n• Arch: sudo pacman -S python tk"
+  exit 1
 fi
+
+# Verify Tkinter
+if ! "$PYTHON_BIN" - <<'PY' >/dev/null 2>&1
+import sys
+try:
+    import tkinter  # noqa: F401
+except Exception:
+    sys.exit(2)
+sys.exit(0)
+PY
+then
+  show_gui_error "Tkinter (python3-tk) is missing for Python 3.\n\nInstall it and try again.\n\nExamples:\n• Ubuntu/Debian: sudo apt-get install python3-tk\n• Fedora: sudo dnf install python3-tkinter\n• Arch: sudo pacman -S tk"
+  exit 1
+fi
+
+exec "$PYTHON_BIN" "$SCRIPT"

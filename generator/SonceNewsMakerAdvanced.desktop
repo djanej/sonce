@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Sonce News Maker (Advanced)
+Comment=Full-featured news generator
+Exec=sh -c 'cd "$(dirname "\"%k\"")" && ./run_mac_linux.sh'
+Terminal=false
+Categories=Utility;
+StartupNotify=true
+Icon=utilities-terminal

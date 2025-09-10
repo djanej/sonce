@@ -13,7 +13,9 @@ This folder contains a tiny offline app that creates draft news files compatible
 2. Open the folder named `generator`.
 3. Double‑click one of these:
    - On Windows: `run_windows.bat`
-   - On Mac or Linux: `run_mac_linux.sh` (you may need to right‑click > Open)
+   - On macOS: `run_mac_linux.sh` (you may need to right‑click > Open)
+   - On Linux (no terminal): double‑click `SonceNewsMakerEasy.desktop` or `SonceNewsMakerAdvanced.desktop`
+     - If your file manager asks to “Mark as executable”, choose Yes. If it opens as text, right‑click the file → Properties → Permissions → check “Allow executing file as program”. Then double‑click again.
 4. Fill in the form and click “Generate Draft”. Tooltips explain each field.
 5. The draft will be saved into `generator/output/` as:
    - `content/news/YYYY-MM-DD-slug.md` (your news file)
@@ -22,6 +24,10 @@ This folder contains a tiny offline app that creates draft news files compatible
 7. Click “Copy ZIP to incoming…” and choose your website folder (or its `incoming/` folder). The file will be copied there.
 
 Note: The tool works fully offline. If your computer does not have Python installed, install it once from `python.org` and then double‑click the run file again.
+
+### Linux dependency notes
+- Requires Python 3 with Tkinter (package `python3-tk` on Debian/Ubuntu; `python3-tkinter` on Fedora; `tk` on Arch).
+- If dependencies are missing, the launcher will show a GUI error dialog with exact install commands.
 
 ## What to send to the editor
 - If you used “Create ZIP”: use the “Copy ZIP to incoming…” button, or send the ZIP file found in `generator/output/` (e.g. `news-draft-2025-01-15-welcome-post.zip`). The editor can copy it into the website repo under `incoming/`.
