@@ -77,23 +77,116 @@ function parseFrontmatter(raw){
 
 function validateFrontmatter(yaml, filename){
   const errors = [];
+  const warnings = [];
+  
   if (!yaml || typeof yaml !== 'object'){
     errors.push('missing frontmatter block');
-    return errors;
+    return { errors, warnings };
   }
-  if (!yaml.title || String(yaml.title).trim() === '') errors.push('title is required');
-  if (!yaml.date || !DATE_RE.test(String(yaml.date))) errors.push('date must be YYYY-MM-DD');
-  if (yaml.slug && !SLUG_RE.test(String(yaml.slug))) errors.push('slug format invalid');
-  if (yaml.image && !HERO_RE.test(String(yaml.image))) errors.push('image path must be under /static/uploads/news/YYYY/MM/');
-  if (Array.isArray(yaml.tags) && !yaml.tags.every(t => typeof t === 'string')) errors.push('tags must be array of strings');
-  // derived suggestions
+  
+  // Required fields
+  if (!yaml.title || String(yaml.title).trim() === '') {
+    errors.push('title is required');
+  } else {
+    const title = String(yaml.title).trim();
+    // Check for test/placeholder content
+    if (title.length < 3) warnings.push('title is too short (min 3 characters)');
+    if (title.length > 100) warnings.push('title is too long (max 100 characters)');
+    if (/^(test|asdf|qwerty|lorem|example|sample|demo)/i.test(title)) {
+      warnings.push('title appears to be test/placeholder content');
+    }
+    if (!/^[A-Z]/.test(title) && !/^[0-9]/.test(title)) {
+      warnings.push('title should start with a capital letter');
+    }
+    // Check for random gibberish
+    if (/^[a-z]{15,}$/i.test(title.replace(/\s/g, '')) || /([a-z])\1{4,}/i.test(title)) {
+      warnings.push('title appears to contain random/repeated characters');
+    }
+  }
+  
+  if (!yaml.date || !DATE_RE.test(String(yaml.date))) {
+    errors.push('date must be YYYY-MM-DD');
+  } else {
+    const date = new Date(yaml.date);
+    const now = new Date();
+    const futureLimit = new Date();
+    futureLimit.setDate(futureLimit.getDate() + 30);
+    
+    if (date > futureLimit) {
+      warnings.push('date is more than 30 days in the future');
+    }
+    if (date < new Date('2020-01-01')) {
+      warnings.push('date seems too old (before 2020)');
+    }
+  }
+  
+  // Optional fields validation
+  if (yaml.slug && !SLUG_RE.test(String(yaml.slug))) {
+    errors.push('slug format invalid (must be lowercase letters, numbers, and hyphens)');
+  }
+  
+  if (yaml.image) {
+    if (!HERO_RE.test(String(yaml.image))) {
+      errors.push('image path must be under /static/uploads/news/YYYY/MM/');
+    }
+    // Check if image path matches the date in frontmatter
+    const imagePath = String(yaml.image);
+    const dateMatch = imagePath.match(/\/(\d{4})\/(\d{2})\//);  
+    if (dateMatch && yaml.date) {
+      const [, year, month] = dateMatch;
+      const postDate = new Date(yaml.date);
+      if (parseInt(year) !== postDate.getFullYear() || parseInt(month) !== postDate.getMonth() + 1) {
+        warnings.push('image path year/month does not match post date');
+      }
+    }
+  }
+  
+  if (yaml.author) {
+    const author = String(yaml.author).trim();
+    if (author.length < 2) warnings.push('author name is too short');
+    if (/^(test|admin|user|author|writer)/i.test(author)) {
+      warnings.push('author appears to be a placeholder');
+    }
+  }
+  
+  if (yaml.summary) {
+    const summary = String(yaml.summary).trim();
+    if (summary.length < 10) warnings.push('summary is too short (min 10 characters)');
+    if (summary.length > 200) warnings.push('summary is too long (max 200 characters)');
+    if (/^(test|lorem ipsum|summary|description)/i.test(summary)) {
+      warnings.push('summary appears to be placeholder content');
+    }
+  }
+  
+  if (Array.isArray(yaml.tags)) {
+    if (!yaml.tags.every(t => typeof t === 'string')) {
+      errors.push('tags must be array of strings');
+    } else if (yaml.tags.length > 10) {
+      warnings.push('too many tags (max 10 recommended)');
+    }
+  }
+  
+  // Filename consistency
+  if (!FILENAME_RE.test(filename)) {
+    errors.push('filename must match YYYY-MM-DD-slug.md format');
+  } else {
+    // Check if filename date matches frontmatter date
+    const filenameDateMatch = filename.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (filenameDateMatch && yaml.date) {
+      const filenameDate = `${filenameDateMatch[1]}-${filenameDateMatch[2]}-${filenameDateMatch[3]}`;
+      if (filenameDate !== yaml.date) {
+        warnings.push('filename date does not match frontmatter date');
+      }
+    }
+  }
+  
+  // Derived slug validation
   if (!yaml.slug && yaml.title){
     const derived = toSlug(yaml.title);
     if (!derived) errors.push('slug would be empty when derived from title');
   }
-  // filename consistency (if date in filename uses 8-digit format, accept that)
-  if (!FILENAME_RE.test(filename)) errors.push('filename must match YYYY-MM-DD-slug.md or YYYYMMDD-slug.md');
-  return errors;
+  
+  return { errors, warnings };
 }
 
 function toIsoDate(d){
@@ -141,6 +234,36 @@ async function buildIndexEntry(filename, yaml, markdown){
   return Object.fromEntries(Object.entries(base).filter(([,v]) => v !== '' && !(Array.isArray(v) && v.length === 0)));
 }
 
+async function validateContent(markdown) {
+  const warnings = [];
+  
+  // Extract body content (after frontmatter)
+  const bodyMatch = markdown.match(/^---\n[\s\S]*?\n---\n\n([\s\S]*)/);
+  const body = bodyMatch ? bodyMatch[1] : '';
+  
+  if (!body || body.trim().length === 0) {
+    warnings.push('post has no content body');
+  } else {
+    const wordCount = body.split(/\s+/).filter(Boolean).length;
+    if (wordCount < 50) warnings.push(`content is very short (${wordCount} words, recommended min 50)`);
+    if (wordCount > 10000) warnings.push(`content is very long (${wordCount} words, consider splitting)`);
+    
+    // Check for placeholder content
+    if (/^(test|lorem ipsum|content goes here|placeholder)/i.test(body.substring(0, 100))) {
+      warnings.push('content appears to be placeholder text');
+    }
+    
+    // Check for broken markdown links/images
+    const brokenLinks = body.match(/\[([^\]]*?)\]\(\s*\)/g);
+    if (brokenLinks) warnings.push('found broken markdown links (empty href)');
+    
+    const brokenImages = body.match(/!\[([^\]]*?)\]\(\s*\)/g);
+    if (brokenImages) warnings.push('found broken markdown images (empty src)');
+  }
+  
+  return warnings;
+}
+
 async function main(){
   const files = await listMarkdown(CONTENT_DIR);
   if (!files.length){
@@ -148,7 +271,11 @@ async function main(){
     return;
   }
   let hasErrors = false;
+  let hasWarnings = false;
   const entries = [];
+  
+  console.log('\n🔍 Validating news content...\n');
+  
   for (const filename of files){
     const full = path.join(CONTENT_DIR, filename);
     const raw = await readFileSafe(full);
@@ -157,15 +284,29 @@ async function main(){
       hasErrors = true;
       continue;
     }
+    
     const yaml = parseFrontmatter(raw);
-    const errs = validateFrontmatter(yaml, filename);
-    if (errs.length){
+    const { errors, warnings } = validateFrontmatter(yaml, filename);
+    const contentWarnings = await validateContent(raw);
+    const allWarnings = [...warnings, ...contentWarnings];
+    
+    if (errors.length > 0){
       hasErrors = true;
-      console.error(`✖ ${filename}:`);
-      errs.forEach(e => console.error(`  - ${e}`));
+      console.error(`\n❌ ${filename}:`);
+      console.error('  Errors:');
+      errors.forEach(e => console.error(`    • ${e}`));
+      if (allWarnings.length > 0) {
+        console.error('  Warnings:');
+        allWarnings.forEach(w => console.error(`    ⚠ ${w}`));
+      }
+    } else if (allWarnings.length > 0) {
+      hasWarnings = true;
+      console.warn(`\n⚠️  ${filename}:`);
+      allWarnings.forEach(w => console.warn(`    • ${w}`));
     } else {
-      console.log(`✔ ${filename} OK`);
+      console.log(`✅ ${filename}`);
     }
+    
     // Build entry regardless, for preview
     const entry = await buildIndexEntry(filename, yaml || {}, raw);
     entries.push(entry);
@@ -176,10 +317,18 @@ async function main(){
 
   const indexPath = path.join(CONTENT_DIR, 'index.json');
   await fs.writeFile(indexPath, JSON.stringify(entries, null, 2) + '\n', 'utf8');
-  console.log(`Wrote ${entries.length} entries to content/news/index.json`);
-
-  if (hasErrors){
+  
+  console.log(`\n📊 Summary:`);
+  console.log(`   Total posts: ${entries.length}`);
+  console.log(`   Index written to: content/news/index.json`);
+  
+  if (hasErrors) {
+    console.error('\n❌ Validation failed with errors');
     process.exitCode = 1;
+  } else if (hasWarnings) {
+    console.warn('\n⚠️  Validation passed with warnings');
+  } else {
+    console.log('\n✅ All posts validated successfully!');
   }
 }
 

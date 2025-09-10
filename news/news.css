@@ -5,6 +5,8 @@
 .news-card {
     transition: all 0.3s ease;
     border: 1px solid #e5e7eb;
+    position: relative;
+    overflow: hidden;
 }
 
 .news-card:hover {
@@ -15,6 +17,27 @@
 .news-card:focus-visible {
     outline: 3px solid #f97316;
     outline-offset: 3px;
+}
+
+/* Add loading skeleton animation */
+@keyframes skeleton-loading {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        #f3f4f6 25%,
+        #e5e7eb 50%,
+        #f3f4f6 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
 }
 
 .news-card h2 { 
@@ -50,6 +73,34 @@
 .news-article {
     color: #374151;
     line-height: 1.7;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Ensure long URLs don't break layout */
+.news-article a {
+    word-break: break-all;
+}
+
+/* Better image handling */
+.news-article img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.news-article figure {
+    margin: 2rem 0;
+}
+
+.news-article figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+    text-align: center;
+    font-style: italic;
 }
 
 .news-article h1 { 
@@ -236,6 +287,65 @@
     animation: spin 1s linear infinite;
 }
 
+/* Print styles */
+@media print {
+    .news-lock-overlay,
+    #news-controls,
+    #pagination,
+    #share,
+    header nav,
+    footer {
+        display: none !important;
+    }
+    
+    .news-article {
+        max-width: 100%;
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+    
+    .news-article a {
+        color: #000;
+        text-decoration: underline;
+    }
+    
+    .news-article a[href]:after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #666;
+    }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .news-card:hover {
+        transform: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .news-card {
+        border-width: 2px;
+        border-color: #000;
+    }
+    
+    .tag-pill,
+    .pagination-btn {
+        border-width: 2px;
+    }
+    
+    .news-article a {
+        text-decoration-thickness: 2px;
+    }
+}
+
 /* Mobile optimizations */
 @media (max-width: 640px) {
     .news-card .p-6 { 
@@ -299,4 +409,58 @@
 /* Smooth transitions */
 * {
     transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Error states */
+.error-message {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+/* Success states */
+.success-message {
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+/* Loading states */
+.loading-spinner {
+    border: 3px solid #f3f4f6;
+    border-top: 3px solid #f97316;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+/* Improved focus styles for keyboard navigation */
+*:focus-visible {
+    outline: 2px solid #f97316;
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+}
+
+/* Skip to content link for accessibility */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #f97316;
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 100;
+    border-radius: 0 0 0.5rem 0;
+}
+
+.skip-to-content:focus {
+    top: 0;
 }

@@ -22,6 +22,15 @@ DATE_RE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})-(?:[a-z0-9]+(?:-[a-z0-9]+)*)\.md
 def info(msg: str):
     print(f"[incoming] {msg}")
 
+def warning(msg: str):
+    print(f"[incoming] ⚠️  {msg}")
+
+def error(msg: str):
+    print(f"[incoming] ❌ {msg}")
+
+def success(msg: str):
+    print(f"[incoming] ✅ {msg}")
+
 
 def fix_paths_in_text(text: str) -> str:
     """Normalize image paths in frontmatter and markdown.
@@ -99,6 +108,49 @@ def git_commit(message: str) -> None:
         pass
 
 
+def validate_markdown_content(text: str, filename: str) -> list:
+    """Validate markdown content for quality issues."""
+    warnings = []
+    
+    # Extract frontmatter
+    fm_match = re.match(r'^---\n([\s\S]*?)\n---', text)
+    if not fm_match:
+        warnings.append("Missing frontmatter")
+        return warnings
+    
+    frontmatter = fm_match.group(1)
+    body = text[fm_match.end():].strip()
+    
+    # Check title
+    title_match = re.search(r'^title:\s*["\']?(.+?)["\']?$', frontmatter, re.MULTILINE)
+    if title_match:
+        title = title_match.group(1).strip()
+        if len(title) < 3:
+            warnings.append("Title too short")
+        if re.match(r'^(test|asdf|lorem|example)', title, re.IGNORECASE):
+            warnings.append("Title appears to be test content")
+        # Check for gibberish
+        if re.match(r'^[a-z]{15,}$', title.replace(' ', ''), re.IGNORECASE):
+            warnings.append("Title appears to be random characters")
+    
+    # Check body content
+    if not body or len(body.strip()) < 10:
+        warnings.append("Content body is too short or missing")
+    else:
+        word_count = len(body.split())
+        if word_count < 50:
+            warnings.append(f"Content is very short ({word_count} words)")
+        if re.match(r'^(test|lorem ipsum|placeholder)', body[:100], re.IGNORECASE):
+            warnings.append("Content appears to be placeholder text")
+    
+    # Check for broken markdown
+    if re.search(r'\[([^\]]*?)\]\(\s*\)', body):
+        warnings.append("Found broken markdown links")
+    if re.search(r'!\[([^\]]*?)\]\(\s*\)', body):
+        warnings.append("Found broken markdown images")
+    
+    return warnings
+
 def import_zip(zip_path: Path) -> bool:
     info(f"Importing {zip_path.name}")
     work_dir = zip_path.with_suffix('.unpacked')
@@ -109,9 +161,14 @@ def import_zip(zip_path: Path) -> bool:
     # Unzip
     try:
         with zipfile.ZipFile(zip_path, 'r') as zf:
+            # Check for suspicious files
+            for name in zf.namelist():
+                if name.startswith('/') or '..' in name:
+                    error(f"Security warning: suspicious path in zip: {name}")
+                    return False
             zf.extractall(work_dir)
     except zipfile.BadZipFile:
-        info(f"Skipping (bad zip): {zip_path.name}")
+        error(f"Skipping (bad zip): {zip_path.name}")
         return False
 
     # Locate markdown under content/news/
@@ -136,10 +193,19 @@ def import_zip(zip_path: Path) -> bool:
     for md in md_files:
         rel_md = md.relative_to(work_dir)
         if not DATE_RE.search(md.name):
-            info(f"Warning: markdown filename not matching date-slug format: {md.name}")
+            warning(f"Markdown filename not matching date-slug format: {md.name}")
+        
+        # Read and validate content
+        text = md.read_text(encoding='utf-8')
+        validation_warnings = validate_markdown_content(text, md.name)
+        if validation_warnings:
+            warning(f"Content quality issues in {md.name}:")
+            for w in validation_warnings:
+                warning(f"  - {w}")
+        
+        # Fix paths and write
         dest_md = ROOT / rel_md
         dest_md.parent.mkdir(parents=True, exist_ok=True)
-        text = md.read_text(encoding='utf-8')
         fixed = fix_paths_in_text(text)
         dest_md.write_text(fixed, encoding='utf-8')
         moved_files.append(dest_md)
@@ -148,7 +214,12 @@ def import_zip(zip_path: Path) -> bool:
     rebuild_index()
     git_commit(f"Import news from {zip_path.name}")
 
-    info(f"Imported {zip_path.name}")
+    success(f"Imported {zip_path.name} - {len(md_files)} post(s), {len(uploads_inside)} image(s)")
+    
+    # Clean up temp directory
+    if work_dir.exists():
+        shutil.rmtree(work_dir)
+    
     return True
 
 

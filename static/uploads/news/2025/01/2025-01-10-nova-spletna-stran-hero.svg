@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="url(#gradient1)"/>
+  <defs>
+    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FED7AA;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FB923C;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Website icon -->
+  <g transform="translate(500, 200)">
+    <rect x="0" y="0" width="200" height="140" rx="8" fill="white" opacity="0.9"/>
+    <rect x="10" y="10" width="180" height="30" rx="4" fill="#F97316"/>
+    <rect x="10" y="50" width="80" height="10" rx="2" fill="#E5E7EB"/>
+    <rect x="100" y="50" width="90" height="10" rx="2" fill="#E5E7EB"/>
+    <rect x="10" y="70" width="180" height="8" rx="2" fill="#E5E7EB"/>
+    <rect x="10" y="85" width="140" height="8" rx="2" fill="#E5E7EB"/>
+    <rect x="10" y="100" width="160" height="8" rx="2" fill="#E5E7EB"/>
+    <rect x="10" y="115" width="100" height="8" rx="2" fill="#E5E7EB"/>
+  </g>
+  
+  <!-- Decorative elements -->
+  <circle cx="200" cy="150" r="50" fill="white" opacity="0.2"/>
+  <circle cx="1000" cy="480" r="70" fill="white" opacity="0.15"/>
+  <circle cx="150" cy="450" r="40" fill="white" opacity="0.25"/>
+  
+  <!-- Text -->
+  <text x="600" y="420" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="bold" fill="white">Nova Spletna Stran</text>
+  <text x="600" y="460" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="white" opacity="0.9">Sindikat Sonce Koper</text>
+</svg>

@@ -1,57 +1,46 @@
 [
   {
-    "id": "2025-09-08-4535",
-    "title": "SIvisdjfisdfik",
-    "date": "2025-09-08",
-    "author": "Moj oce",
-    "summary": "Test1",
-    "excerpt": "Test1",
-    "description": "Test1",
-    "hero": "/static/uploads/news/2025/09/2025-09-08-4535-hero.jpeg",
-    "imageAlt": "smiling sigma",
-    "slug": "4535",
-    "filename": "2025-09-08-4535.md",
-    "path": "/content/news/2025-09-08-4535.md",
-    "link": "/content/news/2025-09-08-4535.md",
-    "readingTimeMinutes": 1,
-    "readingTimeLabel": "1 min"
+    "id": "2025-01-10-nova-spletna-stran-sindikata",
+    "title": "Nova spletna stran Sindikata Sonce Koper",
+    "date": "2025-01-10",
+    "author": "Uredništvo Sonce",
+    "summary": "Z veseljem predstavljamo prenovljeno spletno stran Sindikata Sonce Koper, ki prinaša sodobnejši izgled, boljšo uporabniško izkušnjo in lažji dostop do vseh pomembnih informacij.",
+    "excerpt": "Z veseljem predstavljamo prenovljeno spletno stran Sindikata Sonce Koper, ki prinaša sodobnejši izgled, boljšo uporabniško izkušnjo in lažji dostop do vseh pomembnih informacij.",
+    "description": "Z veseljem predstavljamo prenovljeno spletno stran Sindikata Sonce Koper, ki prinaša sodobnejši izgled, boljšo uporabniško izkušnjo in lažji dostop do vseh pomembnih informacij.",
+    "hero": "/static/uploads/news/2025/01/2025-01-10-nova-spletna-stran-hero.svg",
+    "imageAlt": "Nova spletna stran Sindikata Sonce",
+    "tags": [
+      "novice",
+      "spletna stran",
+      "sindikat"
+    ],
+    "slug": "nova-spletna-stran-sindikata",
+    "filename": "2025-01-10-nova-spletna-stran-sindikata.md",
+    "path": "/content/news/2025-01-10-nova-spletna-stran-sindikata.md",
+    "link": "/content/news/2025-01-10-nova-spletna-stran-sindikata.md",
+    "readingTimeMinutes": 2,
+    "readingTimeLabel": "2 min"
   },
   {
-    "id": "2025-09-08-544",
-    "title": "hertzerzerz",
-    "date": "2025-09-08",
-    "author": "retzet",
-    "summary": "sdsd",
-    "excerpt": "sdsd",
-    "description": "sdsd",
-    "imageAlt": "hertzerzerz",
+    "id": "2025-01-09-letno-srecanje-clanov-2025",
+    "title": "Vabilo na letno srečanje članov 2025",
+    "date": "2025-01-09",
+    "author": "Organizacijski odbor",
+    "summary": "Vabimo vas na tradicionalno letno srečanje članov Sindikata Sonce Koper, ki bo potekalo 25. januarja 2025. Pripravili smo bogat program z aktualnimi temami in družabnim delom.",
+    "excerpt": "Vabimo vas na tradicionalno letno srečanje članov Sindikata Sonce Koper, ki bo potekalo 25. januarja 2025. Pripravili smo bogat program z aktualnimi temami in družabnim delom.",
+    "description": "Vabimo vas na tradicionalno letno srečanje članov Sindikata Sonce Koper, ki bo potekalo 25. januarja 2025. Pripravili smo bogat program z aktualnimi temami in družabnim delom.",
+    "hero": "/static/uploads/news/2025/01/2025-01-09-letno-srecanje-hero.svg",
+    "imageAlt": "Letno srečanje članov sindikata",
     "tags": [
-      "Testing4"
+      "dogodek",
+      "srečanje",
+      "člani"
     ],
-    "slug": "544",
-    "filename": "2025-09-08-544.md",
-    "path": "/content/news/2025-09-08-544.md",
-    "link": "/content/news/2025-09-08-544.md",
-    "readingTimeMinutes": 1,
-    "readingTimeLabel": "1 min"
-  },
-  {
-    "id": "2025-09-05-system-test-2",
-    "title": "system test 2",
-    "date": "2025-09-05",
-    "author": "system test3",
-    "summary": "system testing.",
-    "excerpt": "system testing.",
-    "description": "system testing.",
-    "imageAlt": "system test 2",
-    "tags": [
-      "system test"
-    ],
-    "slug": "system-test-2",
-    "filename": "2025-09-05-system-test-2.md",
-    "path": "/content/news/2025-09-05-system-test-2.md",
-    "link": "/content/news/2025-09-05-system-test-2.md",
-    "readingTimeMinutes": 1,
-    "readingTimeLabel": "1 min"
+    "slug": "letno-srecanje-clanov-2025",
+    "filename": "2025-01-09-letno-srecanje-clanov-2025.md",
+    "path": "/content/news/2025-01-09-letno-srecanje-clanov-2025.md",
+    "link": "/content/news/2025-01-09-letno-srecanje-clanov-2025.md",
+    "readingTimeMinutes": 3,
+    "readingTimeLabel": "3 min"
   }
 ]

@@ -6,9 +6,7 @@
     <title>News – Sonce Slovenije</title>
     <meta name="description" content="Novice in objave Sindikat Sonce Koper.">
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
-    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -23,6 +21,7 @@
         }
     </script>
     <link rel="stylesheet" href="/news/news.css">
+    <script src="/news/performance.js" defer></script>
     <style>
         .news-lock-overlay { display: none !important; }
         .news-locked .news-lock-overlay { display: flex !important; }
@@ -423,6 +422,14 @@
                 const total = state.filteredPosts.length;
                 
                 if (!total){
+                    elements.empty.innerHTML = `
+                        <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Ni rezultatov</h3>
+                        <p class="text-gray-600">${state.query ? `Ni objav, ki bi ustrezale iskanju "${escapeHtml(state.query)}".` : 
+                            state.activeTag ? `Ni objav z oznako "${escapeHtml(state.activeTag)}".` : 
+                            'Ni objav za prikaz.'}</p>`;
                     elements.empty.classList.remove('hidden');
                     elements.loading.classList.add('hidden');
                     return;
@@ -681,19 +688,78 @@
 
             async function load(){
                 try {
-                    const res = await fetch('/content/news/index.json', { cache: 'no-cache' });
-                    if (!res.ok) throw new Error('Failed to load index.json');
+                    // Show loading state
+                    elements.loading.classList.remove('hidden');
+                    elements.empty.classList.add('hidden');
                     
-                    const data = await res.json();
+                    // Use optimized fetch with caching
+                const fetchFn = window.optimizedFetch || fetch;
+                const res = await fetchFn('/content/news/index.json', { 
+                        cache: 'reload',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    if (!res.ok) {
+                        if (res.status === 404) {
+                            throw new Error('News index not found. Please rebuild the news index.');
+                        }
+                        throw new Error(`Failed to load news (HTTP ${res.status})`);
+                    }
+                    
+                    const text = await res.text();
+                    if (!text || text.trim() === '') {
+                        throw new Error('News index is empty');
+                    }
+                    
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch (parseError) {
+                        console.error('JSON parse error:', parseError);
+                        throw new Error('Invalid news index format');
+                    }
+                    
                     const raw = Array.isArray(data) ? data : Array.isArray(data.posts) ? data.posts : [];
-                    state.allPosts = raw.map(normalizePost);
+                    
+                    // Filter out invalid posts
+                    state.allPosts = raw
+                        .filter(post => post && post.title && post.date)
+                        .map(normalizePost);
+                    
+                    if (state.allPosts.length === 0) {
+                        elements.loading.classList.add('hidden');
+                        elements.empty.innerHTML = `
+                            <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">Še ni objav</h3>
+                            <p class="text-gray-600">Kmalu bodo dodane prve novice.</p>`;
+                        elements.empty.classList.remove('hidden');
+                        return;
+                    }
                     
                     readQuery();
                     applyFilters();
+                    
                 } catch (e) {
                     console.error('Error loading news:', e);
                     elements.loading.classList.add('hidden');
-                    elements.empty.textContent = 'Napaka pri nalaganju novic.';
+                    
+                    // Show user-friendly error message
+                    elements.empty.innerHTML = `
+                        <svg class="mx-auto h-12 w-12 text-red-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Napaka pri nalaganju</h3>
+                        <p class="text-gray-600 mb-4">${escapeHtml(e.message || 'Prišlo je do napake pri nalaganju novic.')}</p>
+                        <button onclick="location.reload()" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+                            <svg class="-ml-1 mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            Poskusi ponovno
+                        </button>`;
                     elements.empty.classList.remove('hidden');
                 }
             }
@@ -733,6 +799,6 @@
             load();
         })();
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" defer></script>
+    <!-- Font Awesome removed for better performance - using inline SVG icons instead -->
 </body>
 </html>

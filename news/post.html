@@ -24,6 +24,7 @@
     </script>
     <link rel="stylesheet" href="/news/news.css">
     <script src="/news/markdown.js"></script>
+    <script src="/news/performance.js" defer></script>
     <style>
         .news-lock-overlay { display: none !important; }
         .news-locked .news-lock-overlay { display: flex !important; }
@@ -89,6 +90,8 @@
     <script id="post-jsonld" type="application/ld+json">{}</script>
 </head>
 <body class="bg-gray-50">
+    <!-- Scroll progress indicator -->
+    <div id="scroll-progress" class="fixed top-0 left-0 h-1 bg-orange-500 transition-all duration-150 z-50" style="width: 0%"></div>
     <div class="news-lock-overlay fixed inset-0 z-50 bg-white/90 backdrop-blur flex items-center justify-center p-6">
         <div class="max-w-md w-full bg-white border border-gray-200 rounded-2xl shadow-xl p-8 text-center">
             <div class="mx-auto mb-4 w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
@@ -561,8 +564,9 @@
                 }
                 
                 try {
-                    // Load post metadata
-                    const res = await fetch('/content/news/index.json', { cache: 'no-cache' });
+                    // Load post metadata with optimized caching
+                    const fetchFn = window.optimizedFetch || fetch;
+                    const res = await fetchFn('/content/news/index.json', { cache: 'no-cache' });
                     const data = await res.json().catch(()=>[]);
                     const posts = Array.isArray(data) ? data : Array.isArray(data.posts) ? data.posts : [];
                     let post = null;
@@ -661,6 +665,6 @@
             load();
         })();
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" defer></script>
+    <!-- Font Awesome removed for better performance - using inline SVG icons instead -->
 </body>
 </html>
