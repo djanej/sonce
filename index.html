@@ -4650,9 +4650,108 @@
         html, body { height: 100%; min-height: 100%; }
         body { display: flex; flex-direction: column; margin: 0; padding-bottom: 0; }
         footer { margin-top: auto !important; }
-
+        
         /* Hide trailing CTA bar to ensure footer is last element */
         .mobile-cta-bar { display: none !important; }
+
+        /* Mobile-only layout fixes per section */
+        @media (max-width: 768px) {
+            /* Hero buttons alignment: ensure equal height and centered */
+            .hero-gradient .container .flex a.bg-white,
+            .hero-gradient .container .flex a.bg-white\/20 {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 52px;
+                line-height: 1;
+                vertical-align: middle;
+                width: 100%;
+                max-width: 320px;
+                margin: 0 auto;
+            }
+
+            /* Naše poslanstvo: center list + text */
+            #about ul li {
+                justify-content: center !important;
+                align-items: center !important;
+                text-align: center !important;
+            }
+            #about ul li > span { text-align: center !important; }
+
+            /* Pravna pomoč in zastopanje delavcev: center card content and checklists */
+            #services .bg-white .p-6 h3,
+            #services .bg-white .p-6 p,
+            #services .bg-white .p-6 ul { text-align: center !important; }
+            #services ul li {
+                justify-content: center !important;
+                align-items: center !important;
+                text-align: center !important;
+            }
+
+            /* Kako delujemo? and Zakaj izbrati nas?: center numbers/icons and text */
+            .md\:flex .flex.items-start {
+                flex-direction: column !important;
+                align-items: center !important;
+                text-align: center !important;
+            }
+            .md\:flex .flex.items-start > div:first-child {
+                margin-right: 0 !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            /* Prednosti članstva: center icon + text */
+            #join .grid .flex.items-start {
+                flex-direction: column !important;
+                align-items: center !important;
+                text-align: center !important;
+            }
+            #join .grid .flex.items-start > div:first-child {
+                margin-right: 0 !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            /* Postopek pridružitve: center step numbers */
+            #join .grid .space-y-8 .flex.items-start {
+                flex-direction: column !important;
+                align-items: center !important;
+                text-align: center !important;
+            }
+
+            /* Lokacija in kontaktni podatki: center items */
+            #contact .bg-white .space-y-8 .flex.items-start {
+                flex-direction: column !important;
+                align-items: center !important;
+                text-align: center !important;
+            }
+            #contact .bg-white .space-y-8 .flex.items-start > div:first-child {
+                margin-right: 0 !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            /* Hide Pošljite nam sporočilo section (right column with form) */
+            #contact .lg\:w-1\/2 + .lg\:w-1\/2 { display: none !important; }
+
+            /* Testimonials: keep stars horizontal and unrotated */
+            .testimonial-card .flex.text-accent {
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: center !important;
+                gap: 0.25rem;
+            }
+            .testimonial-card .flex.text-accent i {
+                transform: none !important;
+                rotate: 0deg !important;
+            }
+
+            /* Footer: tidy left-aligned layout on mobile */
+            footer .container > .grid > div { align-items: flex-start !important; }
+            footer .container > .grid > div > h3,
+            footer .container > .grid > div > p,
+            footer .container > .grid > div ul { text-align: left !important; }
+            footer .container .flex { justify-content: flex-start !important; }
+            footer .border-t { align-items: stretch !important; text-align: left !important; }
+            footer .border-t .flex { justify-content: flex-start !important; }
+        }
     </style>
     <script>
         // Global smooth scrolling with header offset and section highlight
