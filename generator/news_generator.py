@@ -11,7 +11,7 @@ import subprocess
 import traceback
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, Tuple
 
 try:
     import tkinter as tk
@@ -62,7 +62,7 @@ def get_file_size_mb(path: Path) -> float:
     return path.stat().st_size / (1024 * 1024)
 
 
-def validate_image(path: Path) -> tuple[bool, str]:
+def validate_image(path: Path) -> Tuple[bool, str]:
     """Validate image file."""
     if not path.exists():
         return False, "File does not exist"
@@ -327,7 +327,7 @@ class NewsGeneratorApp:
             del self.additional_images[idx]
             self.lst_images.delete(idx)
 
-    def _validate_inputs(self) -> tuple[bool, str]:
+    def _validate_inputs(self) -> Tuple[bool, str]:
         title = self.var_title.get().strip()
         if not title:
             return False, "Title is required."
@@ -392,7 +392,7 @@ class NewsGeneratorApp:
 
             # Copy images
             image_url = ""
-            written_paths: list[Path] = []
+            written_paths: List[Path] = []
             if self.hero_image_path:
                 self.progress_label.config(text="Processing hero image...")
                 self.master.update()

@@ -11,7 +11,7 @@ import subprocess
 import traceback
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, Tuple
 
 try:
     import tkinter as tk
@@ -62,7 +62,7 @@ def get_file_size_mb(path: Path) -> float:
     return path.stat().st_size / (1024 * 1024)
 
 
-def validate_image(path: Path) -> tuple[bool, str]:
+def validate_image(path: Path) -> Tuple[bool, str]:
     """Validate image file."""
     if not path.exists():
         return False, "File does not exist"
