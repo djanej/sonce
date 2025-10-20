@@ -123,7 +123,7 @@
 
             <section>
                 <h2 class="text-2xl font-semibold mb-4">7. Kontakt</h2>
-                <p class="text-gray-700">Za vprašanja glede varstva osebnih podatkov nas lahko kontaktirate na naslov info@pisarnasonce.si.</p>
+                <p class="text-gray-700">Za vprašanja glede varstva osebnih podatkov nas lahko kontaktirate na naslov info@sonce.org ali marko@sonce.org.</p>
             </section>
         </div>
     </div>
@@ -145,6 +145,48 @@
                 showErrorIfEmpty();
             }
         })();
+    </script>
+    <script>
+    (function(){
+        try { if (localStorage.getItem('hideNewEmailsPopup') === '1') return; } catch(e){}
+        function createPopup(){
+            var box = document.createElement('div');
+            box.id = 'new-emails-popup';
+            box.style.position = 'fixed';
+            box.style.right = '16px';
+            box.style.bottom = '16px';
+            box.style.zIndex = '9999';
+            box.style.maxWidth = '320px';
+            box.style.background = '#ffffff';
+            box.style.border = '1px solid #e5e7eb';
+            box.style.borderRadius = '12px';
+            box.style.boxShadow = '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)';
+            box.style.padding = '14px 16px';
+            box.innerHTML = '<div style="display:flex;align-items:flex-start;gap:10px;line-height:1.4;">'
+                + '<div style="flex:1 1 auto;min-width:0;">'
+                +   '<div style="font-weight:600;color:#111827;font-size:14px;">Novi e-poštni naslovi</div>'
+                +   '<div style="margin-top:4px;color:#374151;font-size:13px;word-break:break-word;">'
+                +       '<a href="mailto:marko@sonce.org" style="text-decoration:underline;">marko@sonce.org</a><br>'
+                +       '<a href="mailto:info@sonce.org" style="text-decoration:underline;">info@sonce.org</a>'
+                +   '</div>'
+                + '</div>'
+                + '<button aria-label="Zapri" style="margin-left:6px;color:#9ca3af;font-size:18px;line-height:1;background:none;border:0;cursor:pointer;">&times;</button>'
+                + '</div>';
+            var closeBtn = box.querySelector('button');
+            if (closeBtn){
+                closeBtn.addEventListener('click', function(){
+                    if (box && box.parentNode) box.parentNode.removeChild(box);
+                    try { localStorage.setItem('hideNewEmailsPopup', '1'); } catch(e){}
+                });
+            }
+            document.body.appendChild(box);
+        }
+        if (document.readyState === 'loading'){
+            document.addEventListener('DOMContentLoaded', createPopup);
+        } else {
+            createPopup();
+        }
+    })();
     </script>
 </body>
 </html> 

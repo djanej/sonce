@@ -71,7 +71,7 @@
     <div id="content" class="container mx-auto px-4 py-12 max-w-3xl">
         <h1 class="text-3xl font-bold text-primary mb-3">Imate težave z našo spletno stranjo?</h1>
         <p class="text-gray-700 mb-8">Zahvaljujemo se vam za povratne informacije. Pomagajte nam izboljšati delovanje spletne strani z opisom težave. Za nujne zadeve nam lahko pišete tudi neposredno na
-            <a href="mailto:anej.bltnk@gmail.com" class="text-primary font-semibold underline">anej.bltnk@gmail.com</a>.
+            <a href="mailto:info@sonce.org,marko@sonce.org" class="text-primary font-semibold underline">info@sonce.org</a> ali <a href="mailto:info@sonce.org,marko@sonce.org" class="text-primary font-semibold underline">marko@sonce.org</a>.
         </p>
 
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
@@ -110,7 +110,7 @@
                 </div>
             </form>
 
-            <p class="text-gray-500 text-sm mt-4">Če se e‑pošta ne odpre samodejno, kliknite: <a id="fallbackMailto" href="mailto:anej.bltnk@gmail.com" class="text-primary underline">odpri pošto</a>.</p>
+            <p class="text-gray-500 text-sm mt-4">Če se e‑pošta ne odpre samodejno, kliknite: <a id="fallbackMailto" href="mailto:info@sonce.org,marko@sonce.org" class="text-primary underline">odpri pošto</a>.</p>
         </div>
     </div>
 
@@ -172,7 +172,7 @@
             ].filter(Boolean);
             const body = encode(bodyLines.join('\n'));
 
-            const mailto = `mailto:anej.bltnk@gmail.com?subject=${subject}&body=${body}`;
+            const mailto = `mailto:info@sonce.org,marko@sonce.org?subject=${subject}&body=${body}`;
             const fallback = document.getElementById('fallbackMailto');
             if (fallback) fallback.href = mailto;
             window.location.href = mailto;
@@ -188,6 +188,48 @@
             if (deviceInput && !deviceInput.value) deviceInput.value = detectDevice();
             if (browserInput && !browserInput.value) browserInput.value = detectBrowser();
         });
+    </script>
+    <script>
+    (function(){
+        try { if (localStorage.getItem('hideNewEmailsPopup') === '1') return; } catch(e){}
+        function createPopup(){
+            var box = document.createElement('div');
+            box.id = 'new-emails-popup';
+            box.style.position = 'fixed';
+            box.style.right = '16px';
+            box.style.bottom = '16px';
+            box.style.zIndex = '9999';
+            box.style.maxWidth = '320px';
+            box.style.background = '#ffffff';
+            box.style.border = '1px solid #e5e7eb';
+            box.style.borderRadius = '12px';
+            box.style.boxShadow = '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)';
+            box.style.padding = '14px 16px';
+            box.innerHTML = '<div style="display:flex;align-items:flex-start;gap:10px;line-height:1.4;">'
+                + '<div style="flex:1 1 auto;min-width:0;">'
+                +   '<div style="font-weight:600;color:#111827;font-size:14px;">Novi e-poštni naslovi</div>'
+                +   '<div style="margin-top:4px;color:#374151;font-size:13px;word-break:break-word;">'
+                +       '<a href="mailto:marko@sonce.org" style="text-decoration:underline;">marko@sonce.org</a><br>'
+                +       '<a href="mailto:info@sonce.org" style="text-decoration:underline;">info@sonce.org</a>'
+                +   '</div>'
+                + '</div>'
+                + '<button aria-label="Zapri" style="margin-left:6px;color:#9ca3af;font-size:18px;line-height:1;background:none;border:0;cursor:pointer;">&times;</button>'
+                + '</div>';
+            var closeBtn = box.querySelector('button');
+            if (closeBtn){
+                closeBtn.addEventListener('click', function(){
+                    if (box && box.parentNode) box.parentNode.removeChild(box);
+                    try { localStorage.setItem('hideNewEmailsPopup', '1'); } catch(e){}
+                });
+            }
+            document.body.appendChild(box);
+        }
+        if (document.readyState === 'loading'){
+            document.addEventListener('DOMContentLoaded', createPopup);
+        } else {
+            createPopup();
+        }
+    })();
     </script>
 </body>
 </html>
