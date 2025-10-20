@@ -98,7 +98,7 @@
     <!-- Additional SEO Meta Tags -->
     <meta name="copyright" content="Sindikat Sonce Koper">
     <meta name="designer" content="Sindikat Sonce Koper">
-    <meta name="reply-to" content="info@pisarnasonce.si">
+    <meta name="reply-to" content="info@sonce.org">
     <meta name="generator" content="HTML5">
     <meta name="rating" content="Safe For Kids">
     <link rel="apple-touch-startup-image" href="/favicons/apple-splash-2048-2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
@@ -187,7 +187,7 @@
             "@type": "ContactPoint",
             "telephone": "+386 40 238 460",
             "contactType": "customer service",
-            "email": "info@pisarnasonce.si",
+        "email": "info@sonce.org",
             "areaServed": "SI",
             "availableLanguage": ["Slovenian", "English"],
             "hoursAvailable": {
@@ -284,8 +284,8 @@
         "areaServed": "SI",
         "hasMap": "https://maps.google.com/?q=Marušičeva+5,+6000+Koper,+Slovenia",
         "telephone": "+386 40 238 460",
-        "email": "info@pisarnasonce.si",
-        "email": "info@pisarnasonce.si",
+        "email": "info@sonce.org",
+        "email": "marko@sonce.org",
         "url": "https://sonce.org/",
         "areaServed": "Slovenia",
         "serviceArea": {
@@ -3401,7 +3401,7 @@
         // Email protection
         function decodeEmail(e) {
             e.preventDefault();
-            const email = atob('aW5mb0BwaXNhcm5hc29uY2Uuc2k=');
+            const email = atob('aW5mb0Bzb25jZS5vcmc=');
             window.location.href = 'mailto:' + email;
         }
     </script>
@@ -4057,9 +4057,9 @@
                             <div>
                                 <h4 class="font-bold text-xl text-gray-800 mb-3">Pošljite nam izpolnjeno izjavo</h4>
                                 <p class="text-gray-600 mb-4">Skenirajte izpolnjeno in podpisano pristopno izjavo ter jo pošljite na naš e-poštni naslov ali jo pošljite na naslov Sindikat Sonce Slovenije, Marušičeva 5, 6000 Koper.</p>
-                                <a href="mailto:info@pisarnasonce.si" class="inline-flex items-center bg-primary/10 hover:bg-primary/20 text-primary font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:-translate-y-1">
+                                <a href="mailto:info@sonce.org" class="inline-flex items-center bg-primary/10 hover:bg-primary/20 text-primary font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:-translate-y-1">
                                     <i class="fas fa-paper-plane mr-3 text-lg"></i>
-                                    Pošlji na info@pisarnasonce.si
+                                    Pošlji na info@sonce.org
                                 </a>
                             </div>
                         </div>
@@ -4137,7 +4137,7 @@
                                 </div>
                                 <div class="flex-1">
                                     <h4 class="font-semibold text-gray-800 mb-2 text-lg group-hover:text-primary transition-colors duration-300">Elektronska pošta</h4>
-                                    <p class="text-gray-600 group-hover:text-gray-800 transition-colors duration-300">info@pisarnasonce.si</p>
+                                    <p class="text-gray-600 group-hover:text-gray-800 transition-colors duration-300"><a href="mailto:marko@sonce.org" class="underline">marko@sonce.org</a><br><a href="mailto:info@sonce.org" class="underline">info@sonce.org</a></p>
                                 </div>
                             </div>
                             
@@ -4194,7 +4194,7 @@
                             
                             <!-- Error Message (initially hidden) -->
                             <div id="formError" class="hidden p-4 mb-6 text-red-700 bg-red-100 rounded-lg">
-                                Prišlo je do napake pri pošiljanju sporočila. Prosimo, poskusite znova ali nas kontaktirajte direktno na info@pisarnasonce.si
+                                Prišlo je do napake pri pošiljanju sporočila. Prosimo, poskusite znova ali nas kontaktirajte direktno na info@sonce.org ali marko@sonce.org
                             </div>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

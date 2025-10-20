@@ -99,7 +99,7 @@
     <!-- Additional SEO Meta Tags -->
     <meta name="copyright" content="Sindikat Sonce Koper">
     <meta name="designer" content="Sindikat Sonce Koper">
-    <meta name="reply-to" content="info@pisarnasonce.si">
+    <meta name="reply-to" content="info@sonce.org">
     <meta name="generator" content="HTML5">
     <meta name="rating" content="Safe For Kids">
     <link rel="apple-touch-startup-image" href="/favicons/apple-splash-2048-2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
@@ -188,7 +188,7 @@
             "@type": "ContactPoint",
             "telephone": "+386 40 238 460",
             "contactType": "customer service",
-            "email": "info@pisarnasonce.si",
+        "email": "info@sonce.org",
             "areaServed": "SI",
             "availableLanguage": ["Slovenian", "English"],
             "hoursAvailable": {
@@ -285,8 +285,8 @@
         "areaServed": "SI",
         "hasMap": "https://maps.google.com/?q=Marušičeva+5,+6000+Koper,+Slovenia",
         "telephone": "+386 40 238 460",
-        "email": "info@pisarnasonce.si",
-        "email": "info@pisarnasonce.si",
+        "email": "info@sonce.org",
+        "email": "marko@sonce.org",
         "url": "https://sonce.org/",
         "areaServed": "Slovenia",
         "serviceArea": {
@@ -3500,7 +3500,7 @@
         // Email protection
         function decodeEmail(e) {
             e.preventDefault();
-            const email = atob('aW5mb0BwaXNhcm5hc29uY2Uuc2k=');
+            const email = atob('aW5mb0Bzb25jZS5vcmc=');
             window.location.href = 'mailto:' + email;
         }
     </script>
@@ -4162,9 +4162,9 @@
                             <div>
                                 <h4 class="font-bold text-xl text-gray-800 mb-3">Pošljite nam izpolnjeno izjavo</h4>
                                 <p class="text-gray-600 mb-4">Skenirajte izpolnjeno in podpisano pristopno izjavo ter jo pošljite na naš e-poštni naslov ali jo pošljite na naslov Sindikat Sonce Slovenije, Marušičeva 5, 6000 Koper.</p>
-                                <a href="mailto:info@pisarnasonce.si" class="inline-flex items-center bg-primary/10 hover:bg-primary/20 text-primary font-semibold py-3 px-4 md:px-6 rounded-lg transition-all duration-300 transform hover:-translate-y-1 w-full md:w-auto justify-center md:justify-start text-center md:text-left whitespace-normal break-words flex-wrap text-sm md:text-base">
+                                <a href="mailto:info@sonce.org" class="inline-flex items-center bg-primary/10 hover:bg-primary/20 text-primary font-semibold py-3 px-4 md:px-6 rounded-lg transition-all duration-300 transform hover:-translate-y-1 w-full md:w-auto justify-center md:justify-start text-center md:text-left whitespace-normal break-words flex-wrap text-sm md:text-base">
                                     <i class="fas fa-paper-plane mr-3 text-lg"></i>
-                                    Pošlji na info@pisarnasonce.si
+                                    Pošlji na info@sonce.org
                                 </a>
                             </div>
                         </div>
@@ -4242,7 +4242,7 @@
                                 </div>
                                 <div class="flex-1">
                                     <h4 class="font-semibold text-gray-800 mb-2 text-lg group-hover:text-primary transition-colors duration-300">Elektronska pošta</h4>
-                                    <p class="text-gray-600 group-hover:text-gray-800 transition-colors duration-300">info@pisarnasonce.si</p>
+                                    <p class="text-gray-600 group-hover:text-gray-800 transition-colors duration-300"><a href="mailto:marko@sonce.org" class="underline">marko@sonce.org</a><br><a href="mailto:info@sonce.org" class="underline">info@sonce.org</a></p>
                                 </div>
                             </div>
                             
@@ -4299,7 +4299,7 @@
                             
                             <!-- Error Message (initially hidden) -->
                             <div id="formError" class="hidden p-4 mb-6 text-red-700 bg-red-100 rounded-lg">
-                                Prišlo je do napake pri pošiljanju sporočila. Prosimo, poskusite znova ali nas kontaktirajte direktno na info@pisarnasonce.si
+                                Prišlo je do napake pri pošiljanju sporočila. Prosimo, poskusite znova ali nas kontaktirajte direktno na info@sonce.org ali marko@sonce.org
                             </div>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -4474,6 +4474,50 @@
             </div>
         </div>
     </footer>
+
+    <!-- Novi e-poštni naslovi popup -->
+    <script>
+    (function(){
+        try { if (localStorage.getItem('hideNewEmailsPopup') === '1') return; } catch(e){}
+        function createPopup(){
+            var box = document.createElement('div');
+            box.id = 'new-emails-popup';
+            box.style.position = 'fixed';
+            box.style.right = '16px';
+            box.style.bottom = '16px';
+            box.style.zIndex = '9999';
+            box.style.maxWidth = '320px';
+            box.style.background = '#ffffff';
+            box.style.border = '1px solid #e5e7eb';
+            box.style.borderRadius = '12px';
+            box.style.boxShadow = '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)';
+            box.style.padding = '14px 16px';
+            box.innerHTML = '<div style="display:flex;align-items:flex-start;gap:10px;line-height:1.4;">'
+                + '<div style="flex:1 1 auto;min-width:0;">'
+                +   '<div style="font-weight:600;color:#111827;font-size:14px;">Novi e-poštni naslovi</div>'
+                +   '<div style="margin-top:4px;color:#374151;font-size:13px;word-break:break-word;">'
+                +       '<a href="mailto:marko@sonce.org" style="text-decoration:underline;">marko@sonce.org</a><br>'
+                +       '<a href="mailto:info@sonce.org" style="text-decoration:underline;">info@sonce.org</a>'
+                +   '</div>'
+                + '</div>'
+                + '<button aria-label="Zapri" style="margin-left:6px;color:#9ca3af;font-size:18px;line-height:1;background:none;border:0;cursor:pointer;">&times;</button>'
+                + '</div>';
+            var closeBtn = box.querySelector('button');
+            if (closeBtn){
+                closeBtn.addEventListener('click', function(){
+                    if (box && box.parentNode) box.parentNode.removeChild(box);
+                    try { localStorage.setItem('hideNewEmailsPopup', '1'); } catch(e){}
+                });
+            }
+            document.body.appendChild(box);
+        }
+        if (document.readyState === 'loading'){
+            document.addEventListener('DOMContentLoaded', createPopup);
+        } else {
+            createPopup();
+        }
+    })();
+    </script>
 
     <!-- Mobile Sticky CTA Bar (mobile-only) -->
     <div class="mobile-cta-bar lg:hidden">
